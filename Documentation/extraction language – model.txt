@@ -1,0 +1,17 @@
+framework (sucker.Core)
+- ExtractionObjectBase, ExtractionList
+- context, http downloader
+- fronta actions
+- get; enumerator;
+- regexp enumerator
+- contexty - http, formulare, mail, ftp, binary file
+
+
+prekladac (sucker.Compiler)
+- sucker language -> C#
+- XML -> C#
+
+cache (sucker.Core.Cache)
+DB adapter (sucker.Core.DB)
+stahovani s podminkami (where, ignoring not matching actions)
+LINQ provider

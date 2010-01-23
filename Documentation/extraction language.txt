@@ -1,0 +1,133 @@
+calling logical pages (extraction) like functions
+- with parameters (objects being to be filled with extracted data)
+
+- objekt/list ma list actions k udelani, udelanim akce se pridaji dalsi akce volane s timto objektem (todo list)
+- pri requestu na property objektu/elementy listu se provadeji akce ze seznamu,
+  dokud pozadovana property/dalsi prvek seznamu neni inicializovana/vytvoren
+
+- kazda funkce se vzdy provede cela, behem ni se pridavaji akce do todo listu, mozna paralelizace jednotlivych metody
+- metody se volaji na contextu, neni-li specifikovan, vola se metoda na aktualnim kontextu
+
+
+- context:	(jako stranka otevrena v prohlizeci)
+	- .ctory ... vytvorenim noveho context se jakoby provede akce na strance (klik,formular,....)
+	  - .ctor, prechod na novou stranku, based on previous context
+	  - .ctor z jineho context, ktery vyplni nektere formulare (novy context je stejny, navic ma jina POST data)
+	- loaded_content
+	- referrer context
+	- cache object (cache stranek, pozdeji cache extrahovanych objektu - adapter do DB)
+	- timeout (pro cache, muze se ziskat implicitne z HTTP response)
+	- informace zavisle na typu contextu, z toho se pak inicializuje loaded_content
+	  - url, cookies, login, ... protocol (http,imap,file,ftp,...)
+	  - POST data
+	  - referrer url (defaultne z referrer context)
+
+- variable = objekt, ma TODO list, kdyz je z nej potreba nejaka data
+- list ma GetEnumerator() a inicialni TODO list a inicialni polozky
+- list.GetEnumerator() vrati cisty objekt enumerator s inicialnim TODO listem a inicialnimi polozkami
+- objekt ma property, pri get; se provadi TODO list
+
+- action = context + method + parameters (variables) (for method call)
+- do action = with locked action: call method on context with parameters (=method execution)
+
+- method execution:	(do action)
+	- create local stack, add parameters as local variables
+	- do commands, may invoke page download -> loaded_content
+	- on method call:
+		- create action (context+method+parameters)
+		- add action to the TODO list of all parameters of called method
+
+- enumeration OR property initialization:
+	- in loop:
+ 	  - if required property is set, then break;
+	  - if element is ready in the enumerated list, pop it and yield return it;
+	  - pops action of requested object, do action, remove action from variables (affected variables are only in action parameters)
+
+- list ma inicialni TODO list, ktery ziskal v metode ktera ho vytvorila
+- pri enumeraci listu se vytvori enumerator, ten dostane kopii inicialniho TODO listu
+  tim se pri kazde enumeraci bude enumerovat seznam znovu (vzdy od inicialniho TODO listu)
+  v extrakcnich metodach se predava uz jen tento objekt
+=> list je jen kontejner na skutecny objekt s metodou add a bez properties, ten se vytori v GetEnumerator()
+
+- globalni kod obsahuje inicializace context objektu a volani metod
+- globalni kod se provede pri vytvoreni globalnich objektu/listu, cimz se naplni TODO list pouzitych globalnich objektu
+- globalni promenne pristupne jen v globalnim kodu, pak uz jen pres parametry funkci
+
+- aby se udrzela konzistence enumeratoru a todo listu, neni mozne v metode PRIMO pridavat prvky do listu, ktery je v nejakem objektu, pouze do lokalnich listu lze pridavat
+  Pridavani do podrazeneho listu se musi delat pres metodu, cimz se listu prida TODO akce, a tim lze pak enumerovat
+  a.b.add(c) => call("x.add(y)",this,new object[]{x=a.b,y=c})
+
+list je special objekt, restartuje se pri kazde enumeraci, neenumerovane listy jsou "ignorovany"
+- predavani objektu parametrem
+  - objekt normalne
+  - list<T>
+	- defaultne jako jako emptyEnumerator - nema todo list, nema prvky, nic nedela
+	- jako enumerator pouze, pokud je metoda volana primo z enumeratoru
+  - enumerator normalne
+
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+future:
+- vlastni LINQ provider, pri zadani podminky (where) se do todo listu nepridavaji akce, ktere jsou v rozporu s danou podminkou
+- vice contextu (mail,http form,ftp,...)
+- integrace s owl,rdf (generovani objektoveho modelu)
+- obecny graf, semanticke uloziste (mapovani objektu do semantickeho uloziste)
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+// classes declaration
+// nazev tridy je podmet/predmet
+// nazev promenne predstavuje nazev relace
+class XXX
+{
+	string a;//private write once semantic, on get, continue with extraction until the property is loaded, get is prohibited
+	string b;//write once
+	list<string> c;
+	list<XXX> d;
+}
+
+
+// global objects are specified within the arguments of main methods
+// main is initial method for all global objects, has some default context, without content
+main(list<XXX> xxxs)// main is automatically added into the TODO list of global objects
+{
+	context("www.example.com").subpage(xxxs);	// call(subpage, new context(this,"www.example.com"), new object[]{xxxs});// metoda call prida akci do TODO listu vsem parametrum
+	context("www.example.com", "referrer...", "cookies", "3600").subpage(xxxs);
+	//xxxs.add(...) => call("a.add(b);",this,new object[]{a=xxxs,b=...});
+}
+// it is possible to define more main methods
+main(list<XXX> xxxs)//another main method
+{
+	context("www.example2.com").subpage(xxxs);
+}
+
+
+// functions
+subpage(list<XXX> xxxs)
+{
+	foreach( regexp )//regexp on current context // foreach ( Match m in RegExp("...").Match(this.loaded_content) ){ r1=m["r1"], ...; }
+	{
+		xxxs.add(x = new XXX( a = r1, b = r2 ))
+		//x.c.add("text");// nelze, pridavani elementu do podrazeneho listu
+		//x.c.add("text"); => call("a.add(b);",this,new object[]{a=x.c, b="text"})
+
+		context(r3).page_xyz(x, new YYY(), r4)
+		
+	}
+	context("www.example.com").page_xyz( xxxs.add(new XXX()) );
+}
+
+page_xyz( list<XXX> c, YYY data2, string cat )
+{
+	foreach(regexp)
+	{
+		c.add(r1);
+		
+		context(r1).page_sss(d);
+	}
+}
+
+page_sss( XXX data )
+{
+	data.a = "hello";
+}

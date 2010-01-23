@@ -1,0 +1,47 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "linqtoweb.Core", "Core\linqtoweb.Core.csproj", "{B4486636-EEBC-4246-AE8B-0594A58197F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "linqtoweb.Compiler", "Compiler\linqtoweb.Compiler.csproj", "{F68274C3-4CD9-43B0-89A1-39F0EC24ECCA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example1", "Examples\Example1\Example1.csproj", "{EAFAE698-D0F9-47EF-90EF-9FBC45C93161}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 4
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs03.codeplex.com/
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Core\\linqtoweb.Core.csproj
+		SccProjectName1 = Core
+		SccLocalPath1 = Core
+		SccProjectUniqueName2 = Compiler\\linqtoweb.Compiler.csproj
+		SccProjectName2 = Compiler
+		SccLocalPath2 = Compiler
+		SccProjectUniqueName3 = Examples\\Example1\\Example1.csproj
+		SccProjectName3 = Examples/Example1
+		SccLocalPath3 = Examples\\Example1
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B4486636-EEBC-4246-AE8B-0594A58197F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4486636-EEBC-4246-AE8B-0594A58197F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4486636-EEBC-4246-AE8B-0594A58197F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4486636-EEBC-4246-AE8B-0594A58197F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F68274C3-4CD9-43B0-89A1-39F0EC24ECCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F68274C3-4CD9-43B0-89A1-39F0EC24ECCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F68274C3-4CD9-43B0-89A1-39F0EC24ECCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F68274C3-4CD9-43B0-89A1-39F0EC24ECCA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EAFAE698-D0F9-47EF-90EF-9FBC45C93161}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAFAE698-D0F9-47EF-90EF-9FBC45C93161}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAFAE698-D0F9-47EF-90EF-9FBC45C93161}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAFAE698-D0F9-47EF-90EF-9FBC45C93161}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
