@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace linqtoweb.Core.contexts
+namespace linqtoweb.Core.extraction
 {
     /// <summary>
     /// Context of the whole extraction task.

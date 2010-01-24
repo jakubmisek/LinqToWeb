@@ -8,6 +8,7 @@ namespace linqtoweb.Core.extraction
     /// <summary>
     /// The list of actions.
     /// TODO: The object is able to get actions by a priority of specified query.
+    /// TODO: do not use linear list of actions (need of fast inserting and removing).
     /// </summary>
     class ActionList : List<ActionItem>
     {

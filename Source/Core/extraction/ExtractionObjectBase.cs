@@ -12,6 +12,8 @@ namespace linqtoweb.Core.extraction
     /// </summary>
     class ExtractionObjectBase
     {
+        #region exceptions
+
         /// <summary>
         /// An exception that is thrown when the content of property was not extracted. There was no reachable action that extracts required data.
         /// </summary>
@@ -37,6 +39,8 @@ namespace linqtoweb.Core.extraction
             }
         }
 
+        #endregion
+
         /// <summary>
         /// Priority list of action to do, to obtain new data.
         /// </summary>
@@ -60,10 +64,10 @@ namespace linqtoweb.Core.extraction
         }
 
         /// <summary>
-        /// Execute next action in the TODO list.
-        /// Can execute more actions at once asynchronously, method waits until some action is done.
+        /// Execute next action in the ActionsToDo list.
+        /// TODO: Can execute more actions at once asynchronously, method waits until some action is done.
         /// </summary>
-        /// <param name="enumeratedList">Parameter that will not be transformed. Can be null.</param>
+        /// <param name="enumeratedList">Parameters transformation map.</param>
         /// <returns>False if there are no actions, and no action can be executed.
         /// True if an action finished since last DoNextAction call (and some new data might be here).</returns>
         internal virtual bool DoNextAction(Dictionary<object, object> parametersTransform)
@@ -74,7 +78,7 @@ namespace linqtoweb.Core.extraction
 
             if (action != null)
             {
-                // TODO: action.call(parametersTransform);
+                action.CallAction(parametersTransform);
 
                 return true;
             }

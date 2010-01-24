@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace linqtoweb.Core.contexts
+using linqtoweb.Core.datacontext;
+
+namespace linqtoweb.Core.extraction
 {
     /// <summary>
     /// Base container for extraction methods.
@@ -13,8 +15,9 @@ namespace linqtoweb.Core.contexts
         /// <summary>
         /// Extraction method delegate. Declared into the MethodsContainer object.
         /// </summary>
-        public delegate void ExtractionMethod( /* DataContext, dictionary parameters */ );
+        public delegate void ExtractionMethod( DataContext datacontext, MethodParameters parameters );
 
         
+
     }
 }

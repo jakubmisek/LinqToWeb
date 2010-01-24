@@ -33,9 +33,9 @@ namespace linqtoweb.Core.extraction
 
         #endregion
 
-        #region elements
+        #region elements enumerating / buffering
 
-        // TODO: small cache of extracted elements
+        // TODO: small buffer of extracted elements waiting for the enumeration
         
         /// <summary>
         /// Add an element into the enumeration. Called by extraction method that is called by an action by DoNextAction().
@@ -43,7 +43,7 @@ namespace linqtoweb.Core.extraction
         /// <param name="element">An element to be added into the enumerated collection buffer.</param>
         public override void  AddElement(T element)
         {
-            // TODO: add element into the cache
+            // TODO: add element into the buffer
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace linqtoweb.Core.extraction
         /// <returns></returns>
         public IEnumerator<T> GetEnumerator()
         {
-            // TODO: collection enumeration
+            // TODO: collection enumeration 
             // if element in cache, yield return it
             // if !DoNextAction(parametersTransform) break;
 
