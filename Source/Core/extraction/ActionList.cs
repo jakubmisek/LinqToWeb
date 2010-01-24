@@ -5,21 +5,53 @@ using System.Text;
 
 namespace linqtoweb.Core.extraction
 {
-    class ActionList
+    /// <summary>
+    /// The list of actions.
+    /// TODO: The object is able to get actions by a priority of specified query.
+    /// </summary>
+    class ActionList : List<ActionItem>
     {
-        virtual public void Push(Action action)
+        public ActionList()
         {
 
         }
 
-        virtual public Action Pop()
+        public ActionList(int capacity)
+            : base(capacity)
         {
-            return null;
+
         }
 
-        public int Count
+        public ActionList(IEnumerable<ActionItem> collection)
+            : base(collection)
         {
-            get { return 0; }
+
+        }
+
+        /// <summary>
+        /// Insert an action to do.
+        /// TODO: some priority ordering.
+        /// </summary>
+        /// <param name="action"></param>
+        virtual public void AddAction(ActionItem action)
+        {
+            this.Insert(0, action);
+        }
+
+        /// <summary>
+        /// Returns next action to do.
+        /// </summary>
+        /// <returns></returns>
+        virtual public ActionItem GetNextAction()
+        {
+            if (this.Count > 0)
+            {
+                return this[0];
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

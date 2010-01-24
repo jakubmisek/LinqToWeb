@@ -49,16 +49,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="contexts\MethodsContainer.cs" />
+    <Compile Include="contexts\PageContext.cs" />
     <Compile Include="extraction\ActionItem.cs" />
     <Compile Include="extraction\ActionList.cs" />
     <Compile Include="extraction\ExtractionList.cs" />
+    <Compile Include="extraction\ExtractionListEmpty.cs" />
     <Compile Include="extraction\ExtractionListEnumerator.cs" />
     <Compile Include="extraction\ExtractionObjectBase.cs" />
+    <Compile Include="extraction\ExtractionListBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="compilation\" />
-    <Folder Include="contexts\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
