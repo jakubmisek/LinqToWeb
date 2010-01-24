@@ -13,7 +13,7 @@ namespace linqtoweb.Core.contexts
         /// <summary>
         /// Extraction method delegate. Declared into the MethodsContainer object.
         /// </summary>
-        public delegate void ExtractionMethod( /* context, dictionary parameters */ );
+        public delegate void ExtractionMethod( /* DataContext, dictionary parameters */ );
 
         
     }

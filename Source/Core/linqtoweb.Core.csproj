@@ -49,8 +49,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="contexts\ExtractionContext.cs" />
     <Compile Include="contexts\MethodsContainer.cs" />
-    <Compile Include="contexts\PageContext.cs" />
+    <Compile Include="contexts\DataContext.cs" />
     <Compile Include="extraction\ActionItem.cs" />
     <Compile Include="extraction\ActionList.cs" />
     <Compile Include="extraction\ExtractionList.cs" />
