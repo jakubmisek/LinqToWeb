@@ -9,6 +9,7 @@ namespace linqtoweb.Core.extraction
     /// List used for no-action,
     /// always empty, with no actions list.
     /// </summary>
+    /// <typeparam name="T">Type of elements in this empty collection.</typeparam>
     class ExtractionListEmpty<T> : ExtractionListBase<T>
     {
         /// <summary>

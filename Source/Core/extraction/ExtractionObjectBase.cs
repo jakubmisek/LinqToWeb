@@ -6,41 +6,41 @@ using System.Diagnostics;
 
 namespace linqtoweb.Core.extraction
 {
+    #region exceptions
+
+    /// <summary>
+    /// An exception that is thrown when the content of property was not extracted. There was no reachable action that extracts required data.
+    /// </summary>
+    public class NotExtractedDataException : Exception
+    {
+        /// <summary>
+        /// Exception initialization.
+        /// </summary>
+        /// <param name="message"></param>
+        public NotExtractedDataException()
+        {
+
+        }
+
+        /// <summary>
+        /// Exception initialization.
+        /// </summary>
+        /// <param name="message"></param>
+        public NotExtractedDataException(string message)
+            : base(message)
+        {
+
+        }
+    }
+
+    #endregion
+
     /// <summary>
     /// Base object containing extracted data.
     /// Contains list of actions to do, to extract the object properties value.
     /// </summary>
     class ExtractionObjectBase
     {
-        #region exceptions
-
-        /// <summary>
-        /// An exception that is thrown when the content of property was not extracted. There was no reachable action that extracts required data.
-        /// </summary>
-        public class NotExtractedDataException : Exception
-        {
-            /// <summary>
-            /// Exception initialization.
-            /// </summary>
-            /// <param name="message"></param>
-            public NotExtractedDataException()
-            {
-
-            }
-
-            /// <summary>
-            /// Exception initialization.
-            /// </summary>
-            /// <param name="message"></param>
-            public NotExtractedDataException(string message)
-                : base(message)
-            {
-
-            }
-        }
-
-        #endregion
-
         /// <summary>
         /// Priority list of action to do, to obtain new data.
         /// </summary>
@@ -72,7 +72,7 @@ namespace linqtoweb.Core.extraction
         /// True if an action finished since last DoNextAction call (and some new data might be here).</returns>
         internal virtual bool DoNextAction(Dictionary<object, object> parametersTransform)
         {
-            Debug.Assert(ActionsToDo != null, "Objects using DoNextAction() must initialize ActionsToDo list.");
+            Debug.Assert(ActionsToDo != null, "Objects using DoNextAction() must initialize their ActionsToDo list.");
 
             ActionItem action = ActionsToDo.GetNextAction();
 
@@ -98,7 +98,7 @@ namespace linqtoweb.Core.extraction
             return this;
         }
 
-        #region sample object property
+        /*#region sample object property
 
         private string _sampleProperty = null;
 
@@ -120,7 +120,7 @@ namespace linqtoweb.Core.extraction
             }
         }
 
-        #endregion
+        #endregion*/
     }
 
 }

@@ -5,6 +5,10 @@ using System.Text;
 
 namespace linqtoweb.Core.extraction
 {
+    /// <summary>
+    /// Enumerator of extracted collection.
+    /// </summary>
+    /// <typeparam name="T">Type of elements in enumerated collection.</typeparam>
     class ExtractionListEnumerator<T> : ExtractionListBase<T>
     {
         #region initialization
@@ -33,9 +37,13 @@ namespace linqtoweb.Core.extraction
 
         #endregion
 
-        #region elements enumerating / buffering
+        #region elements enumeration / buffering
 
-        // TODO: small buffer of extracted elements waiting for the enumeration
+        /// <summary>
+        /// Small buffer of extracted elements waiting for the enumeration.
+        /// Expecting up to 100 of elements.
+        /// </summary>
+        private Queue<T> ElementsBuffer = new Queue<T>();
         
         /// <summary>
         /// Add an element into the enumeration. Called by extraction method that is called by an action by DoNextAction().
@@ -43,7 +51,10 @@ namespace linqtoweb.Core.extraction
         /// <param name="element">An element to be added into the enumerated collection buffer.</param>
         public override void  AddElement(T element)
         {
-            // TODO: add element into the buffer
+            lock (ElementsBuffer)
+            {
+                ElementsBuffer.Enqueue(element);
+            }
         }
 
         /// <summary>
@@ -52,11 +63,25 @@ namespace linqtoweb.Core.extraction
         /// <returns></returns>
         public IEnumerator<T> GetEnumerator()
         {
-            // TODO: collection enumeration 
-            // if element in cache, yield return it
-            // if !DoNextAction(parametersTransform) break;
+            for (; ; )
+            {
+                // return elements prepared in the queue (buffer) first
+                while (ElementsBuffer.Count > 0)
+                {
+                    T element;
 
-            throw new NotImplementedException();
+                    lock (ElementsBuffer)
+                    {
+                        element = ElementsBuffer.Dequeue();
+                    }
+
+                    yield return element;
+                }
+
+                // extract next elements into the queue
+                if (!DoNextAction(parametersTransform))
+                    break;
+            }
         }
 
         #endregion
