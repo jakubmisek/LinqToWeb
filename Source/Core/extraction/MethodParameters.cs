@@ -5,22 +5,43 @@ using System.Text;
 
 namespace linqtoweb.Core.extraction
 {
-    class MethodParameters : Dictionary<string, object>
+    public class LocalVariables : Dictionary<string, object>
     {
         /// <summary>
         /// Creates an empty parameters collection.
         /// </summary>
-        public MethodParameters()
+        public LocalVariables()
         {
 
         }
 
         /// <summary>
-        /// Create collection of parameters transformed from another collection of parameters.
+        /// Creates parameters collection from a dictionary object.
+        /// </summary>
+        /// <param name="parameters"></param>
+        public LocalVariables( Dictionary<string,object> parameters )
+            :base(parameters)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates parameters collection from two dictionary objects.
+        /// </summary>
+        /// <param name="parameters"></param>
+        public LocalVariables(Dictionary<string, object> parameters, Dictionary<string, object> parameters2)
+            : base(parameters)
+        {
+            foreach (var x in parameters2)
+                this[x.Key] = x.Value;
+        }
+
+        /// <summary>
+        /// Creates collection of parameters transformed from another collection of parameters.
         /// </summary>
         /// <param name="parameters"></param>
         /// <param name="parametersTransform"></param>
-        public MethodParameters( MethodParameters parameters, Dictionary<object,object> parametersTransform )
+        public LocalVariables( LocalVariables parameters, Dictionary<object,object> parametersTransform )
         {
             foreach ( KeyValuePair<string, object> pair in parameters )
             {

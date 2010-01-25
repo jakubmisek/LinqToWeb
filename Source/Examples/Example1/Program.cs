@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 
 using linqtoweb.Core;
+using linqtoweb.Core.extraction;
 
 namespace Example1
 {
@@ -11,7 +12,12 @@ namespace Example1
     {
         static void Main(string[] args)
         {
-            
+            ExtractionContext context = new ExtractionContext();
+
+            foreach ( string x in context.sampleList )
+            {
+                Console.WriteLine(x);
+            }
         }
     }
 }

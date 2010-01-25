@@ -39,7 +39,7 @@ namespace linqtoweb.Core.extraction
     /// Base object containing extracted data.
     /// Contains list of actions to do, to extract the object properties value.
     /// </summary>
-    class ExtractionObjectBase
+    public class ExtractionObjectBase
     {
         /// <summary>
         /// Priority list of action to do, to obtain new data.

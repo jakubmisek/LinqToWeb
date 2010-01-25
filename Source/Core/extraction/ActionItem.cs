@@ -8,7 +8,7 @@ using System.Diagnostics;
 
 namespace linqtoweb.Core.extraction
 {
-    class ActionItem
+    public class ActionItem
     {
         // method, context, named parameters
 
@@ -25,7 +25,7 @@ namespace linqtoweb.Core.extraction
         /// <summary>
         /// Method parameters.
         /// </summary>
-        private readonly MethodParameters parameters;
+        private readonly LocalVariables parameters;
 
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace linqtoweb.Core.extraction
         /// <param name="method"></param>
         /// <param name="datacontext"></param>
         /// <param name="parameters"></param>
-        public ActionItem(MethodsContainer.ExtractionMethod method, DataContext datacontext, MethodParameters parameters)
+        public ActionItem(MethodsContainer.ExtractionMethod method, DataContext datacontext, LocalVariables parameters)
         {
             Debug.Assert(method != null);
             Debug.Assert(datacontext != null);
@@ -55,7 +55,7 @@ namespace linqtoweb.Core.extraction
         internal void CallAction(Dictionary<object, object> parametersTransform)
         {
             // transform parameters to use with the extraction method (remove lists)
-            MethodParameters transformedParameters = new MethodParameters(parameters, parametersTransform);
+            LocalVariables transformedParameters = new LocalVariables(parameters, parametersTransform);
 
             // remove this action from all the objects passed by parameter
             transformedParameters.RemoveActionFromParameters(this);

@@ -10,7 +10,7 @@ namespace linqtoweb.Core.extraction
     /// TODO: The object is able to get actions by a priority of specified query.
     /// TODO: do not use linear list of actions (need of fast inserting and removing).
     /// </summary>
-    class ActionList : List<ActionItem>
+    public class ActionList : List<ActionItem>
     {
         public ActionList()
         {
@@ -31,7 +31,6 @@ namespace linqtoweb.Core.extraction
 
         /// <summary>
         /// Insert an action to do.
-        /// TODO: some priority ordering.
         /// </summary>
         /// <param name="action"></param>
         virtual public void AddAction(ActionItem action)

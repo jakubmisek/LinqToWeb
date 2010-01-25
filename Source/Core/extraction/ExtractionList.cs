@@ -9,7 +9,7 @@ namespace linqtoweb.Core.extraction
     /// Container for the enumerator object. Represents the collection of data described by the list of actions to do.
     /// </summary>
     /// <typeparam name="T">The type of collection element.</typeparam>
-    class ExtractionList<T> : ExtractionListBase<T>, IEnumerable<T>
+    public class ExtractionList<T> : ExtractionListBase<T>, IEnumerable<T>
     {    
         #region ExtractionListBase
 

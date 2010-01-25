@@ -8,7 +8,7 @@ namespace linqtoweb.Core.extraction
     /// <summary>
     /// Base object containing extracted elements in collection (list).
     /// </summary>
-    class ExtractionListBase<T> : ExtractionObjectBase
+    public class ExtractionListBase<T> : ExtractionObjectBase
     {
         /// <summary>
         /// Default ctor.
