@@ -14,7 +14,7 @@ namespace Example1
         {
             ExtractionContext context = new ExtractionContext();
 
-            foreach ( string x in context.sampleList )
+            foreach ( var x in context.sampleList )
             {
                 Console.WriteLine(x);
             }

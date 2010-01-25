@@ -52,6 +52,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="datacontext\DataContext.new.cs" />
+    <Compile Include="datacontext\DataContext.helper.cs" />
+    <Compile Include="datacontext\DataContext.methods.cs" />
     <Compile Include="datacontext\HtmlContext.cs" />
     <Compile Include="extraction\ExtractionContext.cs" />
     <Compile Include="extraction\MethodParameters.cs" />
