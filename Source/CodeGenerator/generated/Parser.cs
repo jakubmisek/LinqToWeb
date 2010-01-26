@@ -4,9 +4,9 @@
 
 // GPPG version 1.3.6
 // Machine:  COREDUO
-// DateTime: 26.1.2010 23:06:01
+// DateTime: 26.1.2010 23:28:11
 // UserName: Jakub
-// Input file <compilation\generators\Parser.y>
+// Input file <generators\Parser.y>
 
 // options: babel no-lines gplex
 
@@ -16,7 +16,7 @@ using System.Globalization;
 using System.Text;
 using QUT.Gppg;
 
-namespace linqtoweb.CodeGenerator.compilation
+namespace linqtoweb.CodeGenerator
 {
 public enum Tokens {error=42,
     EOF=43,DIGIT=44,OPERATOR=45};

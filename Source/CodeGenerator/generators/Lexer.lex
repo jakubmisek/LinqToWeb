@@ -1,4 +1,4 @@
-%namespace linqtoweb.CodeGenerator.compilation
+%namespace linqtoweb.CodeGenerator
 %scannertype Scanner
 %scanbasetype ScanBase
 %tokentype Tokens

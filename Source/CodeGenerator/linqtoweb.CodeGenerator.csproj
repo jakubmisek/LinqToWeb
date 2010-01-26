@@ -50,21 +50,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="compilation\generated\Lexer.cs" />
-    <Compile Include="compilation\generated\Parser.cs" />
+    <Compile Include="generated\Lexer.cs" />
+    <Compile Include="generated\Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="compilation\AST\readme.txt" />
-    <Content Include="compilation\readme.txt" />
+    <Content Include="AST\readme.txt" />
+    <Content Include="readme.txt" />
     <None Include="QUT.ShiftReduceParser.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="generate.cmd" />
-    <None Include="compilation\generators\Lexer.lex" />
-    <None Include="compilation\generators\Parser.y" />
+    <None Include="generators\Lexer.lex" />
+    <None Include="generators\Parser.y" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core\linqtoweb.Core.csproj">
+      <Project>{B4486636-EEBC-4246-AE8B-0594A58197F4}</Project>
+      <Name>linqtoweb.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

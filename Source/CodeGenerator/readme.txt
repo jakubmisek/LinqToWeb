@@ -1,4 +1,4 @@
-﻿linqtoweb.Core.compilation
+﻿linqtoweb.CodeGenerator.compilation
 
 - Source language is XML based or own object-oriented proprietary language.
 - Compilation of the extraction language source code into C#.

@@ -1,4 +1,4 @@
-%namespace linqtoweb.CodeGenerator.compilation
+%namespace linqtoweb.CodeGenerator
 %parsertype Parser
 %tokentype Tokens
 //%valuetype object
