@@ -20,12 +20,23 @@ namespace linqtoweb.Core.datacontext
 
         /// <summary>
         /// New HTML page context.
+        /// As a result of clicking on a link on the current page.
         /// </summary>
-        /// <param name="relativeurl"></param>
+        /// <param name="relativeurl">Relative or absolute URL.</param>
         /// <returns></returns>
         public DataContext OpenHtml(string relativeurl)
         {
             return new HtmlContext(this, relativeurl);
+        }
+
+        /// <summary>
+        /// Page context as a result of HTML form submission.
+        /// As a result of clicking on a form button on the current page.
+        /// </summary>
+        /// <returns></returns>
+        public DataContext SubmitForm( /* input values, submit button (in DOM tree) */ )
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

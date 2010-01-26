@@ -5,19 +5,19 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 using linqtoweb.Core.extraction;
+using linqtoweb.Core.datacontext;
+
 using System.Diagnostics;
 using System.Net;
 using System.IO;
 
-namespace linqtoweb.Core.datacontext
+namespace linqtoweb.Core.methods
 {
     /// <summary>
     /// Methods of data context.
     /// </summary>
-    public partial class DataContext
+    public partial class ExtractionMethods
     {
-        #region regular expressions
-
         public class RegExpEnumerator : IEnumerable<LocalVariables>
         {
             private readonly Regex exp;
@@ -71,27 +71,27 @@ namespace linqtoweb.Core.datacontext
         /// <summary>
         /// Matches given regular expression onto the current Content.
         /// </summary>
+        /// <param name="context">Data context.</param>
         /// <param name="exp">Regular expression with .NET group names (?&lt;GroupName&gt;\w*).</param>
         /// <returns>Enumerator of dictionary of matched groups (variables).</returns>
-        public RegExpEnumerator regexp(string exp)
+        public static RegExpEnumerator regexp(DataContext context, string exp)
         {
             // regular expression to be matched
             Regex regularExpression = new Regex(exp, RegexOptions.Multiline | RegexOptions.IgnoreCase);
 
-            return regexp(regularExpression);
+            return regexp(context, regularExpression);
         }
 
         /// <summary>
         /// Matches given regular expression onto the current Content.
         /// </summary>
+        /// <param name="context">Data context.</param>
         /// <param name="exp">Regular expression with .NET group names (?&lt;GroupName&gt;\w*). </param>
         /// <returns>Enumerator of dictionary of matched groups (variables).</returns>
-        public RegExpEnumerator regexp(Regex exp)
+        public static RegExpEnumerator regexp(DataContext context, Regex exp)
         {
-            return new RegExpEnumerator(this, exp);
+            return new RegExpEnumerator(context, exp);
         }
-
-        #endregion
     }
 
 }

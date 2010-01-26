@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Net;
+using System.IO;
 
 namespace linqtoweb.Core.datacontext
 {
@@ -12,24 +14,68 @@ namespace linqtoweb.Core.datacontext
         /// </summary>
         /// <param name="referrer"></param>
         /// <param name="url"></param>
-        internal HtmlContext(DataContext referrer, string relativeurl)
+        internal HtmlContext(DataContext referer, string relativeurl)
+            : base((referer != null && referer.ContextUri != null) ? (new Uri(referer.ContextUri, relativeurl)) : (new Uri(relativeurl)), referer)
         {
-            _URI = (referrer.URI == null) ? new Uri(relativeurl) : new Uri(referrer.URI, relativeurl);
+
         }
 
+        private bool RequestProcessed = false;
+
         /// <summary>
-        /// HTML page URL.
+        /// Process the request (once). Get the response (page content, cookies, ...).
         /// </summary>
-        protected readonly Uri _URI;
-        
+        private void ProcessRequest()
+        {
+            if (RequestProcessed)
+                return; // test, unlocked
+                
+            lock(this)
+            {
+                if (RequestProcessed) return; // test again
+                RequestProcessed = true;
+
+                // cache
+
+                // get response
+                HttpWebResponse resp = GetHttpResponse(
+                    ContextUri,
+                    (RefererContext != null && RefererContext.ContextUri != null) ? RefererContext.ContextUri.AbsoluteUri : null,
+                    DefaultUserAgent,
+                    15000,
+                    false,
+                    false,
+                    (RefererContext != null) ? RefererContext.Cookies : null);
+
+                // page content
+                _Content = new StreamReader(resp.GetResponseStream()).ReadToEnd();
+
+                // cookies
+                if (resp.Cookies != null && resp.Cookies.Count > 0)
+                {
+                    _Cookies = new CookieCollection();
+                    _Cookies.Add(resp.Cookies);
+                }
+
+                // headers
+
+                // content type, encoding
+
+            }
+        }
+
+        private CookieCollection _Cookies = null;
+
         /// <summary>
-        /// HTML page URI.
+        /// Page cookies.
         /// </summary>
-        public override Uri URI
+        public override CookieCollection Cookies
         {
             get
             {
-                return _URI;
+                ProcessRequest();
+           
+                return _Cookies;
             }
         }
 
@@ -42,8 +88,7 @@ namespace linqtoweb.Core.datacontext
         {
             get
             {
-                if (_Content == null)
-                    _Content = ReadWebRequest(URI);
+                ProcessRequest();
 
                 return _Content;
             }

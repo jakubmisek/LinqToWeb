@@ -26,7 +26,7 @@ namespace linqtoweb.Core.extraction
         /// </summary>
         public ExtractionContext( /*cache*/ )
         {
-            InitialDataContext = new DataContext();
+            InitialDataContext = new DataContext( null, null );
 
             InitActionsToDo();
         }
@@ -45,7 +45,7 @@ namespace linqtoweb.Core.extraction
         protected virtual void InitActionsToDo()
         {
             // initialize the context objects here
-
+            // OpenHtml("http://www.freesutra.cz/").Categories( sampleList );
             InitialDataContext.OpenHtml("http://www.freesutra.cz/").AddAction(
                 MethodsContainer.Categories,
                 new LocalVariables(

@@ -30,9 +30,10 @@ namespace linqtoweb.Core.datacontext
         /// <summary>
         /// Empty (initial) data context. Does not contain any data.
         /// </summary>
-        internal DataContext(/*cache*/)
+        internal DataContext( Uri uri, DataContext referer /*, cache*/)
         {
-            
+            this.ContextUri = uri;
+            this.RefererContext = referer;
         }
 
         /// <summary>
@@ -53,9 +54,19 @@ namespace linqtoweb.Core.datacontext
         #region data source common information
 
         /// <summary>
-        /// The data content URI identifier.
+        /// Referer data context. Can be null.
         /// </summary>
-        public virtual Uri URI
+        public DataContext RefererContext { get; private set; }
+
+        /// <summary>
+        /// The data content URI identifier. Can be null.
+        /// </summary>
+        public Uri ContextUri { get; private set; }
+
+        /// <summary>
+        /// Cookies in the current context. Can be null (no cookies).
+        /// </summary>
+        public virtual CookieCollection Cookies
         {
             get
             {

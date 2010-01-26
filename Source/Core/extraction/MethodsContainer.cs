@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 
 using linqtoweb.Core.datacontext;
+using linqtoweb.Core.methods;
+using System.Diagnostics;
 
 namespace linqtoweb.Core.extraction
 {
@@ -22,14 +24,18 @@ namespace linqtoweb.Core.extraction
 
         public static void Categories( DataContext datacontext, LocalVariables parameters )
         {
+            VariablesStack l = new VariablesStack(parameters);
 
-
-            foreach ( var x in datacontext.regexp(@"Porno\s+(?<Title>\w+)") )
+            foreach (var x in ExtractionMethods.regexp(datacontext, @"Porno\s+(?<Title>\w+)"))
             {
-                LocalVariables l = new LocalVariables(parameters, x);
+                l.Push(x);
 
                 ((ExtractionListBase<string>)l["sampleList"]).AddElement((string)l["Title"]);
+
+                l.Pop();
             }
+
+            Debug.Assert(l.Count == 1);
         }
 
         #endregion
