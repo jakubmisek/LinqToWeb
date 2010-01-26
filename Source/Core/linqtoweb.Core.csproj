@@ -70,8 +70,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="compilation\AST\readme.txt" />
-    <Content Include="compilation\readme.txt" />
     <Content Include="datacontext\readme.txt" />
     <Content Include="storage\readme.txt" />
   </ItemGroup>

@@ -1,0 +1,2 @@
+..\..\Tools\gplex.exe /unicode /babel /out:"compilation\generated\Lexer.cs" "compilation\generators\Lexer.lex"
+..\..\Tools\gppg.exe /gplex /no-lines /babel "compilation\generators\Parser.y" > "compilation\generated\Parser.cs"
