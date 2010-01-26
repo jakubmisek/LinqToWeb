@@ -61,7 +61,7 @@ list je special objekt, restartuje se pri kazde enumeraci, neenumerovane listy j
 - predavani objektu parametrem
   - objekt normalne
   - list<T>
-	- defaultne jako jako emptyEnumerator - nema todo list, nema prvky, nic nedela
+	- defaultne jako jako emptyEnumerator (single shared static object) - nema todo list, nema prvky, nic nedela
 	- jako enumerator pouze, pokud je metoda volana primo z enumeratoru
   - enumerator normalne
 
@@ -89,6 +89,7 @@ class XXX
 
 // global objects are specified within the arguments of main methods
 // main is initial method for all global objects, has some default context, without content
+// all main functions are "called" (added to todo list) at the startup
 main(list<XXX> xxxs)// main is automatically added into the TODO list of global objects
 {
 	context("www.example.com").subpage(xxxs);	// call(subpage, new context(this,"www.example.com"), new object[]{xxxs});// metoda call prida akci do TODO listu vsem parametrum
