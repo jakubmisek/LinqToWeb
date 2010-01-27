@@ -4,7 +4,7 @@
 
 // GPPG version 1.3.6
 // Machine:  COREDUO
-// DateTime: 26.1.2010 23:28:11
+// DateTime: 27.1.2010 23:20:06
 // UserName: Jakub
 // Input file <generators\Parser.y>
 
@@ -15,16 +15,19 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using QUT.Gppg;
+using linqtoweb.CodeGenerator.AST;
 
 namespace linqtoweb.CodeGenerator
 {
-public enum Tokens {error=42,
-    EOF=43,DIGIT=44,OPERATOR=45};
+public enum Tokens {
+    error=1,EOF=2,CLASS=3,IDENTIFIER=4,FOREACH=5,LPAREN=6,
+    RPAREN=7,LBRACE=8,RBRACE=9,LBRACKET=10,RBRACKET=11,STRINGVAL=12,
+    INTEGERVAL=13,DOUBLEVAL=14,OP_PLUS=15,OP_MINUS=16,OP_MUL=17,OP_DIV=18,
+    OP_ASSIGN=19,COMMA=20,SEMICOLON=21,WHITESPACE=22,COMMENT=23};
 
 public struct ValueType
 {
-	public object Object;
-	public LexLocation Pos;
+	public Expression node;
 }
 // Abstract base class for GPLEX scanners
 public abstract class ScanBase : AbstractScanner<ValueType,LexLocation> {
@@ -56,58 +59,36 @@ public class Parser: ShiftReduceParser<ValueType, LexLocation>
   {
     this.InitSpecialTokens((int)Tokens.error, (int)Tokens.EOF);
 
-    this.InitStateTable(11);
-    AddState(0,new State(new int[]{40,6,44,10},new int[]{-1,1,-3,3,-4,9}));
-    AddState(1,new State(new int[]{43,2}));
+    this.InitStateTable(8);
+    AddState(0,new State(new int[]{3,4},new int[]{-1,1,-3,3}));
+    AddState(1,new State(new int[]{2,2}));
     AddState(2,new State(-1));
-    AddState(3,new State(new int[]{45,4,43,-2}));
-    AddState(4,new State(new int[]{40,6,44,10},new int[]{-3,5,-4,9}));
-    AddState(5,new State(-4));
-    AddState(6,new State(new int[]{40,6,44,10},new int[]{-3,7,-4,9}));
-    AddState(7,new State(new int[]{41,8,45,4}));
-    AddState(8,new State(-3));
-    AddState(9,new State(-5));
-    AddState(10,new State(-6));
+    AddState(3,new State(-2));
+    AddState(4,new State(new int[]{4,5}));
+    AddState(5,new State(new int[]{8,6}));
+    AddState(6,new State(new int[]{9,7}));
+    AddState(7,new State(-3));
 
-    Rule[] rules=new Rule[7];
-    rules[1]=new Rule(-2, new int[]{-1,43});
+    Rule[] rules=new Rule[4];
+    rules[1]=new Rule(-2, new int[]{-1,2});
     rules[2]=new Rule(-1, new int[]{-3});
-    rules[3]=new Rule(-3, new int[]{40,-3,41});
-    rules[4]=new Rule(-3, new int[]{-3,45,-3});
-    rules[5]=new Rule(-3, new int[]{-4});
-    rules[6]=new Rule(-4, new int[]{44});
+    rules[3]=new Rule(-3, new int[]{3,4,8,9});
     this.InitRules(rules);
 
-    this.InitNonTerminals(new string[] {"", "init", "$accept", "expr", "number", 
-      });
+    this.InitNonTerminals(new string[] {"", "init", "$accept", "classdecl", });
   }
 
   protected override void DoAction(int action)
   {
     switch (action)
     {
-      case 2: // init -> expr
+      case 2: // init -> classdecl
 {
-					Result = ValueStack[ValueStack.Depth-1].Object;
+					Ast = new GlobalCode();
 				}
         break;
-      case 3: // expr -> '(', expr, ')'
-{
-                    CurrentSemanticValue.Object = ValueStack[ValueStack.Depth-2].Object;
-                    CurrentSemanticValue.Pos = LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]);
-                }
-        break;
-      case 4: // expr -> expr, OPERATOR, expr
-{
-                    CurrentSemanticValue.Object = null;//new OP($2.Object, $1.Object, $3.Object);
-                    CurrentSemanticValue.Pos = LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]);
-                }
-        break;
-      case 6: // number -> DIGIT
-{
-                    CurrentSemanticValue.Object = ValueStack[ValueStack.Depth-1].Object;
-                    CurrentSemanticValue.Pos = LocationStack[LocationStack.Depth-1];
-                }
+      case 3: // classdecl -> CLASS, IDENTIFIER, LBRACE, RBRACE
+{  }
         break;
     }
   }
@@ -125,7 +106,7 @@ public class Parser: ShiftReduceParser<ValueType, LexLocation>
 
     public Parser(Scanner scanner) : base(scanner) { }
     
-    public object Result {get;private set;}
+    public GlobalCode Ast {get;private set;}
 
 }
 }

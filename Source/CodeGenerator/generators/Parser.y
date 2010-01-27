@@ -1,51 +1,45 @@
 %namespace linqtoweb.CodeGenerator
+%using linqtoweb.CodeGenerator.AST
 %parsertype Parser
 %tokentype Tokens
-//%valuetype object
 
-%token DIGIT OPERATOR
+%token CLASS IDENTIFIER FOREACH 
+%token LPAREN RPAREN LBRACE RBRACE LBRACKET RBRACKET
+%token STRINGVAL INTEGERVAL DOUBLEVAL
+%token OP_PLUS OP_MINUS OP_MUL OP_DIV OP_ASSIGN
+%token COMMA SEMICOLON
+%token WHITESPACE
+%token COMMENT
 
-%left OPERATOR
-
-%start init
+%left OP_PLUS
+%left OP_MINUS
+%left OP_MUL
+%left OP_DIV
+%left OP_ASSIGN
 
 %union
 {
-	public object Object;
-	public LexLocation Pos;
+	public Expression node;
 }
+
+%start init
 
 %%
 
-init	:	expr
+init	:	classdecl
 				{
-					Result = $1.Object;
+					Ast = new GlobalCode();
 				}
+			
 		;
 		
-expr    :   '(' expr ')'
-                {
-                    $$.Object = $2.Object;
-                    $$.Pos = @1.Merge(@3);
-                }
-        |   expr OPERATOR expr
-                {
-                    $$.Object = null;//new OP($2.Object, $1.Object, $3.Object);
-                    $$.Pos = @1.Merge(@3);
-                }
-        |   number
-        ;
 
-number  :   DIGIT
-                {
-                    $$.Object = $1.Object;
-                    $$.Pos = @1;
-                }
-        ;
+classdecl	:	CLASS IDENTIFIER LBRACE RBRACE {  }
+			;
 
 %%
 
     public Parser(Scanner scanner) : base(scanner) { }
     
-    public object Result {get;private set;}
+    public GlobalCode Ast {get;private set;}
 

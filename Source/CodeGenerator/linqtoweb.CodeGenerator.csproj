@@ -50,6 +50,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AST\GlobalCode.cs" />
+    <Compile Include="AST\Expression.cs" />
     <Compile Include="generated\Lexer.cs" />
     <Compile Include="generated\Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

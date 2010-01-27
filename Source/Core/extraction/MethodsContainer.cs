@@ -24,18 +24,16 @@ namespace linqtoweb.Core.extraction
 
         public static void Categories( DataContext datacontext, LocalVariables parameters )
         {
-            VariablesStack l = new VariablesStack(parameters);
+            ScopesStack l = new ScopesStack(datacontext, parameters);
 
-            foreach (var x in ExtractionMethods.regexp(datacontext, @"Porno\s+(?<Title>\w+)"))
+            foreach (var x in ExtractionMethods.regexp(l.context, @"Porno\s+(?<Title>\w+)"))
             {
-                l.Push(x);
+                l.Push(null, x);
 
                 ((ExtractionListBase<string>)l["sampleList"]).AddElement((string)l["Title"]);
 
                 l.Pop();
             }
-
-            Debug.Assert(l.Count == 1);
         }
 
         #endregion

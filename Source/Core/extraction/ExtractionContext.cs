@@ -44,9 +44,11 @@ namespace linqtoweb.Core.extraction
         /// </summary>
         protected virtual void InitActionsToDo()
         {
+            ScopesStack l = new ScopesStack(InitialDataContext, null);
+
             // initialize the context objects here
             // OpenHtml("http://www.freesutra.cz/").Categories( sampleList );
-            InitialDataContext
+            l.context
                 .OpenContextDynamic(null, new object[] { "http://www.freesutra.cz/" })
                     .AddAction(
                         MethodsContainer.Categories,

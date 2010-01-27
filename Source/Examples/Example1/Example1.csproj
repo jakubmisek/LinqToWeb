@@ -35,6 +35,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="QUT.ShiftReduceParser, Version=1.3.2.0, Culture=neutral, PublicKeyToken=402396ef6102baec, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\CodeGenerator\QUT.ShiftReduceParser.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -53,6 +57,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\CodeGenerator\linqtoweb.CodeGenerator.csproj">
+      <Project>{F399BE34-8E3F-44FC-B4B4-3C7B2C2F4D52}</Project>
+      <Name>linqtoweb.CodeGenerator</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Core\linqtoweb.Core.csproj">
       <Project>{B4486636-EEBC-4246-AE8B-0594A58197F4}</Project>
       <Name>linqtoweb.Core</Name>
