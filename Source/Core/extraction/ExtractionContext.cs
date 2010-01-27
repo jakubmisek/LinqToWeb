@@ -46,12 +46,14 @@ namespace linqtoweb.Core.extraction
         {
             // initialize the context objects here
             // OpenHtml("http://www.freesutra.cz/").Categories( sampleList );
-            InitialDataContext.OpenHtml("http://www.freesutra.cz/").AddAction(
-                MethodsContainer.Categories,
-                new LocalVariables(
-                    new Dictionary<string, object>() {
-                        {"sampleList", sampleList}
-                    }));
+            InitialDataContext
+                .OpenContextDynamic(null, new object[] { "http://www.freesutra.cz/" })
+                    .AddAction(
+                        MethodsContainer.Categories,
+                        new LocalVariables(
+                            new Dictionary<string, object>() {
+                                {"sampleList", sampleList}
+                            }));
         }
 
         #endregion

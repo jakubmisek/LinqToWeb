@@ -36,11 +36,15 @@ namespace linqtoweb.Core.datacontext
             this.RefererContext = referer;
         }
 
+        #endregion
+
+        #region calling methods on context
+
         /// <summary>
         /// Create new action and adds it into the parameter's ActionsToDo list.
         /// </summary>
         /// <param name="method"></param>
-        internal void AddAction( MethodsContainer.ExtractionMethod method, LocalVariables parameters )
+        public void AddAction( MethodsContainer.ExtractionMethod method, LocalVariables parameters )
         {
             // create the action
             ActionItem newAction = new ActionItem(method, this, parameters);
@@ -85,7 +89,6 @@ namespace linqtoweb.Core.datacontext
             }
         }
 
-        #endregion
-        
+        #endregion        
     }
 }
