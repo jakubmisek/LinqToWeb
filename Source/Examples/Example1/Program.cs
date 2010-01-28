@@ -7,6 +7,7 @@ using linqtoweb.Core;
 using linqtoweb.Core.extraction;
 using linqtoweb.CodeGenerator;
 using linqtoweb.CodeGenerator.AST;
+using System.IO;
 
 namespace Example1
 {
@@ -28,6 +29,8 @@ namespace Example1
             if (parser.Parse())
             {
                 GlobalCode x = parser.Ast;
+
+                x.EmitCs(new StreamWriter("code.cs"));
             }
         }
     }
