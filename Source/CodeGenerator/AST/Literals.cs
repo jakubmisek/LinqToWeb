@@ -11,14 +11,6 @@ namespace linqtoweb.CodeGenerator.AST
     /// </summary>
     class Literal : Expression
     {
-        public override ExpressionType ResultType
-        {
-            get
-            {
-                throw new InvalidOperationException("Depends on specified literal type.");
-            }
-        }
-
         public Literal(ExprPosition position)
             : base(position)
         {
@@ -36,14 +28,6 @@ namespace linqtoweb.CodeGenerator.AST
         /// The value of the string literal.
         /// </summary>
         public string Value { get; private set; }
-
-        public override ExpressionType ResultType
-        {
-            get
-            {
-                return ExpressionType.StringType;
-            }
-        }
 
         public StringLiteral( ExprPosition position, string value )
             :base(position)
@@ -64,14 +48,6 @@ namespace linqtoweb.CodeGenerator.AST
         /// </summary>
         public int Value { get; private set; }
 
-        public override ExpressionType ResultType
-        {
-            get
-            {
-                return ExpressionType.IntType;
-            }
-        }
-
         public IntLiteral(ExprPosition position, int value)
             :base(position)
         {
@@ -89,15 +65,24 @@ namespace linqtoweb.CodeGenerator.AST
         /// </summary>
         public double Value { get; private set; }
 
-        public override ExpressionType ResultType
-        {
-            get
-            {
-                return ExpressionType.DoubleType;
-            }
-        }
-
         public DoubleLiteral(ExprPosition position, double value)
+            : base(position)
+        {
+            this.Value = value;
+        }
+    }
+
+    /// <summary>
+    /// Double literal.
+    /// </summary>
+    class DateTimeLiteral : Literal
+    {
+        /// <summary>
+        /// The value of the double literal.
+        /// </summary>
+        public DateTime Value { get; private set; }
+
+        public DateTimeLiteral(ExprPosition position, DateTime value)
             : base(position)
         {
             this.Value = value;

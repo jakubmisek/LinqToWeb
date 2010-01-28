@@ -8,16 +8,18 @@
 %token LPAREN RPAREN LBRACE RBRACE LBRACKET RBRACKET
 %token TSTRING, TINT, TDOUBLE, TDATETIME
 %token STRINGVAL INTEGERVAL DOUBLEVAL
-%token OP_PLUS OP_MINUS OP_MUL OP_DIV OP_ASSIGN
+%token OP_ADD OP_SUB OP_MUL OP_DIV OP_ASSIGN
 %token COMMA SEMICOLON
 %token WHITESPACE
 %token COMMENT
 
-%left OP_PLUS
-%left OP_MINUS
+%left OP_ADD
+%left OP_SUB
 %left OP_MUL
 %left OP_DIV
 %left OP_ASSIGN
+%left LPAREN
+%right RPAREN
 
 %union
 {
@@ -44,20 +46,59 @@ propertylist:	typename IDENTIFIER SEMICOLON propertylist { $$.obj = VariableDecl
 typename:		singletype { $$.obj = $1.obj; }
 			|	singletype LBRACKET RBRACKET { $$.obj = new ExpressionListType( (ExpressionType)$1.obj ); }
 			;
-singletype:		TSTRING		{ $$.obj = ExpressionType.StringType; }
+singlebasetype:	TSTRING		{ $$.obj = ExpressionType.StringType; }
 			|	TINT		{ $$.obj = ExpressionType.IntType; }
 			|	TDOUBLE		{ $$.obj = ExpressionType.DoubleType; }
 			|	TDATETIME	{ $$.obj = ExpressionType.DateTimeType; }
+			;
+singletype:		singlebasetype {$$.obj = $1.obj;}	
 			|	IDENTIFIER	{ $$.obj = new ExpressionType((string)$1.obj); }
 			;
 						
-methoddecl:		IDENTIFIER LPAREN argslist RPAREN { $$.obj = new MethodDecl( @1.Merge(@4), (string)$1.obj, (List<VariableDecl>)$3.obj ); }
+methoddecl:		IDENTIFIER LPAREN argslist RPAREN contextstatement { $$.obj = new MethodDecl( @1.Merge(@4), (string)$1.obj, (List<VariableDecl>)$3.obj, (Expression)$5.obj ); }
 			;
 argslist:		typename IDENTIFIER COMMA argslist { $$.obj = VariableDecls($4.obj, new VariableDecl(@1.Merge(@2),(ExpressionType)$1.obj,(string)$2.obj)); }
 			|	typename IDENTIFIER { $$.obj = VariableDecls(null, new VariableDecl(@1.Merge(@2),(ExpressionType)$1.obj,(string)$2.obj)); }
 			|	{ $$.obj = null; }
 			;
 
+contextdef:		LBRACKET methodcall RBRACKET	{ $$.obj = $2.obj; }
+			;
+
+contextstatement:	contextdef contextstatement { $$.obj = $2.obj; AddDataContext(ref $$.obj,(MethodCall)$1.obj); }
+			|		statement { $$.obj = $1.obj; }
+			;
+statementlist:	contextstatement statementlist { $$.obj = ExpressionList($2.obj, (Expression)$1.obj); }
+			|	contextstatement { $$.obj = ExpressionList(null, (Expression)$1.obj); }
+			;
+statement:		SEMICOLON	{ $$.obj = null; }
+			|	expr SEMICOLON { $$.obj = $1.obj; }
+			|	LBRACE RBRACE	{ $$.obj = null; }
+			|	LBRACE statementlist RBRACE { $$.obj = new CodeBlock( @1.Merge(@3), (List<Expression>)$2.obj ); }
+			|	FOREACH LPAREN expr RPAREN contextstatement { $$.obj = new Foreach(@1.Merge(@5),(Expression)$3.obj,(Expression)$5.obj); }
+			;
+expr:			IDENTIFIER	{ $$.obj = new VariableUse( @1, (string)$1.obj ); }
+			|	STRINGVAL	{ $$.obj = new StringLiteral(@1, (string)$1.obj); }
+			|	INTEGERVAL	{ $$.obj = new IntLiteral(@1, (int)$1.obj); }
+			|	DOUBLEVAL	{ $$.obj = new DoubleLiteral(@1, (double)$1.obj); }
+			|	expr OP_ADD expr	{ $$.obj = new BinaryAddExpression(@1.Merge(@3), (Expression)$1.obj, (Expression)$3.obj); }
+			|	expr OP_SUB expr	{ $$.obj = new BinarySubExpression(@1.Merge(@3), (Expression)$1.obj, (Expression)$3.obj); }
+			|	expr OP_MUL expr	{ $$.obj = new BinaryMulExpression(@1.Merge(@3), (Expression)$1.obj, (Expression)$3.obj); }
+			|	expr OP_DIV expr	{ $$.obj = new BinaryDivExpression(@1.Merge(@3), (Expression)$1.obj, (Expression)$3.obj); }
+			|	expr OP_ASSIGN expr	{ $$.obj = new BinaryAssignExpression(@1.Merge(@3), (Expression)$1.obj, (Expression)$3.obj); }
+			|	LPAREN expr RPAREN	{ $$.obj = $2.obj; }
+			|	LPAREN singlebasetype RPAREN expr	{ $$.obj = new TypeCastExpression( @1.Merge(@4), (ExpressionType)$2.obj, (Expression)$4.obj ); }
+			|	methodcall	{ $$.obj = $1.obj; }
+			;
+methodcall:		IDENTIFIER LPAREN callargs RPAREN	{ $$.obj = new MethodCall( @1.Merge(@4), (string)$1.obj, (List<Expression>)$3.obj ); }
+			;
+
+callargs:		nextcallargs { $$.obj = ExpressionList($1.obj,null); }
+			|	{ $$.obj = ExpressionList(null,null); }
+			;
+nextcallargs:	expr	{ $$.obj = ExpressionList(null,(Expression)$1.obj); }
+			|	expr COMMA nextcallargs	{ $$.obj = ExpressionList($3.obj,(Expression)$1.obj); }
+			;
 %%
 
 	/* creates new list of variables declaration from old List<VariableDecl> and new VariableDecl */
@@ -66,6 +107,39 @@ argslist:		typename IDENTIFIER COMMA argslist { $$.obj = VariableDecls($4.obj, n
 		var newdecls = (decls!=null)?(new List<VariableDecl>( (List<VariableDecl>)decls )):(new List<VariableDecl>());
 		if(vardecl!=null)newdecls.Add(vardecl);		
 		return newdecls;
+	}
+	
+	/* creates new list of expressions from old List<Expression> and new Expression */
+	private List<Expression> ExpressionList( object exprs, Expression expr )
+	{
+		var newexprs = (exprs!=null)?(new List<Expression>( (List<Expression>)exprs )):(new List<Expression>());
+		
+		if(expr!=null)
+		{
+			CodeBlock exprbl;
+			if ( (exprbl = expr as CodeBlock) != null )
+			{	// reduces the tree (empty CodeBlock or CodeBlock with only one expression is reduced)
+				if (exprbl.Statements.Count > 0)
+				{
+					newexprs.Add( (exprbl.Statements.Count==1 && exprbl.DataContexts.Count == 0)?exprbl.Statements[0]:exprbl );
+				}
+			}
+			else
+				newexprs.Add( expr );
+		}
+		return newexprs;
+	}
+	
+	private void AddDataContext( ref object statement, MethodCall contextcreate )
+	{
+		if (statement == null || contextcreate == null)	return;
+		Expression expr = statement as Expression;
+		CodeBlock exprbl = statement as CodeBlock;
+		
+		if ( expr == null )	return;
+		if ( exprbl == null )	statement = exprbl = new CodeBlock( expr.Position, new List<Expression>(){ expr } );
+		
+		exprbl.DataContexts.AddFirst(contextcreate);
 	}
 
 	/* initialization of the parser object */

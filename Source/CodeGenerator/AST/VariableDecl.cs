@@ -18,17 +18,6 @@ namespace linqtoweb.CodeGenerator.AST
         /// <summary>
         /// Variable type.
         /// </summary>
-        public override ExpressionType ResultType
-        {
-            get
-            {
-                return VariableType;
-            }
-        }
-
-        /// <summary>
-        /// Variable type.
-        /// </summary>
         private ExpressionType VariableType;
 
         /// <summary>
@@ -50,7 +39,7 @@ namespace linqtoweb.CodeGenerator.AST
         /// <returns></returns>
         public override string ToString()
         {
-            return ResultType.ToString() + " " + VariableName;
+            return VariableType.ToString() + " " + VariableName;
         }
     }
 }

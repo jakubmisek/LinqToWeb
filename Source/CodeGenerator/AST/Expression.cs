@@ -17,17 +17,6 @@ namespace linqtoweb.CodeGenerator.AST
         public ExprPosition Position { get; private set; }
 
         /// <summary>
-        /// The type of resulting expression.
-        /// </summary>
-        public virtual ExpressionType ResultType
-        {
-            get
-            {
-                return ExpressionType.VoidType;
-            }
-        }
-
-        /// <summary>
         /// Constructs the expression node.
         /// </summary>
         /// <param name="position"></param>
@@ -41,7 +30,7 @@ namespace linqtoweb.CodeGenerator.AST
         /// </summary>
         /// <param name="output">Output stream.</param>
         /// <param name="level">Code indent level.</param>
-        public virtual void EmitCs( StreamWriter output, int level )
+        public virtual ExpressionType EmitCs( StreamWriter output, int level, Dictionary<string,ExpressionType> declaredVariables )
         {
             throw new NotImplementedException();
         }

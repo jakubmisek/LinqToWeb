@@ -58,8 +58,8 @@ datetime		{return (int)Tokens.TDATETIME;}
 \)				{return (int)Tokens.RPAREN;}
 \:				{return (int)Tokens.COMMA;}
 \;				{return (int)Tokens.SEMICOLON;}
-\+				{return (int)Tokens.OP_PLUS;}
-\-				{return (int)Tokens.OP_MINUS;}
+\+				{return (int)Tokens.OP_ADD;}
+\-				{return (int)Tokens.OP_SUB;}
 \*				{return (int)Tokens.OP_MUL;}
 \/				{return (int)Tokens.OP_DIV;}
 \=				{return (int)Tokens.OP_ASSIGN;}

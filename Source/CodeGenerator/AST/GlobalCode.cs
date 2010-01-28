@@ -41,11 +41,23 @@ namespace linqtoweb.CodeGenerator.AST
         /// <summary>
         /// Emit the C# source code.
         /// </summary>
+        /// <param name="output">OUtput stream.</param>
+        public void EmitCs(System.IO.StreamWriter output)
+        {
+            EmitCs(output, 0, new Dictionary<string, ExpressionType>());
+        }
+
+        /// <summary>
+        /// Emit the C# source code.
+        /// </summary>
         /// <param name="output">Output stream.</param>
         /// <param name="level">The level of code indent, default 0.</param>
-        public override void EmitCs(System.IO.StreamWriter output, int level)
+        /// <param name="declaredVariables">List of variables declared in the current context and their type.</param>
+        public override ExpressionType EmitCs(System.IO.StreamWriter output, int level, Dictionary<string,ExpressionType> declaredVariables)
         {
-            
+
+
+            return ExpressionType.VoidType;
         }
     }
 

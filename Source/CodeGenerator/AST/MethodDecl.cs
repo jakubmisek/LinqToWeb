@@ -11,11 +11,14 @@ namespace linqtoweb.CodeGenerator.AST
 
         public List<VariableDecl> MethodArguments { get; private set; }
 
-        public MethodDecl(ExprPosition position, string methodname, List<VariableDecl> arguments)
+        public Expression Body { get; protected set; }
+
+        public MethodDecl(ExprPosition position, string methodname, List<VariableDecl> arguments, Expression body)
             :base(position)
         {
             this.MethodName = methodname;
             this.MethodArguments = arguments;
+            this.Body = body;
         }
     }
 }

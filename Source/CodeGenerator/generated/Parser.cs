@@ -4,7 +4,7 @@
 
 // GPPG version 1.3.6
 // Machine:  COREDUO
-// DateTime: 28.1.2010 18:41:57
+// DateTime: 28.1.2010 22:56:37
 // UserName: Jakub
 // Input file <generators\Parser.y>
 
@@ -23,7 +23,7 @@ public enum Tokens {
     error=1,EOF=2,CLASS=3,IDENTIFIER=4,DOTTEDIDENTIFIER=5,FOREACH=6,
     LPAREN=7,RPAREN=8,LBRACE=9,RBRACE=10,LBRACKET=11,RBRACKET=12,
     TSTRING=13,TINT=14,TDOUBLE=15,TDATETIME=16,STRINGVAL=17,INTEGERVAL=18,
-    DOUBLEVAL=19,OP_PLUS=20,OP_MINUS=21,OP_MUL=22,OP_DIV=23,OP_ASSIGN=24,
+    DOUBLEVAL=19,OP_ADD=20,OP_SUB=21,OP_MUL=22,OP_DIV=23,OP_ASSIGN=24,
     COMMA=25,SEMICOLON=26,WHITESPACE=27,COMMENT=28};
 
 public struct ValueType
@@ -60,43 +60,94 @@ public class Parser: ShiftReduceParser<ValueType, ExprPosition>
   {
     this.InitSpecialTokens((int)Tokens.error, (int)Tokens.EOF);
 
-    this.InitStateTable(34);
-    AddState(0,new State(new int[]{3,6,4,25,2,33},new int[]{-1,1,-3,3,-4,4,-5,23}));
+    this.InitStateTable(85);
+    AddState(0,new State(new int[]{3,6,4,26,2,84},new int[]{-1,1,-3,3,-4,4,-5,24}));
     AddState(1,new State(new int[]{2,2}));
     AddState(2,new State(-1));
     AddState(3,new State(-2));
-    AddState(4,new State(new int[]{3,6,4,25,2,33},new int[]{-3,5,-4,4,-5,23}));
+    AddState(4,new State(new int[]{3,6,4,26,2,84},new int[]{-3,5,-4,4,-5,24}));
     AddState(5,new State(-3));
     AddState(6,new State(new int[]{4,7}));
     AddState(7,new State(new int[]{9,8}));
-    AddState(8,new State(new int[]{13,18,14,19,15,20,16,21,4,22,10,-8},new int[]{-6,9,-7,11,-8,15}));
+    AddState(8,new State(new int[]{13,19,14,20,15,21,16,22,4,23,10,-8},new int[]{-6,9,-7,11,-8,15,-9,18}));
     AddState(9,new State(new int[]{10,10}));
     AddState(10,new State(-6));
     AddState(11,new State(new int[]{4,12}));
     AddState(12,new State(new int[]{26,13}));
-    AddState(13,new State(new int[]{13,18,14,19,15,20,16,21,4,22,10,-8},new int[]{-6,14,-7,11,-8,15}));
+    AddState(13,new State(new int[]{13,19,14,20,15,21,16,22,4,23,10,-8},new int[]{-6,14,-7,11,-8,15,-9,18}));
     AddState(14,new State(-7));
     AddState(15,new State(new int[]{11,16,4,-9}));
     AddState(16,new State(new int[]{12,17}));
     AddState(17,new State(-10));
-    AddState(18,new State(-11));
-    AddState(19,new State(-12));
-    AddState(20,new State(-13));
-    AddState(21,new State(-14));
-    AddState(22,new State(-15));
-    AddState(23,new State(new int[]{3,6,4,25,2,33},new int[]{-3,24,-4,4,-5,23}));
-    AddState(24,new State(-4));
-    AddState(25,new State(new int[]{7,26}));
-    AddState(26,new State(new int[]{13,18,14,19,15,20,16,21,4,22,8,-19},new int[]{-9,27,-7,29,-8,15}));
-    AddState(27,new State(new int[]{8,28}));
-    AddState(28,new State(-16));
-    AddState(29,new State(new int[]{4,30}));
-    AddState(30,new State(new int[]{25,31,8,-18}));
-    AddState(31,new State(new int[]{13,18,14,19,15,20,16,21,4,22,8,-19},new int[]{-9,32,-7,29,-8,15}));
-    AddState(32,new State(-17));
-    AddState(33,new State(-5));
+    AddState(18,new State(-15));
+    AddState(19,new State(-11));
+    AddState(20,new State(-12));
+    AddState(21,new State(-13));
+    AddState(22,new State(-14));
+    AddState(23,new State(-16));
+    AddState(24,new State(new int[]{3,6,4,26,2,84},new int[]{-3,25,-4,4,-5,24}));
+    AddState(25,new State(-4));
+    AddState(26,new State(new int[]{7,27}));
+    AddState(27,new State(new int[]{13,19,14,20,15,21,16,22,4,23,8,-20},new int[]{-10,28,-7,80,-8,15,-9,18}));
+    AddState(28,new State(new int[]{8,29}));
+    AddState(29,new State(new int[]{11,33,26,66,4,52,17,53,18,54,19,55,7,56,9,69,6,75},new int[]{-11,30,-12,31,-14,65,-16,67,-13,62}));
+    AddState(30,new State(-17));
+    AddState(31,new State(new int[]{11,33,26,66,4,52,17,53,18,54,19,55,7,56,9,69,6,75},new int[]{-11,32,-12,31,-14,65,-16,67,-13,62}));
+    AddState(32,new State(-22));
+    AddState(33,new State(new int[]{4,36},new int[]{-13,34}));
+    AddState(34,new State(new int[]{12,35}));
+    AddState(35,new State(-21));
+    AddState(36,new State(new int[]{7,37}));
+    AddState(37,new State(new int[]{4,52,17,53,18,54,19,55,7,56,8,-45},new int[]{-17,38,-18,40,-16,41,-13,62}));
+    AddState(38,new State(new int[]{8,39}));
+    AddState(39,new State(-43));
+    AddState(40,new State(-44));
+    AddState(41,new State(new int[]{20,42,21,44,22,46,23,48,24,50,25,63,8,-46}));
+    AddState(42,new State(new int[]{4,52,17,53,18,54,19,55,7,56},new int[]{-16,43,-13,62}));
+    AddState(43,new State(new int[]{20,-35,21,44,22,46,23,48,24,50,26,-35,25,-35,8,-35}));
+    AddState(44,new State(new int[]{4,52,17,53,18,54,19,55,7,56},new int[]{-16,45,-13,62}));
+    AddState(45,new State(new int[]{20,-36,21,-36,22,46,23,48,24,50,26,-36,25,-36,8,-36}));
+    AddState(46,new State(new int[]{4,52,17,53,18,54,19,55,7,56},new int[]{-16,47,-13,62}));
+    AddState(47,new State(new int[]{20,-37,21,-37,22,-37,23,48,24,50,26,-37,25,-37,8,-37}));
+    AddState(48,new State(new int[]{4,52,17,53,18,54,19,55,7,56},new int[]{-16,49,-13,62}));
+    AddState(49,new State(new int[]{20,-38,21,-38,22,-38,23,-38,24,50,26,-38,25,-38,8,-38}));
+    AddState(50,new State(new int[]{4,52,17,53,18,54,19,55,7,56},new int[]{-16,51,-13,62}));
+    AddState(51,new State(-39));
+    AddState(52,new State(new int[]{7,37,26,-31,20,-31,21,-31,22,-31,23,-31,24,-31,25,-31,8,-31}));
+    AddState(53,new State(-32));
+    AddState(54,new State(-33));
+    AddState(55,new State(-34));
+    AddState(56,new State(new int[]{4,52,17,53,18,54,19,55,7,56,13,19,14,20,15,21,16,22},new int[]{-16,57,-9,59,-13,62}));
+    AddState(57,new State(new int[]{8,58,20,42,21,44,22,46,23,48,24,50}));
+    AddState(58,new State(-40));
+    AddState(59,new State(new int[]{8,60}));
+    AddState(60,new State(new int[]{4,52,17,53,18,54,19,55,7,56},new int[]{-16,61,-13,62}));
+    AddState(61,new State(-41));
+    AddState(62,new State(-42));
+    AddState(63,new State(new int[]{4,52,17,53,18,54,19,55,7,56},new int[]{-18,64,-16,41,-13,62}));
+    AddState(64,new State(-47));
+    AddState(65,new State(-23));
+    AddState(66,new State(-26));
+    AddState(67,new State(new int[]{26,68,20,42,21,44,22,46,23,48,24,50}));
+    AddState(68,new State(-27));
+    AddState(69,new State(new int[]{10,70,11,33,26,66,4,52,17,53,18,54,19,55,7,56,9,69,6,75},new int[]{-15,71,-11,73,-12,31,-14,65,-16,67,-13,62}));
+    AddState(70,new State(-28));
+    AddState(71,new State(new int[]{10,72}));
+    AddState(72,new State(-29));
+    AddState(73,new State(new int[]{11,33,26,66,4,52,17,53,18,54,19,55,7,56,9,69,6,75,10,-25},new int[]{-15,74,-11,73,-12,31,-14,65,-16,67,-13,62}));
+    AddState(74,new State(-24));
+    AddState(75,new State(new int[]{7,76}));
+    AddState(76,new State(new int[]{4,52,17,53,18,54,19,55,7,56},new int[]{-16,77,-13,62}));
+    AddState(77,new State(new int[]{8,78,20,42,21,44,22,46,23,48,24,50}));
+    AddState(78,new State(new int[]{11,33,26,66,4,52,17,53,18,54,19,55,7,56,9,69,6,75},new int[]{-11,79,-12,31,-14,65,-16,67,-13,62}));
+    AddState(79,new State(-30));
+    AddState(80,new State(new int[]{4,81}));
+    AddState(81,new State(new int[]{25,82,8,-19}));
+    AddState(82,new State(new int[]{13,19,14,20,15,21,16,22,4,23,8,-20},new int[]{-10,83,-7,80,-8,15,-9,18}));
+    AddState(83,new State(-18));
+    AddState(84,new State(-5));
 
-    Rule[] rules=new Rule[20];
+    Rule[] rules=new Rule[48];
     rules[1]=new Rule(-2, new int[]{-1,2});
     rules[2]=new Rule(-1, new int[]{-3});
     rules[3]=new Rule(-3, new int[]{-4,-3});
@@ -107,20 +158,49 @@ public class Parser: ShiftReduceParser<ValueType, ExprPosition>
     rules[8]=new Rule(-6, new int[]{});
     rules[9]=new Rule(-7, new int[]{-8});
     rules[10]=new Rule(-7, new int[]{-8,11,12});
-    rules[11]=new Rule(-8, new int[]{13});
-    rules[12]=new Rule(-8, new int[]{14});
-    rules[13]=new Rule(-8, new int[]{15});
-    rules[14]=new Rule(-8, new int[]{16});
-    rules[15]=new Rule(-8, new int[]{4});
-    rules[16]=new Rule(-5, new int[]{4,7,-9,8});
-    rules[17]=new Rule(-9, new int[]{-7,4,25,-9});
-    rules[18]=new Rule(-9, new int[]{-7,4});
-    rules[19]=new Rule(-9, new int[]{});
+    rules[11]=new Rule(-9, new int[]{13});
+    rules[12]=new Rule(-9, new int[]{14});
+    rules[13]=new Rule(-9, new int[]{15});
+    rules[14]=new Rule(-9, new int[]{16});
+    rules[15]=new Rule(-8, new int[]{-9});
+    rules[16]=new Rule(-8, new int[]{4});
+    rules[17]=new Rule(-5, new int[]{4,7,-10,8,-11});
+    rules[18]=new Rule(-10, new int[]{-7,4,25,-10});
+    rules[19]=new Rule(-10, new int[]{-7,4});
+    rules[20]=new Rule(-10, new int[]{});
+    rules[21]=new Rule(-12, new int[]{11,-13,12});
+    rules[22]=new Rule(-11, new int[]{-12,-11});
+    rules[23]=new Rule(-11, new int[]{-14});
+    rules[24]=new Rule(-15, new int[]{-11,-15});
+    rules[25]=new Rule(-15, new int[]{-11});
+    rules[26]=new Rule(-14, new int[]{26});
+    rules[27]=new Rule(-14, new int[]{-16,26});
+    rules[28]=new Rule(-14, new int[]{9,10});
+    rules[29]=new Rule(-14, new int[]{9,-15,10});
+    rules[30]=new Rule(-14, new int[]{6,7,-16,8,-11});
+    rules[31]=new Rule(-16, new int[]{4});
+    rules[32]=new Rule(-16, new int[]{17});
+    rules[33]=new Rule(-16, new int[]{18});
+    rules[34]=new Rule(-16, new int[]{19});
+    rules[35]=new Rule(-16, new int[]{-16,20,-16});
+    rules[36]=new Rule(-16, new int[]{-16,21,-16});
+    rules[37]=new Rule(-16, new int[]{-16,22,-16});
+    rules[38]=new Rule(-16, new int[]{-16,23,-16});
+    rules[39]=new Rule(-16, new int[]{-16,24,-16});
+    rules[40]=new Rule(-16, new int[]{7,-16,8});
+    rules[41]=new Rule(-16, new int[]{7,-9,8,-16});
+    rules[42]=new Rule(-16, new int[]{-13});
+    rules[43]=new Rule(-13, new int[]{4,7,-17,8});
+    rules[44]=new Rule(-17, new int[]{-18});
+    rules[45]=new Rule(-17, new int[]{});
+    rules[46]=new Rule(-18, new int[]{-16});
+    rules[47]=new Rule(-18, new int[]{-16,25,-18});
     this.InitRules(rules);
 
     this.InitNonTerminals(new string[] {"", "init", "$accept", "globaldecls", 
-      "classdecl", "methoddecl", "propertylist", "typename", "singletype", "argslist", 
-      });
+      "classdecl", "methoddecl", "propertylist", "typename", "singletype", "singlebasetype", 
+      "argslist", "contextstatement", "contextdef", "methodcall", "statement", 
+      "statementlist", "expr", "callargs", "nextcallargs", });
   }
 
   protected override void DoAction(int action)
@@ -154,32 +234,116 @@ public class Parser: ShiftReduceParser<ValueType, ExprPosition>
       case 10: // typename -> singletype, LBRACKET, RBRACKET
 { CurrentSemanticValue.obj = new ExpressionListType( (ExpressionType)ValueStack[ValueStack.Depth-3].obj ); }
         break;
-      case 11: // singletype -> TSTRING
+      case 11: // singlebasetype -> TSTRING
 { CurrentSemanticValue.obj = ExpressionType.StringType; }
         break;
-      case 12: // singletype -> TINT
+      case 12: // singlebasetype -> TINT
 { CurrentSemanticValue.obj = ExpressionType.IntType; }
         break;
-      case 13: // singletype -> TDOUBLE
+      case 13: // singlebasetype -> TDOUBLE
 { CurrentSemanticValue.obj = ExpressionType.DoubleType; }
         break;
-      case 14: // singletype -> TDATETIME
+      case 14: // singlebasetype -> TDATETIME
 { CurrentSemanticValue.obj = ExpressionType.DateTimeType; }
         break;
-      case 15: // singletype -> IDENTIFIER
+      case 15: // singletype -> singlebasetype
+{CurrentSemanticValue.obj = ValueStack[ValueStack.Depth-1].obj;}
+        break;
+      case 16: // singletype -> IDENTIFIER
 { CurrentSemanticValue.obj = new ExpressionType((string)ValueStack[ValueStack.Depth-1].obj); }
         break;
-      case 16: // methoddecl -> IDENTIFIER, LPAREN, argslist, RPAREN
-{ CurrentSemanticValue.obj = new MethodDecl( LocationStack[LocationStack.Depth-4].Merge(LocationStack[LocationStack.Depth-1]), (string)ValueStack[ValueStack.Depth-4].obj, (List<VariableDecl>)ValueStack[ValueStack.Depth-2].obj ); }
+      case 17: // methoddecl -> IDENTIFIER, LPAREN, argslist, RPAREN, contextstatement
+{ CurrentSemanticValue.obj = new MethodDecl( LocationStack[LocationStack.Depth-5].Merge(LocationStack[LocationStack.Depth-2]), (string)ValueStack[ValueStack.Depth-5].obj, (List<VariableDecl>)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj ); }
         break;
-      case 17: // argslist -> typename, IDENTIFIER, COMMA, argslist
+      case 18: // argslist -> typename, IDENTIFIER, COMMA, argslist
 { CurrentSemanticValue.obj = VariableDecls(ValueStack[ValueStack.Depth-1].obj, new VariableDecl(LocationStack[LocationStack.Depth-4].Merge(LocationStack[LocationStack.Depth-3]),(ExpressionType)ValueStack[ValueStack.Depth-4].obj,(string)ValueStack[ValueStack.Depth-3].obj)); }
         break;
-      case 18: // argslist -> typename, IDENTIFIER
+      case 19: // argslist -> typename, IDENTIFIER
 { CurrentSemanticValue.obj = VariableDecls(null, new VariableDecl(LocationStack[LocationStack.Depth-2].Merge(LocationStack[LocationStack.Depth-1]),(ExpressionType)ValueStack[ValueStack.Depth-2].obj,(string)ValueStack[ValueStack.Depth-1].obj)); }
         break;
-      case 19: // argslist -> /* empty */
+      case 20: // argslist -> /* empty */
 { CurrentSemanticValue.obj = null; }
+        break;
+      case 21: // contextdef -> LBRACKET, methodcall, RBRACKET
+{ CurrentSemanticValue.obj = ValueStack[ValueStack.Depth-2].obj; }
+        break;
+      case 22: // contextstatement -> contextdef, contextstatement
+{ CurrentSemanticValue.obj = ValueStack[ValueStack.Depth-1].obj; AddDataContext(ref CurrentSemanticValue.obj,(MethodCall)ValueStack[ValueStack.Depth-2].obj); }
+        break;
+      case 23: // contextstatement -> statement
+{ CurrentSemanticValue.obj = ValueStack[ValueStack.Depth-1].obj; }
+        break;
+      case 24: // statementlist -> contextstatement, statementlist
+{ CurrentSemanticValue.obj = ExpressionList(ValueStack[ValueStack.Depth-1].obj, (Expression)ValueStack[ValueStack.Depth-2].obj); }
+        break;
+      case 25: // statementlist -> contextstatement
+{ CurrentSemanticValue.obj = ExpressionList(null, (Expression)ValueStack[ValueStack.Depth-1].obj); }
+        break;
+      case 26: // statement -> SEMICOLON
+{ CurrentSemanticValue.obj = null; }
+        break;
+      case 27: // statement -> expr, SEMICOLON
+{ CurrentSemanticValue.obj = ValueStack[ValueStack.Depth-2].obj; }
+        break;
+      case 28: // statement -> LBRACE, RBRACE
+{ CurrentSemanticValue.obj = null; }
+        break;
+      case 29: // statement -> LBRACE, statementlist, RBRACE
+{ CurrentSemanticValue.obj = new CodeBlock( LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]), (List<Expression>)ValueStack[ValueStack.Depth-2].obj ); }
+        break;
+      case 30: // statement -> FOREACH, LPAREN, expr, RPAREN, contextstatement
+{ CurrentSemanticValue.obj = new Foreach(LocationStack[LocationStack.Depth-5].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-3].obj,(Expression)ValueStack[ValueStack.Depth-1].obj); }
+        break;
+      case 31: // expr -> IDENTIFIER
+{/*variable*/}
+        break;
+      case 32: // expr -> STRINGVAL
+{ CurrentSemanticValue.obj = new StringLiteral(LocationStack[LocationStack.Depth-1], (string)ValueStack[ValueStack.Depth-1].obj); }
+        break;
+      case 33: // expr -> INTEGERVAL
+{ CurrentSemanticValue.obj = new IntLiteral(LocationStack[LocationStack.Depth-1], (int)ValueStack[ValueStack.Depth-1].obj); }
+        break;
+      case 34: // expr -> DOUBLEVAL
+{ CurrentSemanticValue.obj = new DoubleLiteral(LocationStack[LocationStack.Depth-1], (double)ValueStack[ValueStack.Depth-1].obj); }
+        break;
+      case 35: // expr -> expr, OP_ADD, expr
+{ CurrentSemanticValue.obj = new BinaryAddExpression(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]), (Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj); }
+        break;
+      case 36: // expr -> expr, OP_SUB, expr
+{ CurrentSemanticValue.obj = new BinarySubExpression(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]), (Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj); }
+        break;
+      case 37: // expr -> expr, OP_MUL, expr
+{ CurrentSemanticValue.obj = new BinaryMulExpression(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]), (Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj); }
+        break;
+      case 38: // expr -> expr, OP_DIV, expr
+{ CurrentSemanticValue.obj = new BinaryDivExpression(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]), (Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj); }
+        break;
+      case 39: // expr -> expr, OP_ASSIGN, expr
+{ CurrentSemanticValue.obj = new BinaryAssignExpression(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]), (Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj); }
+        break;
+      case 40: // expr -> LPAREN, expr, RPAREN
+{ CurrentSemanticValue.obj = ValueStack[ValueStack.Depth-2].obj; }
+        break;
+      case 41: // expr -> LPAREN, singlebasetype, RPAREN, expr
+{ CurrentSemanticValue.obj = new TypeCastExpression( LocationStack[LocationStack.Depth-4].Merge(LocationStack[LocationStack.Depth-1]), (ExpressionType)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj ); }
+        break;
+      case 42: // expr -> methodcall
+{ CurrentSemanticValue.obj = ValueStack[ValueStack.Depth-1].obj; }
+        break;
+      case 43: // methodcall -> IDENTIFIER, LPAREN, callargs, RPAREN
+{ CurrentSemanticValue.obj = new MethodCall( LocationStack[LocationStack.Depth-4].Merge(LocationStack[LocationStack.Depth-1]), (string)ValueStack[ValueStack.Depth-4].obj, (List<Expression>)ValueStack[ValueStack.Depth-2].obj ); }
+        break;
+      case 44: // callargs -> nextcallargs
+{ CurrentSemanticValue.obj = ExpressionList(ValueStack[ValueStack.Depth-1].obj,null); }
+        break;
+      case 45: // callargs -> /* empty */
+{ CurrentSemanticValue.obj = ExpressionList(null,null); }
+        break;
+      case 46: // nextcallargs -> expr
+{ CurrentSemanticValue.obj = ExpressionList(null,(Expression)ValueStack[ValueStack.Depth-1].obj); }
+        break;
+      case 47: // nextcallargs -> expr, COMMA, nextcallargs
+{ CurrentSemanticValue.obj = ExpressionList(ValueStack[ValueStack.Depth-1].obj,(Expression)ValueStack[ValueStack.Depth-3].obj); }
         break;
     }
   }
@@ -201,6 +365,39 @@ public class Parser: ShiftReduceParser<ValueType, ExprPosition>
 		var newdecls = (decls!=null)?(new List<VariableDecl>( (List<VariableDecl>)decls )):(new List<VariableDecl>());
 		if(vardecl!=null)newdecls.Add(vardecl);		
 		return newdecls;
+	}
+	
+	/* creates new list of expressions from old List<Expression> and new Expression */
+	private List<Expression> ExpressionList( object exprs, Expression expr )
+	{
+		var newexprs = (exprs!=null)?(new List<Expression>( (List<Expression>)exprs )):(new List<Expression>());
+		
+		if(expr!=null)
+		{
+			CodeBlock exprbl;
+			if ( (exprbl = expr as CodeBlock) != null )
+			{	// reduces the tree (empty CodeBlock or CodeBlock with only one expression is reduced)
+				if (exprbl.Statements.Count > 0)
+				{
+					newexprs.Add( (exprbl.Statements.Count==1 && exprbl.DataContexts.Count == 0)?exprbl.Statements[0]:exprbl );
+				}
+			}
+			else
+				newexprs.Add( expr );
+		}
+		return newexprs;
+	}
+	
+	private void AddDataContext( ref object statement, MethodCall contextcreate )
+	{
+		if (statement == null || contextcreate == null)	return;
+		Expression expr = statement as Expression;
+		CodeBlock exprbl = statement as CodeBlock;
+		
+		if ( expr == null )	return;
+		if ( exprbl == null )	statement = exprbl = new CodeBlock( expr.Position, new List<Expression>(){ expr } );
+		
+		exprbl.DataContexts.AddFirst(contextcreate);
 	}
 
 	/* initialization of the parser object */
