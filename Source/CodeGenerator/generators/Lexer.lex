@@ -17,7 +17,7 @@ EXPONENT_DNUM           (({LNUM}|{DNUM})[eE][\+\-]\?{LNUM})
 HNUM                    "0x"{HexDigit}+
 STRINGVAL				\"{StringChar}*\"
 IDENTIFIER              [a-zA-Z_][a-zA-Z0-9_]*
-WHITESPACEN				[ \r\t\f]
+NAMESPACE				{IDENTIFIER}(\.{IDENTIFIER})*
 WHITESPACE              [ \n\r\t\f]
 NEWLINE                 ("\r"|"\n"|"\r\n")
 
@@ -28,17 +28,25 @@ NEWLINE                 ("\r"|"\n"|"\r\n")
 class			{return (int)Tokens.CLASS;}
 foreach			{return (int)Tokens.FOREACH;}
 
+string			{return (int)Tokens.TSTRING;}
+int				{return (int)Tokens.TINT;}
+double			{return (int)Tokens.TDOUBLE;}
+datetime		{return (int)Tokens.TDATETIME;}
+
 /* identifier, numbers, strings */
 
-{IDENTIFIER}	{return (int)Tokens.IDENTIFIER;}
-{STRINGVAL}		{return (int)Tokens.STRINGVAL;}
-{DNUM}			{return (int)Tokens.DOUBLEVAL;}
-{EXPONENT_DNUM}	{return (int)Tokens.DOUBLEVAL;}
-{LNUM}			{return (int)Tokens.INTEGERVAL;}
-{HNUM}			{return (int)Tokens.INTEGERVAL;}
+{IDENTIFIER}	{yylval.obj = yytext; return (int)Tokens.IDENTIFIER;}
+{STRINGVAL}		{yylval.obj = yytext; return (int)Tokens.STRINGVAL;}
+{NAMESPACE}		{yylval.obj = yytext; return (int)Tokens.DOTTEDIDENTIFIER;}
 
-{WHITESPACEN}+	/* go out with whitespaces, not \n */
-//.{NEWLINE}	/* go out with single-line comments */
+{DNUM}			{yylval.obj = double.Parse(yytext); return (int)Tokens.DOUBLEVAL;}
+{EXPONENT_DNUM}	{yylval.obj = double.Parse(yytext); return (int)Tokens.DOUBLEVAL;}
+
+{LNUM}			{yylval.obj = int.Parse(yytext); return (int)Tokens.INTEGERVAL;}
+{HNUM}			{yylval.obj = int.Parse(yytext); return (int)Tokens.INTEGERVAL;}
+
+{WHITESPACE}+	/* skip whitespaces */
+//.{NEWLINE}	/* skip single-line comments */
 
 /* symbols, operators */
 
@@ -64,7 +72,6 @@ foreach			{return (int)Tokens.FOREACH;}
 [^(\*\/)]+		/* comment text, ignored */
 \*\/			{ BEGIN(INITIAL); }
 }
-
 
 
 %%

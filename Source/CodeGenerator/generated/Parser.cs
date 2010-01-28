@@ -4,7 +4,7 @@
 
 // GPPG version 1.3.6
 // Machine:  COREDUO
-// DateTime: 27.1.2010 23:20:06
+// DateTime: 28.1.2010 18:41:57
 // UserName: Jakub
 // Input file <generators\Parser.y>
 
@@ -20,19 +20,20 @@ using linqtoweb.CodeGenerator.AST;
 namespace linqtoweb.CodeGenerator
 {
 public enum Tokens {
-    error=1,EOF=2,CLASS=3,IDENTIFIER=4,FOREACH=5,LPAREN=6,
-    RPAREN=7,LBRACE=8,RBRACE=9,LBRACKET=10,RBRACKET=11,STRINGVAL=12,
-    INTEGERVAL=13,DOUBLEVAL=14,OP_PLUS=15,OP_MINUS=16,OP_MUL=17,OP_DIV=18,
-    OP_ASSIGN=19,COMMA=20,SEMICOLON=21,WHITESPACE=22,COMMENT=23};
+    error=1,EOF=2,CLASS=3,IDENTIFIER=4,DOTTEDIDENTIFIER=5,FOREACH=6,
+    LPAREN=7,RPAREN=8,LBRACE=9,RBRACE=10,LBRACKET=11,RBRACKET=12,
+    TSTRING=13,TINT=14,TDOUBLE=15,TDATETIME=16,STRINGVAL=17,INTEGERVAL=18,
+    DOUBLEVAL=19,OP_PLUS=20,OP_MINUS=21,OP_MUL=22,OP_DIV=23,OP_ASSIGN=24,
+    COMMA=25,SEMICOLON=26,WHITESPACE=27,COMMENT=28};
 
 public struct ValueType
 {
-	public Expression node;
+	public Object obj;
 }
 // Abstract base class for GPLEX scanners
-public abstract class ScanBase : AbstractScanner<ValueType,LexLocation> {
-  private LexLocation __yylloc = new LexLocation();
-  public override LexLocation yylloc { get { return __yylloc; } set { __yylloc = value; } }
+public abstract class ScanBase : AbstractScanner<ValueType,ExprPosition> {
+  private ExprPosition __yylloc = new ExprPosition();
+  public override ExprPosition yylloc { get { return __yylloc; } set { __yylloc = value; } }
   protected virtual bool yywrap() { return true; }
 
   protected abstract int CurrentSc { get; set; }
@@ -49,7 +50,7 @@ public interface IColorScan {
   int GetNext(ref int state, out int start, out int end);
 }
 
-public class Parser: ShiftReduceParser<ValueType, LexLocation>
+public class Parser: ShiftReduceParser<ValueType, ExprPosition>
 {
 #pragma warning disable 649
     private Dictionary<int, string> aliasses;
@@ -59,36 +60,126 @@ public class Parser: ShiftReduceParser<ValueType, LexLocation>
   {
     this.InitSpecialTokens((int)Tokens.error, (int)Tokens.EOF);
 
-    this.InitStateTable(8);
-    AddState(0,new State(new int[]{3,4},new int[]{-1,1,-3,3}));
+    this.InitStateTable(34);
+    AddState(0,new State(new int[]{3,6,4,25,2,33},new int[]{-1,1,-3,3,-4,4,-5,23}));
     AddState(1,new State(new int[]{2,2}));
     AddState(2,new State(-1));
     AddState(3,new State(-2));
-    AddState(4,new State(new int[]{4,5}));
-    AddState(5,new State(new int[]{8,6}));
-    AddState(6,new State(new int[]{9,7}));
-    AddState(7,new State(-3));
+    AddState(4,new State(new int[]{3,6,4,25,2,33},new int[]{-3,5,-4,4,-5,23}));
+    AddState(5,new State(-3));
+    AddState(6,new State(new int[]{4,7}));
+    AddState(7,new State(new int[]{9,8}));
+    AddState(8,new State(new int[]{13,18,14,19,15,20,16,21,4,22,10,-8},new int[]{-6,9,-7,11,-8,15}));
+    AddState(9,new State(new int[]{10,10}));
+    AddState(10,new State(-6));
+    AddState(11,new State(new int[]{4,12}));
+    AddState(12,new State(new int[]{26,13}));
+    AddState(13,new State(new int[]{13,18,14,19,15,20,16,21,4,22,10,-8},new int[]{-6,14,-7,11,-8,15}));
+    AddState(14,new State(-7));
+    AddState(15,new State(new int[]{11,16,4,-9}));
+    AddState(16,new State(new int[]{12,17}));
+    AddState(17,new State(-10));
+    AddState(18,new State(-11));
+    AddState(19,new State(-12));
+    AddState(20,new State(-13));
+    AddState(21,new State(-14));
+    AddState(22,new State(-15));
+    AddState(23,new State(new int[]{3,6,4,25,2,33},new int[]{-3,24,-4,4,-5,23}));
+    AddState(24,new State(-4));
+    AddState(25,new State(new int[]{7,26}));
+    AddState(26,new State(new int[]{13,18,14,19,15,20,16,21,4,22,8,-19},new int[]{-9,27,-7,29,-8,15}));
+    AddState(27,new State(new int[]{8,28}));
+    AddState(28,new State(-16));
+    AddState(29,new State(new int[]{4,30}));
+    AddState(30,new State(new int[]{25,31,8,-18}));
+    AddState(31,new State(new int[]{13,18,14,19,15,20,16,21,4,22,8,-19},new int[]{-9,32,-7,29,-8,15}));
+    AddState(32,new State(-17));
+    AddState(33,new State(-5));
 
-    Rule[] rules=new Rule[4];
+    Rule[] rules=new Rule[20];
     rules[1]=new Rule(-2, new int[]{-1,2});
     rules[2]=new Rule(-1, new int[]{-3});
-    rules[3]=new Rule(-3, new int[]{3,4,8,9});
+    rules[3]=new Rule(-3, new int[]{-4,-3});
+    rules[4]=new Rule(-3, new int[]{-5,-3});
+    rules[5]=new Rule(-3, new int[]{2});
+    rules[6]=new Rule(-4, new int[]{3,4,9,-6,10});
+    rules[7]=new Rule(-6, new int[]{-7,4,26,-6});
+    rules[8]=new Rule(-6, new int[]{});
+    rules[9]=new Rule(-7, new int[]{-8});
+    rules[10]=new Rule(-7, new int[]{-8,11,12});
+    rules[11]=new Rule(-8, new int[]{13});
+    rules[12]=new Rule(-8, new int[]{14});
+    rules[13]=new Rule(-8, new int[]{15});
+    rules[14]=new Rule(-8, new int[]{16});
+    rules[15]=new Rule(-8, new int[]{4});
+    rules[16]=new Rule(-5, new int[]{4,7,-9,8});
+    rules[17]=new Rule(-9, new int[]{-7,4,25,-9});
+    rules[18]=new Rule(-9, new int[]{-7,4});
+    rules[19]=new Rule(-9, new int[]{});
     this.InitRules(rules);
 
-    this.InitNonTerminals(new string[] {"", "init", "$accept", "classdecl", });
+    this.InitNonTerminals(new string[] {"", "init", "$accept", "globaldecls", 
+      "classdecl", "methoddecl", "propertylist", "typename", "singletype", "argslist", 
+      });
   }
 
   protected override void DoAction(int action)
   {
     switch (action)
     {
-      case 2: // init -> classdecl
-{
-					Ast = new GlobalCode();
-				}
+      case 2: // init -> globaldecls
+{ Ast = new GlobalCode((DeclarationsList)ValueStack[ValueStack.Depth-1].obj); }
         break;
-      case 3: // classdecl -> CLASS, IDENTIFIER, LBRACE, RBRACE
-{  }
+      case 3: // globaldecls -> classdecl, globaldecls
+{ CurrentSemanticValue.obj = new DeclarationsList( LocationStack[LocationStack.Depth-2].Merge(LocationStack[LocationStack.Depth-1]), (DeclarationsList)ValueStack[ValueStack.Depth-1].obj, (ClassDecl)ValueStack[ValueStack.Depth-2].obj ); }
+        break;
+      case 4: // globaldecls -> methoddecl, globaldecls
+{ CurrentSemanticValue.obj = new DeclarationsList( LocationStack[LocationStack.Depth-2].Merge(LocationStack[LocationStack.Depth-1]), (DeclarationsList)ValueStack[ValueStack.Depth-1].obj, (MethodDecl)ValueStack[ValueStack.Depth-2].obj ); }
+        break;
+      case 5: // globaldecls -> EOF
+{ CurrentSemanticValue.obj = new DeclarationsList( new ExprPosition() ); }
+        break;
+      case 6: // classdecl -> CLASS, IDENTIFIER, LBRACE, propertylist, RBRACE
+{ CurrentSemanticValue.obj = new ClassDecl( LocationStack[LocationStack.Depth-5].Merge(LocationStack[LocationStack.Depth-1]), (string)ValueStack[ValueStack.Depth-4].obj, (List<VariableDecl>)ValueStack[ValueStack.Depth-2].obj ); }
+        break;
+      case 7: // propertylist -> typename, IDENTIFIER, SEMICOLON, propertylist
+{ CurrentSemanticValue.obj = VariableDecls(ValueStack[ValueStack.Depth-1].obj, new VariableDecl(LocationStack[LocationStack.Depth-4].Merge(LocationStack[LocationStack.Depth-3]),(ExpressionType)ValueStack[ValueStack.Depth-4].obj,(string)ValueStack[ValueStack.Depth-3].obj)); }
+        break;
+      case 8: // propertylist -> /* empty */
+{ CurrentSemanticValue.obj = null; }
+        break;
+      case 9: // typename -> singletype
+{ CurrentSemanticValue.obj = ValueStack[ValueStack.Depth-1].obj; }
+        break;
+      case 10: // typename -> singletype, LBRACKET, RBRACKET
+{ CurrentSemanticValue.obj = new ExpressionListType( (ExpressionType)ValueStack[ValueStack.Depth-3].obj ); }
+        break;
+      case 11: // singletype -> TSTRING
+{ CurrentSemanticValue.obj = ExpressionType.StringType; }
+        break;
+      case 12: // singletype -> TINT
+{ CurrentSemanticValue.obj = ExpressionType.IntType; }
+        break;
+      case 13: // singletype -> TDOUBLE
+{ CurrentSemanticValue.obj = ExpressionType.DoubleType; }
+        break;
+      case 14: // singletype -> TDATETIME
+{ CurrentSemanticValue.obj = ExpressionType.DateTimeType; }
+        break;
+      case 15: // singletype -> IDENTIFIER
+{ CurrentSemanticValue.obj = new ExpressionType((string)ValueStack[ValueStack.Depth-1].obj); }
+        break;
+      case 16: // methoddecl -> IDENTIFIER, LPAREN, argslist, RPAREN
+{ CurrentSemanticValue.obj = new MethodDecl( LocationStack[LocationStack.Depth-4].Merge(LocationStack[LocationStack.Depth-1]), (string)ValueStack[ValueStack.Depth-4].obj, (List<VariableDecl>)ValueStack[ValueStack.Depth-2].obj ); }
+        break;
+      case 17: // argslist -> typename, IDENTIFIER, COMMA, argslist
+{ CurrentSemanticValue.obj = VariableDecls(ValueStack[ValueStack.Depth-1].obj, new VariableDecl(LocationStack[LocationStack.Depth-4].Merge(LocationStack[LocationStack.Depth-3]),(ExpressionType)ValueStack[ValueStack.Depth-4].obj,(string)ValueStack[ValueStack.Depth-3].obj)); }
+        break;
+      case 18: // argslist -> typename, IDENTIFIER
+{ CurrentSemanticValue.obj = VariableDecls(null, new VariableDecl(LocationStack[LocationStack.Depth-2].Merge(LocationStack[LocationStack.Depth-1]),(ExpressionType)ValueStack[ValueStack.Depth-2].obj,(string)ValueStack[ValueStack.Depth-1].obj)); }
+        break;
+      case 19: // argslist -> /* empty */
+{ CurrentSemanticValue.obj = null; }
         break;
     }
   }
@@ -104,9 +195,23 @@ public class Parser: ShiftReduceParser<ValueType, LexLocation>
   }
 
 
-    public Parser(Scanner scanner) : base(scanner) { }
+	/* creates new list of variables declaration from old List<VariableDecl> and new VariableDecl */
+	private List<VariableDecl> VariableDecls( object decls, VariableDecl vardecl )
+	{
+		var newdecls = (decls!=null)?(new List<VariableDecl>( (List<VariableDecl>)decls )):(new List<VariableDecl>());
+		if(vardecl!=null)newdecls.Add(vardecl);		
+		return newdecls;
+	}
+
+	/* initialization of the parser object */
+    public Parser(Scanner scanner)
+     :base(scanner)
+    {
     
-    public GlobalCode Ast {get;private set;}
+    }
+    
+    /* The result of the Parse() operation. */
+    public GlobalCode Ast { get; private set; }
 
 }
 }

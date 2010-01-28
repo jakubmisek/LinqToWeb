@@ -22,7 +22,7 @@ namespace Example1
             }*/
 
             Scanner scanner = new Scanner();
-            scanner.SetSource("class XXX{  } ",0);            
+            scanner.SetSource("class XXX{ string str; string[] strs; } main( string[] sampleList )",0);            
 
             Parser parser = new Parser(scanner);
             if (parser.Parse())
