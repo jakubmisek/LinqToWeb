@@ -5,6 +5,7 @@ using System.Text;
 
 namespace linqtoweb.CodeGenerator.AST
 {
+    #region binary expression
     public class BinaryExpression : Expression
     {
         public Expression LValue { get; protected set; }
@@ -24,7 +25,9 @@ namespace linqtoweb.CodeGenerator.AST
         }
     }
 
+    #endregion
 
+    #region arithmetic (+ - * /)
     public class BinaryAddExpression : BinaryExpression
     {
         public BinaryAddExpression( ExprPosition position, Expression lValue, Expression rValue )
@@ -61,6 +64,10 @@ namespace linqtoweb.CodeGenerator.AST
         }
     }
 
+    #endregion
+
+    #region assign (=)
+
     public class BinaryAssignExpression : BinaryExpression
     {
         public BinaryAssignExpression(ExprPosition position, Expression lValue, Expression rValue)
@@ -69,4 +76,93 @@ namespace linqtoweb.CodeGenerator.AST
 
         }
     }
+
+    #endregion
+
+    #region logical operators ( and, or, xor )
+
+    public class LogicalAndExpression : BinaryExpression
+    {
+        public LogicalAndExpression(ExprPosition position, Expression lValue, Expression rValue)
+            : base(position, lValue, rValue)
+        {
+
+        }
+    }
+
+    public class LogicalOrExpression : BinaryExpression
+    {
+        public LogicalOrExpression(ExprPosition position, Expression lValue, Expression rValue)
+            : base(position, lValue, rValue)
+        {
+
+        }
+    }
+
+    public class LogicalXorExpression : BinaryExpression
+    {
+        public LogicalXorExpression(ExprPosition position, Expression lValue, Expression rValue)
+            : base(position, lValue, rValue)
+        {
+
+        }
+    }
+
+    #endregion
+
+    #region compare (< > <= >= != ==)
+
+    public class EqExpression : BinaryExpression
+    {
+        public EqExpression(ExprPosition position, Expression lValue, Expression rValue)
+            : base(position, lValue, rValue)
+        {
+
+        }
+    }
+
+    public class NotEqExpression : BinaryExpression
+    {
+        public NotEqExpression(ExprPosition position, Expression lValue, Expression rValue)
+            : base(position, lValue, rValue)
+        {
+
+        }
+    }
+
+    public class BinaryLessExpression : BinaryExpression
+    {
+        public BinaryLessExpression(ExprPosition position, Expression lValue, Expression rValue)
+            : base(position, lValue, rValue)
+        {
+
+        }
+    }
+    public class BinaryGreaterExpression : BinaryExpression
+    {
+        public BinaryGreaterExpression(ExprPosition position, Expression lValue, Expression rValue)
+            : base(position, lValue, rValue)
+        {
+
+        }
+    }
+
+    public class BinaryLessEqExpression : BinaryExpression
+    {
+        public BinaryLessEqExpression(ExprPosition position, Expression lValue, Expression rValue)
+            : base(position, lValue, rValue)
+        {
+
+        }
+    }
+    public class BinaryGreaterEqExpression : BinaryExpression
+    {
+        public BinaryGreaterEqExpression(ExprPosition position, Expression lValue, Expression rValue)
+            : base(position, lValue, rValue)
+        {
+
+        }
+    }
+
+    #endregion
 }
