@@ -39,23 +39,44 @@ namespace linqtoweb.Core.extraction
 
         #region context objects initialization
 
+        #region DEBUG TODO:DEL
+        public static void Categories(DataContext datacontext, LocalVariables parameters)
+        {
+            ScopesStack l = new ScopesStack(datacontext, parameters);
+
+            foreach (var x in ExtractionMethods.regexp(l.context, @"Porno\s+(?<Title>\w+)"))
+            {
+                l.Push(null, x);
+
+                ((ExtractionListBase<string>)l["sampleList"]).AddElement((string)l["Title"]);
+
+                l.Pop();
+            }
+        }
+        #endregion
         /// <summary>
         /// Initialize ActionsToDo lists for context objects.
         /// </summary>
         protected virtual void InitActionsToDo()
         {
+            #region DEBUG TODO:DEL
             ScopesStack l = new ScopesStack(InitialDataContext, null);
 
             // initialize the context objects here
             // OpenHtml("http://www.freesutra.cz/").Categories( sampleList );
-            l.context
-                .OpenContextDynamic(null, new object[] { "http://www.freesutra.cz/" })
-                    .AddAction(
-                        MethodsContainer.Categories,
-                        new LocalVariables(
-                            new Dictionary<string, object>() {
+            {
+                l.Push(l.context.OpenContextDynamic(null, new object[] { "http://www.freesutra.cz/" }), null);
+
+                ActionItem.AddAction(
+                            Categories, l.context,
+                            new LocalVariables(
+                                new Dictionary<string, object>() {
                                 {"sampleList", sampleList}
                             }));
+
+                l.Pop();
+            }
+            #endregion
         }
 
         #endregion

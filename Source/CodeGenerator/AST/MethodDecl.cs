@@ -20,5 +20,32 @@ namespace linqtoweb.CodeGenerator.AST
             this.MethodArguments = arguments;
             this.Body = body;
         }
+
+        public override string ToString()
+        {
+            StringBuilder str = new StringBuilder();
+
+            str.Append( MethodName + "(" );
+
+            for(int i = 0;i<MethodArguments.Count;++i)
+            {
+                str.Append(MethodArguments[i].ToString());
+
+                if (i < MethodArguments.Count - 1)
+                    str.Append(", ");
+            }
+
+            str.Append(")");
+
+            if (Body != null) str.Append(Body.ToString());
+            
+            return str.ToString();
+        }
+
+        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
+        {
+
+            return ExpressionType.VoidType;
+        }
     }
 }

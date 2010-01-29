@@ -11,13 +11,16 @@ using System.Diagnostics;
 using System.Net;
 using System.IO;
 
-namespace linqtoweb.Core.methods
+namespace linqtoweb.Core.extraction
 {
     /// <summary>
     /// Methods of data context.
     /// </summary>
     public partial class ExtractionMethods
     {
+        /// <summary>
+        /// RegExp enumerator.
+        /// </summary>
         public class RegExpEnumerator : IEnumerable<LocalVariables>
         {
             private readonly Regex exp;

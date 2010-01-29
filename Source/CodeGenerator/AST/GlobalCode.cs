@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
+using System.IO;
 
 namespace linqtoweb.CodeGenerator.AST
 {
@@ -32,10 +34,20 @@ namespace linqtoweb.CodeGenerator.AST
         public GlobalCode(DeclarationsList decls)
             : base(decls.Position)
         {
+            Debug.Assert(decls != null);
+
             this.Declarations = decls;
 
             ContextName = "WebContext";
             NamespaceName = "linqtoweb.Example";
+        }
+
+        public override string ToString()
+        {
+            return 
+                "namespace " + NamespaceName + "\n{" +
+                Declarations.ToString() +
+                "}";
         }
 
         /// <summary>
@@ -44,7 +56,11 @@ namespace linqtoweb.CodeGenerator.AST
         /// <param name="output">OUtput stream.</param>
         public void EmitCs(System.IO.StreamWriter output)
         {
-            EmitCs(output, 0, new Dictionary<string, ExpressionType>());
+            output.NewLine = "\r\n";
+
+            EmitCs(new EmitCodeContext(Declarations, output));
+
+            output.Flush();
         }
 
         /// <summary>
@@ -53,8 +69,31 @@ namespace linqtoweb.CodeGenerator.AST
         /// <param name="output">Output stream.</param>
         /// <param name="level">The level of code indent, default 0.</param>
         /// <param name="declaredVariables">List of variables declared in the current context and their type.</param>
-        public override ExpressionType EmitCs(System.IO.StreamWriter output, int level, Dictionary<string,ExpressionType> declaredVariables)
+        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
         {
+            codecontext.WriteLine("using System;");
+            codecontext.WriteLine("using System.Collections.Generic;");
+            codecontext.WriteLine("using System.Text;");
+            codecontext.WriteLine("using System.Diagnostics;");
+            codecontext.WriteLine("using linqtoweb.Core.datacontext;");
+            codecontext.WriteLine("using linqtoweb.Core.extraction;");
+
+            codecontext.WriteLine("namespace " + NamespaceName);
+            codecontext.WriteLine("{");
+
+            EmitCodeContext indentc = codecontext.NewScope();
+
+            indentc.WriteLine("class " + ContextName + " : ExtractionContext");
+            indentc.WriteLine("{");
+
+            Declarations.EmitCs(indentc.NewScope());
+
+            // TODO: emit init, emit vars (use arguments from main methods)
+
+            indentc.WriteLine("}");
+
+
+            codecontext.WriteLine("}");
 
 
             return ExpressionType.VoidType;
@@ -125,5 +164,36 @@ namespace linqtoweb.CodeGenerator.AST
                 Methods.Add(methoddecl);
             }
         }
+
+        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
+        {
+            foreach (var c in Classes)
+                c.Value.EmitCs(codecontext);
+
+            foreach (var m in Methods)
+                m.EmitCs(codecontext);
+
+            return ExpressionType.VoidType;
+        }
+
+        public override string ToString()
+        {
+            StringBuilder str = new StringBuilder();
+            // emit classes
+            foreach (var x in Classes)
+            {
+                str.AppendLine(x.Value.ToString());
+            }
+
+            // emit methods
+            foreach (var x in Methods)
+            {
+                str.AppendLine(x.ToString());
+            }
+
+            //
+            return str.ToString();
+        }
     }
+
 }

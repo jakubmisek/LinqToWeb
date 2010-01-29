@@ -18,7 +18,12 @@ namespace linqtoweb.CodeGenerator.AST
         /// <summary>
         /// Variable type.
         /// </summary>
-        private ExpressionType VariableType;
+        public readonly ExpressionType VariableType;
+
+        /// <summary>
+        /// Variable initial value.
+        /// </summary>
+        public readonly Expression InitialValue;
 
         /// <summary>
         /// Init new variable declaration.
@@ -27,10 +32,24 @@ namespace linqtoweb.CodeGenerator.AST
         /// <param name="vartype">Type of the variable/property.</param>
         /// <param name="varname">Name of the variable/property.</param>
         public VariableDecl(ExprPosition position, ExpressionType vartype, string varname)
-            : base(position)
+            : this(position,vartype,varname,null)
+        {
+            
+        }
+
+        /// <summary>
+        /// Init new variable declaration.
+        /// </summary>
+        /// <param name="position">Position.</param>
+        /// <param name="vartype">Variable type.</param>
+        /// <param name="varname">Variable name.</param>
+        /// <param name="value">Variable initial value.</param>
+        public VariableDecl(ExprPosition position, ExpressionType vartype, string varname, Expression value)
+            :base(position)
         {
             this.VariableName = varname;
             this.VariableType = vartype;
+            this.InitialValue = value;
         }
 
         /// <summary>
@@ -39,7 +58,12 @@ namespace linqtoweb.CodeGenerator.AST
         /// <returns></returns>
         public override string ToString()
         {
-            return VariableType.ToString() + " " + VariableName;
+            string decl = VariableType.ToString() + " " + VariableName;
+
+            if (InitialValue != null)
+                decl += " = " + InitialValue.ToString();
+
+            return decl;
         }
     }
 }

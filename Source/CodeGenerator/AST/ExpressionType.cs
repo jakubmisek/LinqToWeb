@@ -17,6 +17,7 @@ namespace linqtoweb.CodeGenerator.AST
         public static ExpressionType DoubleType = new ExpressionType(KnownTypes.TDouble);
         public static ExpressionType DateTimeType = new ExpressionType(KnownTypes.TDateTime);
         public static ExpressionType VoidType = new ExpressionType(KnownTypes.TVoid);
+        public static ExpressionType BoolType = new ExpressionType(KnownTypes.TBool);
 
         #endregion
 
@@ -60,25 +61,59 @@ namespace linqtoweb.CodeGenerator.AST
 
         public override string ToString()
         {
-            switch (TypeName)
-            {
-                case KnownTypes.TList:
-                    return ListOf.ToString() + "[]";
-                case KnownTypes.TUserType:
-                    return UserTypeName;
-                default:
-                    return TypeName.ToString();
-            }
+            return CsName;
         }
 
         #endregion
+
+        /// <summary>
+        /// Get the C# equivalent type name.
+        /// </summary>
+        public string CsName
+        {
+            get
+            {
+                switch (TypeName)
+                {
+                    case KnownTypes.TBool:
+                        return "bool";
+                    case KnownTypes.TDateTime:
+                        return "DateTime";
+                    case KnownTypes.TDouble:
+                        return "double";
+                    case KnownTypes.TInt:
+                        return "int";
+                    case KnownTypes.TList:
+                        return "ExtractionListBase<" + ListOf.CsName + ">";
+                    case KnownTypes.TString:
+                        return "string";
+                    case KnownTypes.TUserType:
+                        return UserTypeName;
+                    case KnownTypes.TVoid:
+                        return "void";
+                    default:
+                        throw new NotImplementedException("this type is not implemented");
+                }
+            }
+        }
+
+        /// <summary>
+        /// True if the type represents user defined object, that is able to be filled by extraction method.
+        /// </summary>
+        public bool IsExtractionObject
+        {
+            get
+            {
+                return (TypeName == KnownTypes.TList || TypeName == KnownTypes.TUserType);
+            }
+        }
 
         /// <summary>
         /// Known types of language variables.
         /// </summary>
         public enum KnownTypes
         {
-            TVoid, TString, TInt, TDouble, TDateTime, TList, TUserType
+            TVoid, TBool, TString, TInt, TDouble, TDateTime, TList, TUserType
         }
 
         /// <summary>

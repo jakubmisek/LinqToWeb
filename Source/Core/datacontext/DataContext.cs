@@ -38,23 +38,6 @@ namespace linqtoweb.Core.datacontext
 
         #endregion
 
-        #region calling methods on context
-
-        /// <summary>
-        /// Create new action and adds it into the parameter's ActionsToDo list.
-        /// </summary>
-        /// <param name="method"></param>
-        public void AddAction( MethodsContainer.ExtractionMethod method, LocalVariables parameters )
-        {
-            // create the action
-            ActionItem newAction = new ActionItem(method, this, parameters);
-
-            // add the action to all objects specified within the action parameters
-            parameters.AddActionToParameters(newAction);
-        }
-
-        #endregion
-
         #region data source common information
 
         /// <summary>

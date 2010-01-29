@@ -16,5 +16,25 @@ namespace linqtoweb.CodeGenerator.AST
             this.MethodName = methodName;
             this.CallArguments = callArguments;
         }
+
+        public override string ToString()
+        {
+
+            StringBuilder str = new StringBuilder();
+
+            str.Append(MethodName + "(");
+
+            for (int i = 0; i < CallArguments.Count; ++i)
+            {
+                str.Append(CallArguments[i].ToString());
+
+                if (i < CallArguments.Count - 1)
+                    str.Append(", ");
+            }
+
+            str.Append(")");
+
+            return str.ToString();
+        }
     }
 }

@@ -59,7 +59,6 @@
     <Compile Include="datacontext\HtmlContext.cs" />
     <Compile Include="extraction\ExtractionContext.cs" />
     <Compile Include="extraction\LocalVariables.cs" />
-    <Compile Include="extraction\MethodsContainer.cs" />
     <Compile Include="datacontext\DataContext.cs" />
     <Compile Include="extraction\ActionItem.cs" />
     <Compile Include="extraction\ActionList.cs" />

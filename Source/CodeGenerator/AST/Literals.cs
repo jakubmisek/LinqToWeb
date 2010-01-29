@@ -73,7 +73,7 @@ namespace linqtoweb.CodeGenerator.AST
     }
 
     /// <summary>
-    /// Double literal.
+    /// DateTime literal.
     /// </summary>
     class DateTimeLiteral : Literal
     {
@@ -83,6 +83,23 @@ namespace linqtoweb.CodeGenerator.AST
         public DateTime Value { get; private set; }
 
         public DateTimeLiteral(ExprPosition position, DateTime value)
+            : base(position)
+        {
+            this.Value = value;
+        }
+    }
+
+    /// <summary>
+    /// Bool literal.
+    /// </summary>
+    class BoolLiteral : Literal
+    {
+        /// <summary>
+        /// The value of the double literal.
+        /// </summary>
+        public bool Value { get; private set; }
+
+        public BoolLiteral(ExprPosition position, bool value)
             : base(position)
         {
             this.Value = value;

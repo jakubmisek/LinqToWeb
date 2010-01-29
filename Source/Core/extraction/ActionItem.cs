@@ -10,12 +10,15 @@ namespace linqtoweb.Core.extraction
 {
     public class ActionItem
     {
-        // method, context, named parameters
+        /// <summary>
+        /// Extraction method delegate. Declared into the MethodsContainer object.
+        /// </summary>
+        public delegate void ExtractionMethod(DataContext datacontext, LocalVariables parameters);
 
         /// <summary>
         /// Method to be executed.
         /// </summary>
-        private readonly MethodsContainer.ExtractionMethod method;
+        private readonly ExtractionMethod method;
 
         /// <summary>
         /// Data context.
@@ -34,7 +37,7 @@ namespace linqtoweb.Core.extraction
         /// <param name="method"></param>
         /// <param name="datacontext"></param>
         /// <param name="parameters"></param>
-        public ActionItem(MethodsContainer.ExtractionMethod method, DataContext datacontext, LocalVariables parameters)
+        public ActionItem(ExtractionMethod method, DataContext datacontext, LocalVariables parameters)
         {
             Debug.Assert(method != null);
             Debug.Assert(datacontext != null);
@@ -62,6 +65,19 @@ namespace linqtoweb.Core.extraction
 
             // call the method synchronously
             method(datacontext, transformedParameters);
+        }
+
+        /// <summary>
+        /// Create new action and adds it into the parameter's ActionsToDo list.
+        /// </summary>
+        /// <param name="method"></param>
+        public static void AddAction(ExtractionMethod method, DataContext context, LocalVariables parameters)
+        {
+            // create the action
+            ActionItem newAction = new ActionItem(method, context, parameters);
+
+            // add the action to all objects specified within the action parameters
+            parameters.AddActionToParameters(newAction);
         }
     }
 }

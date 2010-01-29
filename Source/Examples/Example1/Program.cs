@@ -30,7 +30,7 @@ namespace Example1
             {
                 GlobalCode x = parser.Ast;
 
-                x.EmitCs(new StreamWriter("code.cs"));
+                x.EmitCs(new StreamWriter("code.cs",false,Encoding.Unicode));
             }
         }
     }

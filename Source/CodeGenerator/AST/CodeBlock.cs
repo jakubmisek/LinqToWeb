@@ -24,6 +24,25 @@ namespace linqtoweb.CodeGenerator.AST
         {
             this.Statements = (statements != null) ? statements : new List<Expression>();
         }
+
+        public override string ToString()
+        {
+            StringBuilder str = new StringBuilder();
+
+            foreach (var c in DataContexts)
+                str.Append("[" + c.ToString() + "]");
+
+            if (Statements.Count > 1)
+                str.Append("{");
+
+            foreach (var s in Statements)
+                str.Append(s.ToString());
+
+            if (Statements.Count > 1)
+                str.Append("}");
+
+            return str.ToString();
+        }
     }
     
 }
