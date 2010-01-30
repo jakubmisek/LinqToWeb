@@ -83,7 +83,7 @@ namespace linqtoweb.CodeGenerator.AST
 
             EmitCodeContext indentc = codecontext.NewScope();
 
-            indentc.WriteLine("class " + ContextName + " : ExtractionContext");
+            indentc.WriteLine("public partial class " + ContextName + " : ExtractionContext");
             indentc.WriteLine("{");
 
             Declarations.EmitCs(indentc.NewScope());

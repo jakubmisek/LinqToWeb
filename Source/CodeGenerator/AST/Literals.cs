@@ -25,16 +25,23 @@ namespace linqtoweb.CodeGenerator.AST
     class StringLiteral : Literal
     {
         /// <summary>
-        /// The value of the string literal.
+        /// The value of the string literal. C# string.
         /// </summary>
-        public string Value { get; private set; }
+        public string CsValue { get; private set; }
 
         public StringLiteral( ExprPosition position, string value )
             :base(position)
         {
             Debug.Assert(value != null);
 
-            this.Value = value;
+            this.CsValue = value;
+        }
+
+        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
+        {
+            codecontext.Write(CsValue);
+
+            return ExpressionType.StringType;
         }
     }
 
@@ -53,6 +60,13 @@ namespace linqtoweb.CodeGenerator.AST
         {
             this.Value = value;
         }
+
+        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
+        {
+            codecontext.Write(Value.ToString());
+
+            return ExpressionType.IntType;
+        }
     }
 
     /// <summary>
@@ -69,6 +83,13 @@ namespace linqtoweb.CodeGenerator.AST
             : base(position)
         {
             this.Value = value;
+        }
+
+        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
+        {
+            codecontext.Write(Value.ToString());
+
+            return ExpressionType.DoubleType;
         }
     }
 
@@ -87,6 +108,13 @@ namespace linqtoweb.CodeGenerator.AST
         {
             this.Value = value;
         }
+
+        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
+        {
+            codecontext.Write("(new DateTime(\"" + Value.ToString() + "\"))");
+
+            return ExpressionType.DateTimeType;
+        }
     }
 
     /// <summary>
@@ -103,6 +131,13 @@ namespace linqtoweb.CodeGenerator.AST
             : base(position)
         {
             this.Value = value;
+        }
+
+        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
+        {
+            codecontext.Write( Value ? "true" : "false" );
+
+            return ExpressionType.BoolType;
         }
     }
 }

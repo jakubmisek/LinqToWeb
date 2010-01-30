@@ -23,7 +23,7 @@ namespace Example1
             }*/
 
             Scanner scanner = new Scanner();
-            scanner.SetSource("class XXX{ string str; string[] strs; } main( string[] sampleList ){ [open(\"www\")]foreach(111){(string)123+(\"aaa\");} }", 0);            
+            scanner.SetSource("class XXX{ string str; string[] strs; } main( string[] sampleList )[open(\"www\")]{ [open(\"www\")]foreach(111){(string)123+(\"aaa\");} }", 0);            
 
             Parser parser = new Parser(scanner);
             if (parser.Parse())

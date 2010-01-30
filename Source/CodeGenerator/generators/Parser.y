@@ -104,6 +104,7 @@ expr:			IDENTIFIER	{ $$.obj = new VariableUse( @1, (string)$1.obj ); }
 			|	INTEGERVAL	{ $$.obj = new IntLiteral(@1, (int)$1.obj); }
 			|	DOUBLEVAL	{ $$.obj = new DoubleLiteral(@1, (double)$1.obj); }
 			|	BOOLVAL		{ $$.obj = new BoolLiteral(@1, (bool)$1.obj); }
+			|	IDENTIFIER LBRACKET RBRACKET OP_ASSIGN expr	{ $$.obj = new AddElementExpression(@1.Merge(@5),(VariableUse)$1.obj, (Expression)$5.obj); }
 			|	OP_SUB expr	{  $$.obj = new UnaryMinusExpression(@1.Merge(@2),(Expression)$2.obj); }
 			|	OP_ADD expr	{  $$.obj = new UnaryPlusExpression(@1.Merge(@2),(Expression)$2.obj); }
 			|	OP_SUB1 expr	{  $$.obj = new BinaryAddExpression(@1.Merge(@2),(Expression)$2.obj, new IntLiteral(@1,-1)); }

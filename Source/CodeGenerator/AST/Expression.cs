@@ -12,6 +12,8 @@ namespace linqtoweb.CodeGenerator.AST
     /// </summary>
     public class Expression
     {
+        public const string scopeLocalVarName = "__l";
+
         /// <summary>
         /// The position in the source code.
         /// </summary>
@@ -86,6 +88,37 @@ namespace linqtoweb.CodeGenerator.AST
                 Output.WriteLine(str);
             }
 
+            public void Write(string str, int spaces)
+            {
+                for(int i = 0; i < spaces; ++i)
+                {
+                    Output.Write("    ");
+                }
+
+                Output.Write(str);
+            }
+
+            public void Write(string str)
+            {
+                Output.Write(str);
+            }
+
+            public void DeclareLocalVar( ExpressionType vartype, string varname, Expression varvalue )
+            {
+                if (DeclaredLocalVars.ContainsKey(varname))
+                    throw new InvalidOperationException("Symbol " + varname + " already defined.");
+
+                Debug.Assert(varvalue != null, "Local variable must be initialized immediately.");
+
+                DeclaredLocalVars[varname] = vartype;
+
+                this.Write(vartype.CsName + " " + varname + " = ", Level);
+                ExpressionType rettype = varvalue.EmitCs(this);
+                this.Write(";" + Output.NewLine);
+
+                Debug.Assert(rettype == vartype, "Assigning different types: '" + vartype.CsName + "' and '" + rettype.CsName + "'");
+            }
+
             public EmitCodeContext NewScope()
             {
                 EmitCodeContext code = new EmitCodeContext(Declarations, Output);
@@ -102,4 +135,23 @@ namespace linqtoweb.CodeGenerator.AST
         #endregion
     }
    
+
+    public class CustomExpression:Expression
+    {
+        private string CsCode;
+        private ExpressionType ExprType;
+
+        public CustomExpression(ExprPosition position, ExpressionType exprType, string csCode)
+            :base(position)
+        {
+            this.CsCode = csCode;
+            this.ExprType = exprType;
+        }
+
+        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
+        {
+            codecontext.Write(CsCode);
+            return ExprType;
+        }
+    }
 }

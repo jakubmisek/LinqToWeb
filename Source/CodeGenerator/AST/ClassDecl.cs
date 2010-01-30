@@ -102,7 +102,7 @@ namespace linqtoweb.CodeGenerator.AST
         }
         internal override ExpressionType EmitCs(EmitCodeContext codecontext)
         {
-            codecontext.WriteLine("public class " + ClassName + " : ExtractionObjectBase");
+            codecontext.WriteLine("public partial class " + ClassName + " : ExtractionObjectBase");
             codecontext.WriteLine("{");
             EmitCsInnerClass(codecontext.NewScope());
             codecontext.WriteLine("}");

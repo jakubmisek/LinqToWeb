@@ -77,6 +77,19 @@ namespace linqtoweb.CodeGenerator.AST
         }
     }
 
+    public class AddElementExpression : Expression
+    {
+        public readonly VariableUse lvalue;
+        public readonly Expression rvalue;
+
+        public AddElementExpression(ExprPosition position, VariableUse lvalue, Expression rvalue)
+            : base(position)
+        {
+            this.lvalue = lvalue;
+            this.rvalue = rvalue;
+        }
+    }
+
     #endregion
 
     #region logical operators ( and, or, xor )
