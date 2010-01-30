@@ -48,15 +48,5 @@ namespace linqtoweb.CodeGenerator.AST
         }
     }
 
-    /// <summary>
-    /// +value
-    /// </summary>
-    public class UnaryPlusExpression : UnaryExpression
-    {
-        public UnaryPlusExpression(ExprPosition position, Expression value)
-            : base(position, value)
-        {
-
-        }
-    }
+    
 }
