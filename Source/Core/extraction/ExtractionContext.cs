@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 
 using linqtoweb.Core.datacontext;
+using linqtoweb.Core.methods;
 
 namespace linqtoweb.Core.extraction
 {
@@ -31,53 +32,14 @@ namespace linqtoweb.Core.extraction
             InitActionsToDo();
         }
 
-        #region context objects
-
-        public readonly ExtractionList<string> sampleList = new ExtractionList<string>();
-
-        #endregion
-
         #region context objects initialization
 
-        #region DEBUG TODO:DEL
-        public static void Categories(DataContext datacontext, LocalVariables parameters)
-        {
-            ExtractionListBase<string> sampleList = (ExtractionListBase<string>)parameters["sampleList"];
-            ScopesStack l = new ScopesStack(datacontext, parameters);
-
-            foreach (var x in ExtractionMethods.regexp(l.context, @"Porno\s+(?<Title>\w+)"))
-            {
-                l.Push(null, x);
-
-                sampleList.AddElement((string)l["Title"]);
-
-                l.Pop();
-            }
-        }
-        #endregion
         /// <summary>
         /// Initialize ActionsToDo lists for context objects.
         /// </summary>
         protected virtual void InitActionsToDo()
         {
-            #region DEBUG TODO:DEL
-            ScopesStack l = new ScopesStack(InitialDataContext, null);
-
-            // initialize the context objects here
-            // OpenHtml("http://www.freesutra.cz/").Categories( sampleList );
-            {
-                l.Push(l.context.OpenContextDynamic(null, new object[] { "http://www.freesutra.cz/" }), null);
-
-                ActionItem.AddAction(
-                            Categories, l.context,
-                            new LocalVariables(
-                                new Dictionary<string, object>() {
-                                {"sampleList", sampleList}
-                            }));
-
-                l.Pop();
-            }
-            #endregion
+           
         }
 
         #endregion

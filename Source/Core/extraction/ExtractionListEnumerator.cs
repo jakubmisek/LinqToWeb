@@ -49,12 +49,14 @@ namespace linqtoweb.Core.extraction
         /// Add an element into the enumeration. Called by extraction method that is called by an action by DoNextAction().
         /// </summary>
         /// <param name="element">An element to be added into the enumerated collection buffer.</param>
-        public override void  AddElement(T element)
+        public override T  AddElement(T element)
         {
             lock (ElementsBuffer)
             {
                 ElementsBuffer.Enqueue(element);
             }
+
+            return element;
         }
 
         /// <summary>

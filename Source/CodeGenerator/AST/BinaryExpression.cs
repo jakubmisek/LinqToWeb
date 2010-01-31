@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 
 namespace linqtoweb.CodeGenerator.AST
 {
@@ -87,6 +88,27 @@ namespace linqtoweb.CodeGenerator.AST
         {
             this.lvalue = lvalue;
             this.rvalue = rvalue;
+        }
+
+        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
+        {
+            // lvalue.AddElement( rvalue );
+
+            ExpressionType lValueType = lvalue.EmitCs(codecontext);
+
+            if(lValueType.ListOf == null)
+                throw new Exception("Unable to add an element to a non-list variable.");
+
+            codecontext.Write(".AddElement(");
+
+            ExpressionType rValueType = rvalue.EmitCs(codecontext);
+
+            codecontext.Write(")");
+
+            if(rValueType != lValueType.ListOf)
+                throw new Exception("Type mishmash, adding an element of type " + rValueType.CsName + " to the list of " + lValueType.ListOf.CsName);
+
+            return lValueType.ListOf;
         }
     }
 

@@ -30,9 +30,10 @@ namespace linqtoweb.Core.extraction
         /// add no element.
         /// </summary>
         /// <param name="element">ignored</param>
-        public override void AddElement(T element)
+        public override T AddElement(T element)
         {
             // do nothing
+            return element;
         }
 
         /// <summary>
@@ -40,7 +41,7 @@ namespace linqtoweb.Core.extraction
         /// </summary>
         /// <param name="parametersTransform">ignored</param>
         /// <returns>Always false.</returns>
-        internal override bool DoNextAction(Dictionary<object, object> parametersTransform)
+        protected override bool DoNextAction(Dictionary<object, object> parametersTransform)
         {
             // do nothing
             return false;

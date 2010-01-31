@@ -70,7 +70,7 @@ namespace linqtoweb.Core.extraction
         /// <param name="enumeratedList">Parameters transformation map.</param>
         /// <returns>False if there are no actions, and no action can be executed.
         /// True if an action finished since last DoNextAction call (and some new data might be here).</returns>
-        internal virtual bool DoNextAction(Dictionary<object, object> parametersTransform)
+        protected virtual bool DoNextAction(Dictionary<object, object> parametersTransform)
         {
             Debug.Assert(ActionsToDo != null, "Objects using DoNextAction() must initialize their ActionsToDo list.");
 

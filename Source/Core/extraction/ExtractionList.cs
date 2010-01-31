@@ -13,13 +13,13 @@ namespace linqtoweb.Core.extraction
     {    
         #region ExtractionListBase
 
-        public override void AddElement(T element)
+        public override T AddElement(T element)
         {
             // do nothing, should not be called!
             throw new InvalidOperationException("Should not be called. AddElement() method should be called on the ExtractionListEnumerator<T> object instance only!");
         }
 
-        internal override bool DoNextAction(Dictionary<object, object> parametersTransform)
+        protected override bool DoNextAction(Dictionary<object, object> parametersTransform)
         {
             // do nothing, should not be called!
             throw new InvalidOperationException("Should not be called. DoNextAction() method should be called on the ExtractionListEnumerator<T> object instance only!");

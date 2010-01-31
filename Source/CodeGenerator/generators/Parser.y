@@ -93,7 +93,7 @@ statementlist:	contextstatement statementlist { $$.obj = ExpressionList($2.obj, 
 			;
 statement:		SEMICOLON	{ $$.obj = null; /*empty statement*/ }
 			|	singletype IDENTIFIER OP_ASSIGN expr SEMICOLON { $$.obj = new VariableDecl(@1.Merge(@5),(ExpressionType)$1.obj,(string)$2.obj,(Expression)$4.obj);/* declare and initialize variable */ }
-			|	expr SEMICOLON { $$.obj = $1.obj; }
+			|	expr SEMICOLON { $$.obj = new Statement(@1.Merge(@2),(Expression)$1.obj); }
 			|	LBRACE RBRACE	{ $$.obj = null; }
 			|	LBRACE statementlist RBRACE { $$.obj = new CodeBlock( @1.Merge(@3), (List<Expression>)$2.obj ); }
 			|	FOREACH LPAREN expr RPAREN contextstatement { $$.obj = new Foreach(@1.Merge(@5),(Expression)$3.obj,(Expression)$5.obj); }
@@ -105,7 +105,7 @@ expr:			expr2						{$$.obj = $1.obj;}
 			|	expr OP_LOGIC_XOR expr2		{$$.obj = new LogicalXorExpression(@1.Merge(@3),(Expression)$1.obj, (Expression)$3.obj);}
 			|	expr OP_QUESTION expr OP_COLON expr	{$$.obj = new TernaryCondExpression(@1.Merge(@5),(Expression)$1.obj,(Expression)$3.obj,(Expression)$5.obj);}
 			|	varuse OP_ASSIGN expr		{$$.obj = new BinaryAssignExpression(@1.Merge(@3), (Expression)$1.obj, (Expression)$3.obj);}
-			|	IDENTIFIER LBRACKET RBRACKET OP_ASSIGN expr	{ $$.obj = new AddElementExpression(@1.Merge(@5),(VariableUse)$1.obj, (Expression)$5.obj); }
+			|	varuse LBRACKET RBRACKET OP_ASSIGN expr	{ $$.obj = new AddElementExpression(@1.Merge(@5),(VariableUse)$1.obj, (Expression)$5.obj); }
 			;
 			
 expr2:			expr3						{$$.obj = $1.obj;}

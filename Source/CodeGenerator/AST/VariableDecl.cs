@@ -65,5 +65,12 @@ namespace linqtoweb.CodeGenerator.AST
 
             return decl;
         }
+
+        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
+        {
+            codecontext.DeclareLocalVar(VariableType, VariableName, InitialValue);
+
+            return ExpressionType.VoidType;
+        }
     }
 }

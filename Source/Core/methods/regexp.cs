@@ -11,12 +11,12 @@ using System.Diagnostics;
 using System.Net;
 using System.IO;
 
-namespace linqtoweb.Core.extraction
+namespace linqtoweb.Core.methods
 {
     /// <summary>
     /// Methods of data context.
     /// </summary>
-    public partial class ExtractionMethods
+    public partial class ForeachMethods
     {
         /// <summary>
         /// RegExp enumerator.

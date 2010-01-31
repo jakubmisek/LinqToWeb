@@ -7,6 +7,7 @@ using linqtoweb.Core;
 using linqtoweb.Core.extraction;
 using linqtoweb.CodeGenerator;
 using linqtoweb.CodeGenerator.AST;
+
 using System.IO;
 
 namespace Example1
@@ -15,22 +16,23 @@ namespace Example1
     {
         static void Main(string[] args)
         {
-            /*ExtractionContext context = new ExtractionContext();
+            //WebContext context = new WebContext();
 
-            foreach ( var x in context.sampleList )
-            {
-                Console.WriteLine(x);
-            }*/
+            //foreach (var x in context.sampleList)
+            //{
+            //    Console.WriteLine(x);
+            //}
+
 
             Scanner scanner = new Scanner();
-            scanner.SetSource("class XXX{ string str; string[] strs; } main( string[] sampleList )[open(\"www\")]{ [open(\"www\")]foreach(111){(string)123+(\"aaa\");} }", 0);            
+            scanner.SetSource("class XXX{ string str; string[] strs; }\n_main( string[] sampleList )\n{ [open(\"http://www.freesutra.cz/\")]\nforeach(regexp(\"(?<x>ahoj)\")){sampleList[]=x;} }", 0);
 
             Parser parser = new Parser(scanner);
             if (parser.Parse())
             {
                 GlobalCode x = parser.Ast;
 
-                x.EmitCs(new StreamWriter("code.cs",false,Encoding.Unicode));
+                x.EmitCs(new StreamWriter("code.cs", false, Encoding.Unicode));
             }
         }
     }

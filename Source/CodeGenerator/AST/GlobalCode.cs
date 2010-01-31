@@ -77,6 +77,7 @@ namespace linqtoweb.CodeGenerator.AST
             codecontext.WriteLine("using System.Diagnostics;");
             codecontext.WriteLine("using linqtoweb.Core.datacontext;");
             codecontext.WriteLine("using linqtoweb.Core.extraction;");
+            codecontext.WriteLine("using linqtoweb.Core.methods;");
 
             codecontext.WriteLine("namespace " + NamespaceName);
             codecontext.WriteLine("{");
@@ -88,15 +89,93 @@ namespace linqtoweb.CodeGenerator.AST
 
             Declarations.EmitCs(indentc.NewScope());
 
-            // TODO: emit init, emit vars (use arguments from main methods)
+            // emit initialize, emit vars (use arguments from main methods)
+            EmitCs_Init(indentc.NewScope());
 
             indentc.WriteLine("}");
-
 
             codecontext.WriteLine("}");
 
 
             return ExpressionType.VoidType;
+        }
+        internal void EmitCs_Init(EmitCodeContext codecontext)
+        {
+            Dictionary<string, ExpressionType> mainVars = new Dictionary<string, ExpressionType>();
+            List<MethodDecl> mainMethods = new List<MethodDecl>();
+
+            // collect global vars
+            foreach (var m in codecontext.Declarations.Methods)
+            {
+                if (m.MethodName.StartsWith("_"))
+                {
+                    mainMethods.Add(m);
+
+                    foreach (var arg in m.MethodArguments)
+                    {
+                        if (!arg.VariableType.IsExtractionObject)
+                            throw new Exception("Main methods can be called only with List or User-defined type arguments.");
+
+                        ExpressionType vartype;
+                        if (mainVars.TryGetValue(arg.VariableName, out vartype))
+                        {
+                            if (vartype != arg.VariableType)
+                                throw new Exception("Two global properties with different type defined.");
+                        }
+                        else
+                        {
+                            mainVars[arg.VariableName] = arg.VariableType;
+                        }
+                    }
+                }
+            }
+
+            // emit properties
+            foreach (var v in mainVars)
+            {
+                string varTypeName;
+
+                switch (v.Value.TypeName)
+                {
+                    case ExpressionType.KnownTypes.TUserType:
+                        varTypeName = v.Value.CsName;
+                        break;
+                    case ExpressionType.KnownTypes.TList:
+                        varTypeName = "ExtractionList<" + v.Value.ListOf.CsName + ">";
+                        break;
+                    default:
+                        throw new Exception("Invalid context property type.");
+                }
+
+                // emit prop
+                codecontext.WriteLine("public readonly " + varTypeName + " " + v.Key + " = new " + varTypeName + "();");
+            }
+
+            // emit InitActionsToDo
+            codecontext.WriteLine("protected override void InitActionsToDo()");
+            codecontext.WriteLine("{"); codecontext.Level++;
+            codecontext.WriteLine("base.InitActionsToDo();");
+
+            foreach (var m in mainMethods)
+            {
+                codecontext.WriteLine("ActionItem.AddAction(" + m.MethodName + ", InitialDataContext, new LocalVariables(new Dictionary<string, object>() {");
+                codecontext.Level ++;
+
+                bool bfirstarg = true;
+                foreach (var arg in m.MethodArguments)
+                {
+                    if (bfirstarg) bfirstarg = false;
+                    else codecontext.Write(", ", codecontext.Level);
+                    codecontext.WriteLine("{\"" + arg.VariableName + "\", " + arg.VariableName + "}");
+                }
+
+                codecontext.WriteLine("}));");
+                codecontext.Level --;
+                
+            }
+
+            codecontext.Level--;
+            codecontext.WriteLine("}");
         }
     }
 

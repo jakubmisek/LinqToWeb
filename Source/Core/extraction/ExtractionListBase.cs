@@ -30,7 +30,7 @@ namespace linqtoweb.Core.extraction
         /// <summary>
         /// Add new element into the list buffer.
         /// </summary>
-        public virtual void AddElement(T element)
+        public virtual T AddElement(T element)
         {
             throw new NotImplementedException();
         }

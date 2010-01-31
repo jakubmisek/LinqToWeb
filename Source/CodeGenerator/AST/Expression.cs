@@ -110,6 +110,8 @@ namespace linqtoweb.CodeGenerator.AST
 
                 Debug.Assert(varvalue != null, "Local variable must be initialized immediately.");
 
+                Debug.Assert(varname != scopeLocalVarName, "Reserved variable name used.");
+
                 DeclaredLocalVars[varname] = vartype;
 
                 this.Write(vartype.CsName + " " + varname + " = ", Level);
@@ -134,7 +136,28 @@ namespace linqtoweb.CodeGenerator.AST
 
         #endregion
     }
-   
+
+    public class Statement : Expression
+    {
+        public readonly Expression ExpressionInside;
+
+        public Statement(ExprPosition position, Expression expr)
+            :base(position)
+        {
+            ExpressionInside = expr;
+        }
+
+        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
+        {
+            if (ExpressionInside != null)
+            {
+                ExpressionInside.EmitCs(codecontext);
+                codecontext.Write(";");
+            }
+
+            return ExpressionType.VoidType;
+        }
+    }
 
     public class CustomExpression:Expression
     {

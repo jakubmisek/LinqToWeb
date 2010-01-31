@@ -47,7 +47,7 @@ namespace linqtoweb.CodeGenerator.AST
         internal override ExpressionType EmitCs(EmitCodeContext codecontext)
         {
             codecontext.WriteLine("{");
-
+            codecontext.Level++;
             // push scope
             bool contextchanged = false;
             foreach (var x in DataContexts)
@@ -55,7 +55,7 @@ namespace linqtoweb.CodeGenerator.AST
                 if (!contextchanged)
                 {
                     contextchanged = true;
-                    codecontext.Write("l.Push(l.context", codecontext.Level);
+                    codecontext.Write(scopeLocalVarName + ".Push(" + scopeLocalVarName + ".context", codecontext.Level);
                 }
                 //.OpenContextDynamic(MethodName, new object[] { arg1, arg2, ... })
                 codecontext.Write(".OpenContextDynamic(\"" + x.MethodName + "\", new object[] {");
@@ -84,9 +84,10 @@ namespace linqtoweb.CodeGenerator.AST
             // pop scope
             if (contextchanged)
             {
-                codecontext.WriteLine("l.Pop();");
+                codecontext.WriteLine(scopeLocalVarName + ".Pop();");
             }
 
+            codecontext.Level--;
             codecontext.WriteLine("}");
 
             return ExpressionType.VoidType;
