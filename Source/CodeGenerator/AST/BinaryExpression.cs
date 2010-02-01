@@ -67,7 +67,7 @@ namespace linqtoweb.CodeGenerator.AST
 
     #endregion
 
-    #region assign (=)
+    #region assign, addelement (=, []=)
 
     public class BinaryAssignExpression : BinaryExpression
     {
@@ -105,7 +105,7 @@ namespace linqtoweb.CodeGenerator.AST
 
             codecontext.Write(")");
 
-            if(rValueType != lValueType.ListOf)
+            if(!rValueType.Equals(lValueType.ListOf))
                 throw new Exception("Type mishmash, adding an element of type " + rValueType.CsName + " to the list of " + lValueType.ListOf.CsName);
 
             return lValueType.ListOf;

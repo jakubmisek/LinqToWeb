@@ -151,6 +151,7 @@ namespace linqtoweb.CodeGenerator.AST
         {
             if (ExpressionInside != null)
             {
+                codecontext.Write(string.Empty, codecontext.Level);
                 ExpressionInside.EmitCs(codecontext);
                 codecontext.Write(";");
             }

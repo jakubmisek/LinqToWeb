@@ -36,5 +36,76 @@ namespace linqtoweb.CodeGenerator.AST
 
             return str.ToString();
         }
+
+        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
+        {
+            // is it an extraction method ?
+            foreach (var decl in codecontext.Declarations.Methods)
+            {
+                if (decl.MethodName == MethodName)
+                {
+                    if (decl.MethodArguments.Count != CallArguments.Count)
+                        throw new Exception("Invalid arguments count in method call " + MethodName);
+
+                    codecontext.Write("ActionItem.AddAction(" + MethodName + ", "+scopeLocalVarName+".context, new LocalVariables(new Dictionary<string, object>() {" + codecontext.Output.NewLine);
+                    codecontext.Level++;
+
+                    for (int arg = 0; arg < CallArguments.Count; ++arg )
+                    {
+                        if (arg > 0) codecontext.Write("," + codecontext.Output.NewLine);
+                        codecontext.Write("{\"" + decl.MethodArguments[arg].VariableName + "\", ", codecontext.Level);
+                        ExpressionType t = CallArguments[arg].EmitCs(codecontext);
+                        codecontext.Write("}");
+
+                        if (!t.Equals(decl.MethodArguments[arg].VariableType))
+                            throw new Exception("Type mishmash.");
+                    }
+
+                    codecontext.Write(" }))");
+                    codecontext.Level--;
+
+                    return ExpressionType.VoidType;
+                }
+            }
+
+            // is it a class construction ?
+            foreach (var decl in codecontext.Declarations.Classes.Values)
+            {
+                if (decl.ClassName == MethodName)
+                {
+                    // emit // (new XXX(){ a = val1, b = val2 });
+
+                    codecontext.Write("(new " + MethodName + "(){ ");
+
+                    for ( int arg = 0; arg < CallArguments.Count; ++arg )
+                    {
+                        BinaryAssignExpression ass = CallArguments[arg] as BinaryAssignExpression;
+                        VariableUse lvalue;
+                        if (ass == null || (lvalue = ass.LValue as VariableUse) == null)
+                            throw new ArgumentException("Argument " + arg + ": class construct arguments must be in a form of 'PropertyName = Expression'");
+
+                        if (arg > 0) codecontext.Write(", ");
+
+                        ExpressionType propType = decl.ContainsProperty(lvalue.VariableName);
+
+                        if (propType == null)
+                            throw new Exception(lvalue.VariableName + " is not a property of " + decl.ClassName);
+
+                        codecontext.Write(lvalue.VariableName + " = ");
+                        ExpressionType propValueType =  ass.RValue.EmitCs(codecontext);
+
+                        if (!propValueType.Equals(propType))
+                            throw new ArgumentException("Type mishmash, " + propType.CsName + " and " + propValueType.CsName);
+                    }
+
+                    codecontext.Write(" })");
+
+                    return new ExpressionType(decl.ClassName);
+                }
+            }
+
+            //
+            throw new Exception("Undeclared method or class " + MethodName);
+        }
     }
 }

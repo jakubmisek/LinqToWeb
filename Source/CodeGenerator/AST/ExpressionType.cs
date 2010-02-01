@@ -42,18 +42,18 @@ namespace linqtoweb.CodeGenerator.AST
                     return false;
 
                 if (this.TypeName == KnownTypes.TList)
-                    return (this.ListOf == objtype.ListOf);
+                    return (this.ListOf.Equals(objtype.ListOf));
                 else if (this.TypeName == KnownTypes.TUserType)
                     return (this.UserTypeName == objtype.UserTypeName);
-
-                return true;
+                else
+                    return true;
             }
             else
             {
                 return base.Equals(obj);
             }
         }
-
+        
         public override int GetHashCode()
         {
             return base.GetHashCode();

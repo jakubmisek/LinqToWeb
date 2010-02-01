@@ -32,7 +32,24 @@ namespace linqtoweb.CodeGenerator.AST
         public LogicalNotExpression(ExprPosition position, Expression value)
             :base(position, value)
         {
+            
+        }
 
+        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
+        {
+            if (Value == null)
+                throw new Exception("Value cannot be null.");
+
+            codecontext.Write("(!(");
+
+            ExpressionType valtype = Value.EmitCs(codecontext);
+
+            codecontext.Write("))");
+
+            if (!valtype.Equals(ExpressionType.BoolType))
+                throw new Exception("Value must be of type bool.");
+
+            return ExpressionType.BoolType;
         }
     }
 
@@ -45,6 +62,20 @@ namespace linqtoweb.CodeGenerator.AST
             : base(position, value)
         {
 
+        }
+
+        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
+        {
+            codecontext.Write("(-(");
+
+            ExpressionType valtype = Value.EmitCs(codecontext);
+
+            codecontext.Write("))");
+
+            if (!(valtype.Equals(ExpressionType.DoubleType) || valtype.Equals(ExpressionType.IntType)))
+                throw new Exception("Value must be of type double or int.");
+
+            return valtype;
         }
     }
 

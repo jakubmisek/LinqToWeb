@@ -10,6 +10,8 @@ using linqtoweb.CodeGenerator.AST;
 
 using System.IO;
 
+using linqtoweb.Example;
+
 namespace Example1
 {
     class Program
@@ -20,12 +22,15 @@ namespace Example1
 
             //foreach (var x in context.sampleList)
             //{
-            //    Console.WriteLine(x);
+            //    Console.WriteLine(x.str);
             //}
 
 
             Scanner scanner = new Scanner();
-            scanner.SetSource("class XXX{ string str; string[] strs; }\n_main( string[] sampleList )\n{ [open(\"http://www.freesutra.cz/\")]\nforeach(regexp(\"(?<x>ahoj)\")){sampleList[]=x;} }", 0);
+            scanner.SetSource("class XXX{ string str; XXX[] xxxs; }\n" +
+                "_main( XXX[] sampleList )\n{ [open(\"http://www.freesutra.cz/\")]\nforeach(regexp(\"(?<x>ahoj)\")){addel(sampleList,x);} }" +
+                "addel(XXX[] l,string val){l[]=XXX(str=val);}"
+                , 0);
 
             Parser parser = new Parser(scanner);
             if (parser.Parse())

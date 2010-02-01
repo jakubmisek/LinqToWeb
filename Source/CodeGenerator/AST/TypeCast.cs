@@ -16,5 +16,13 @@ namespace linqtoweb.CodeGenerator.AST
             this.NewType = newType;
             this.Expr = expr;
         }
+
+        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
+        {
+            throw new NotImplementedException();
+
+            //
+            //return NewType;
+        }
     }
 }

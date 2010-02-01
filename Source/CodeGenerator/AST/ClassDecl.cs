@@ -16,7 +16,7 @@ namespace linqtoweb.CodeGenerator.AST
             : base(position)
         {
             Debug.Assert(!String.IsNullOrEmpty(classname));
-            
+
             this.ClassName = classname;
             this.ClassProperties = properties;
         }
@@ -33,6 +33,15 @@ namespace linqtoweb.CodeGenerator.AST
             str.Append("}");
 
             return str.ToString();
+        }
+
+        public ExpressionType   ContainsProperty(string propertyName)
+        {
+            foreach (var p in ClassProperties)
+                if (p.VariableName == propertyName)
+                    return p.VariableType;
+
+            return null;
         }
 
         private string PropertyType( ExpressionType decl )
@@ -62,6 +71,9 @@ namespace linqtoweb.CodeGenerator.AST
         {
             foreach (var x in ClassProperties)
             {
+                if (x.VariableName.StartsWith("_"))
+                    throw new Exception("Class property cannot start with _.");
+
                 string protype= PropertyType(x.VariableType);
                 // private property value
                 
@@ -91,7 +103,7 @@ namespace linqtoweb.CodeGenerator.AST
 
                     // extracting on request (public property)
                     string format = "public " + protype + " " + x.VariableName +
-                        "{set{while(" + privatePropName + "==" + defaultvalue + "){if (!DoNextAction(null))throw new NotExtractedDataException(\"SampleProperty cannot reach any data.\");}" + privatePropName + "=value;}get{return " + privatePropName + ";}}";
+                        "{get{while(" + privatePropName + "==" + defaultvalue + "){if (!DoNextAction(null))throw new NotExtractedDataException(\"" + x.VariableName + " cannot reach any data.\");} return " + privatePropName + ";}set{" + privatePropName + "=value;}}";
 
                     codecontext.WriteLine(format);
                 }
