@@ -40,32 +40,52 @@ namespace linqtoweb.CodeGenerator.AST
         internal override ExpressionType EmitCs(EmitCodeContext codecontext)
         {
             // is it an extraction method ?
+            List<MethodDecl> matchingMethods = new List<MethodDecl>();
+
             foreach (var decl in codecontext.Declarations.Methods)
             {
-                if (decl.MethodName == MethodName)
+                if (decl.DeclMethodName == MethodName)
                 {
                     if (decl.MethodArguments.Count != CallArguments.Count)
                         throw new Exception("Invalid arguments count in method call " + MethodName);
 
-                    codecontext.Write("ActionItem.AddAction(" + MethodName + ", "+scopeLocalVarName+".context, new LocalVariables(new Dictionary<string, object>() {" + codecontext.Output.NewLine);
-                    codecontext.Level++;
-
-                    for (int arg = 0; arg < CallArguments.Count; ++arg )
-                    {
-                        if (arg > 0) codecontext.Write("," + codecontext.Output.NewLine);
-                        codecontext.Write("{\"" + decl.MethodArguments[arg].VariableName + "\", ", codecontext.Level);
-                        ExpressionType t = CallArguments[arg].EmitCs(codecontext);
-                        codecontext.Write("}");
-
-                        if (!t.Equals(decl.MethodArguments[arg].VariableType))
-                            throw new Exception("Type mishmash.");
-                    }
-
-                    codecontext.Write(" }))");
-                    codecontext.Level--;
-
-                    return ExpressionType.VoidType;
+                    matchingMethods.Add(decl);
                 }
+            }
+
+            if (matchingMethods.Count > 0)
+            {
+                codecontext.Write("ActionItem.AddAction( new ActionItem.ExtractionMethod[]{");
+
+                bool bFirstMethod = true;
+                foreach (var decl in matchingMethods)
+                {
+                    if (bFirstMethod) bFirstMethod = false;
+                    else codecontext.Write(", ");
+                    codecontext.Write(decl.GeneratedMethodName);
+                   
+                }
+
+                codecontext.Write("}, "+scopeLocalVarName+".context, new LocalVariables(new Dictionary<string, object>() {" + codecontext.Output.NewLine);
+
+                codecontext.Level++;
+
+                MethodDecl somedecl = matchingMethods[0];
+                for (int arg = 0; arg < CallArguments.Count; ++arg )
+                {
+                    if (arg > 0) codecontext.Write("," + codecontext.Output.NewLine);
+                    codecontext.Write("{\"" + somedecl.MethodArguments[arg].VariableName + "\", ", codecontext.Level);
+                    ExpressionType t = CallArguments[arg].EmitCs(codecontext);
+                    codecontext.Write("}");
+
+                    if (!t.Equals(somedecl.MethodArguments[arg].VariableType))
+                        throw new Exception("Type mishmash.");
+                }
+
+                codecontext.Write(" }))");
+                codecontext.Level--;
+
+                return ExpressionType.VoidType;
             }
 
             // is it a class construction ?

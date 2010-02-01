@@ -7,7 +7,26 @@ namespace linqtoweb.CodeGenerator.AST
 {
     public class MethodDecl:Expression
     {
-        public string MethodName { get; private set; }
+        /// <summary>
+        /// Method name as it was declared in the original source.
+        /// </summary>
+        public string DeclMethodName { get; private set; }
+
+        /// <summary>
+        /// Method name as it is generated in the resulted code.
+        /// </summary>
+        public string GeneratedMethodName { get; private set; }
+
+        /// <summary>
+        /// This is the main method.
+        /// </summary>
+        public bool IsMainMethod
+        {
+            get
+            {
+                return (DeclMethodName == null);
+            }
+        }
 
         public List<VariableDecl> MethodArguments { get; private set; }
 
@@ -16,7 +35,8 @@ namespace linqtoweb.CodeGenerator.AST
         public MethodDecl(ExprPosition position, string methodname, List<VariableDecl> arguments, Expression body)
             :base(position)
         {
-            this.MethodName = methodname;
+            this.DeclMethodName = methodname;
+            this.GeneratedMethodName = methodname + "_" + position.StartLine + "_" + position.StartColumn;
             this.MethodArguments = arguments;
             this.Body = body;
         }
@@ -25,7 +45,7 @@ namespace linqtoweb.CodeGenerator.AST
         {
             StringBuilder str = new StringBuilder();
 
-            str.Append( MethodName + "(" );
+            str.Append( DeclMethodName + "(" );
 
             for(int i = 0;i<MethodArguments.Count;++i)
             {
@@ -44,7 +64,7 @@ namespace linqtoweb.CodeGenerator.AST
 
         internal override ExpressionType EmitCs(EmitCodeContext codecontext)
         {
-            codecontext.WriteLine("private static void " + MethodName + "(DataContext datacontext, LocalVariables parameters)");
+            codecontext.WriteLine("private static void " + GeneratedMethodName + "(DataContext datacontext, LocalVariables parameters)");
             codecontext.WriteLine("{");
 
             EmitCodeContext bodycontext = codecontext.NewScope();

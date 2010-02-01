@@ -107,7 +107,7 @@ namespace linqtoweb.CodeGenerator.AST
             // collect global vars
             foreach (var m in codecontext.Declarations.Methods)
             {
-                if (m.MethodName.StartsWith("_"))
+                if (m.IsMainMethod)
                 {
                     mainMethods.Add(m);
 
@@ -158,7 +158,7 @@ namespace linqtoweb.CodeGenerator.AST
 
             foreach (var m in mainMethods)
             {
-                codecontext.WriteLine("ActionItem.AddAction(" + m.MethodName + ", InitialDataContext, new LocalVariables(new Dictionary<string, object>() {");
+                codecontext.WriteLine("ActionItem.AddAction(" + m.GeneratedMethodName + ", InitialDataContext, new LocalVariables(new Dictionary<string, object>() {");
                 codecontext.Level ++;
 
                 bool bfirstarg = true;
@@ -240,6 +240,21 @@ namespace linqtoweb.CodeGenerator.AST
 
             if (methoddecl != null)
             {
+                foreach ( var m in Methods )
+                    if (m.DeclMethodName == methoddecl.DeclMethodName)
+                    {   // arguments must match
+                        if (m.MethodArguments.Count != methoddecl.MethodArguments.Count)
+                            throw new Exception("Methods " + methoddecl.DeclMethodName + ": Arguments mishmash.");
+
+                        for(int arg = 0; arg < m.MethodArguments.Count; ++arg)
+                        {
+                            if ( !m.MethodArguments[arg].VariableType.Equals(methoddecl.MethodArguments[arg].VariableType) )
+                                throw new Exception("Methods " + methoddecl.DeclMethodName + ": Arguments mishmash.");
+                            if (m.MethodArguments[arg].VariableName != methoddecl.MethodArguments[arg].VariableName)
+                                throw new Exception("Methods " + methoddecl.DeclMethodName + ": Arguments mishmash.");
+                        }
+                    }
+
                 Methods.Add(methoddecl);
             }
         }

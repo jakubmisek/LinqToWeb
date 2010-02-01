@@ -27,10 +27,7 @@ namespace Example1
 
 
             Scanner scanner = new Scanner();
-            scanner.SetSource("class XXX{ string str; XXX[] xxxs; }\n" +
-                "_main( XXX[] sampleList )\n{ [open(\"http://www.freesutra.cz/\")]\nforeach(regexp(\"(?<x>ahoj)\")){addel(sampleList,x);} }" +
-                "addel(XXX[] l,string val){l[]=XXX(str=val);}"
-                , 0);
+            scanner.SetSource(File.ReadAllText("code.txt"), 0);
 
             Parser parser = new Parser(scanner);
             if (parser.Parse())

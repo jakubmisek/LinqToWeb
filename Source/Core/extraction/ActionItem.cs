@@ -79,5 +79,21 @@ namespace linqtoweb.Core.extraction
             // add the action to all objects specified within the action parameters
             parameters.AddActionToParameters(newAction);
         }
+
+        /// <summary>
+        /// Create new actions and add them into the parameter's ActionsToDo list.
+        /// </summary>
+        /// <param name="methods">List of methods to do.</param>
+        public static void AddAction(ExtractionMethod[] methods, DataContext context, LocalVariables parameters)
+        {
+            foreach (var m in methods)
+            {
+                // create the action
+                ActionItem newAction = new ActionItem(m, context, parameters);
+
+                // add the action to all objects specified within the action parameters
+                parameters.AddActionToParameters(newAction);
+            }
+        }
     }
 }

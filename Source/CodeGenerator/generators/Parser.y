@@ -76,6 +76,7 @@ singletype:		singlebasetype {$$.obj = $1.obj;}
 			;
 						
 methoddecl:		IDENTIFIER LPAREN argslist RPAREN contextstatement { $$.obj = new MethodDecl( @1.Merge(@4), (string)$1.obj, (List<VariableDecl>)$3.obj, (Expression)$5.obj ); }
+			|	LPAREN argslist RPAREN contextstatement { $$.obj = new MethodDecl( @1.Merge(@3), null, (List<VariableDecl>)$2.obj, (Expression)$4.obj ); }
 			;
 argslist:		typename IDENTIFIER COMMA argslist { $$.obj = VariableDecls($4.obj, new VariableDecl(@1.Merge(@2),(ExpressionType)$1.obj,(string)$2.obj)); }
 			|	typename IDENTIFIER { $$.obj = VariableDecls(null, new VariableDecl(@1.Merge(@2),(ExpressionType)$1.obj,(string)$2.obj)); }

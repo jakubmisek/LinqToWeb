@@ -98,3 +98,5 @@ false			{yylval.obj = false; return (int)Tokens.BOOLVAL;}
 
 
 %%
+
+	public override ExprPosition yylloc { get { return new ExprPosition(tokLin,tokCol,tokELin,tokECol); } set {  } }
