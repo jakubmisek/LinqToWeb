@@ -74,7 +74,8 @@ namespace linqtoweb.CodeGenerator.AST
         public BinaryAssignExpression(ExprPosition position, Expression lValue, Expression rValue)
             : base(position, lValue, rValue)
         {
-
+            if (!(lValue is VariableUse))
+                throw new ArgumentException("L-Value must be a VariableUse.");
         }
     }
 

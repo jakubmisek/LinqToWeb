@@ -20,6 +20,8 @@ namespace linqtoweb.CodeGenerator.AST
             ExpressionType varType;
             string varuseString;
 
+            // TODO: dotted identifier
+
             if (codecontext.DeclaredLocalVars.TryGetValue(VariableName, out varType))
             {
                 // VariableName
