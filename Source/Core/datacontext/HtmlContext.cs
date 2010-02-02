@@ -61,6 +61,8 @@ namespace linqtoweb.Core.datacontext
 
                 // content type, encoding
 
+                // close response
+                resp.Close();
             }
         }
 

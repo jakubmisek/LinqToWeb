@@ -68,7 +68,7 @@ namespace linqtoweb.CodeGenerator.AST
             codecontext.WriteLine("{");
 
             EmitCodeContext bodycontext = codecontext.NewScope();
-
+            
             // declare parameters as local variables
             foreach (var x in MethodArguments)
             {

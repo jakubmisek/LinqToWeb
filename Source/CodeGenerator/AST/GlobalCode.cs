@@ -255,7 +255,7 @@ namespace linqtoweb.CodeGenerator.AST
                         }
                     }
 
-                Methods.Add(methoddecl);
+                Methods.Insert(0,methoddecl);
             }
         }
 

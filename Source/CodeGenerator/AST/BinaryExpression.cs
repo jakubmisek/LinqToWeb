@@ -34,7 +34,25 @@ namespace linqtoweb.CodeGenerator.AST
         public BinaryAddExpression( ExprPosition position, Expression lValue, Expression rValue )
             :base(position, lValue, rValue)
         {
+            
+        }
 
+        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
+        {
+            ExpressionType lType, rType;
+
+            codecontext.Write("((");
+            lType = LValue.EmitCs(codecontext);
+            codecontext.Write(")+(");
+            rType = RValue.EmitCs(codecontext);
+            codecontext.Write("))");
+
+            // only int,double,string
+            if (!lType.Equals(rType) ||
+                (lType.TypeName != ExpressionType.KnownTypes.TDouble && lType.TypeName != ExpressionType.KnownTypes.TInt && lType.TypeName != ExpressionType.KnownTypes.TString))
+                throw new Exception("Type mishmash.");
+
+            return lType;
         }
     }
 
@@ -45,6 +63,24 @@ namespace linqtoweb.CodeGenerator.AST
         {
 
         }
+
+        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
+        {
+            ExpressionType lType, rType;
+
+            codecontext.Write("((");
+            lType = LValue.EmitCs(codecontext);
+            codecontext.Write(")-(");
+            rType = RValue.EmitCs(codecontext);
+            codecontext.Write("))");
+
+            // only int,double
+            if (!lType.Equals(rType) ||
+                (lType.TypeName != ExpressionType.KnownTypes.TDouble && lType.TypeName != ExpressionType.KnownTypes.TInt))
+                throw new Exception("Type mishmash.");
+
+            return lType;
+        }
     }
 
     public class BinaryMulExpression : BinaryExpression
@@ -54,6 +90,24 @@ namespace linqtoweb.CodeGenerator.AST
         {
 
         }
+
+        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
+        {
+            ExpressionType lType, rType;
+
+            codecontext.Write("((");
+            lType = LValue.EmitCs(codecontext);
+            codecontext.Write(")*(");
+            rType = RValue.EmitCs(codecontext);
+            codecontext.Write("))");
+
+            // only int,double
+            if (!lType.Equals(rType) ||
+                (lType.TypeName != ExpressionType.KnownTypes.TDouble && lType.TypeName != ExpressionType.KnownTypes.TInt))
+                throw new Exception("Type mishmash.");
+
+            return lType;
+        }
     }
 
     public class BinaryDivExpression : BinaryExpression
@@ -62,6 +116,24 @@ namespace linqtoweb.CodeGenerator.AST
             : base(position, lValue, rValue)
         {
 
+        }
+
+        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
+        {
+            ExpressionType lType, rType;
+
+            codecontext.Write("((");
+            lType = LValue.EmitCs(codecontext);
+            codecontext.Write(")/(");
+            rType = RValue.EmitCs(codecontext);
+            codecontext.Write("))");
+
+            // only int,double
+            if (!lType.Equals(rType) ||
+                (lType.TypeName != ExpressionType.KnownTypes.TDouble && lType.TypeName != ExpressionType.KnownTypes.TInt))
+                throw new Exception("Type mishmash.");
+
+            return lType;
         }
     }
 
@@ -76,6 +148,28 @@ namespace linqtoweb.CodeGenerator.AST
         {
             if (!(lValue is VariableUse))
                 throw new ArgumentException("L-Value must be a VariableUse.");
+        }
+
+        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
+        {
+            // l = r
+
+            VariableUse lValueVariable = (VariableUse)LValue;
+            ExpressionType lType = codecontext.GetLocalVarType(lValueVariable.VariableName);
+            if (lType == null)
+                throw new Exception(lValueVariable.VariableName + " is not declared.");
+
+            if (lType.ListOf != null)
+                throw new Exception("Unable to assign to a list.");
+
+            codecontext.Write(lValueVariable.VariableName + " = ");
+
+            ExpressionType rType = RValue.EmitCs(codecontext);
+
+            if (!(lType.Equals(rType)))
+                throw new Exception("Type mishmash.");
+
+            return lType;
         }
     }
 
@@ -93,22 +187,35 @@ namespace linqtoweb.CodeGenerator.AST
 
         internal override ExpressionType EmitCs(EmitCodeContext codecontext)
         {
-            // lvalue.AddElement( rvalue );
-
-            ExpressionType lValueType = lvalue.EmitCs(codecontext);
-
+            ExpressionType lValueType = codecontext.GetLocalVarType(lvalue.VariableName);
+            if (lValueType == null)
+                throw new Exception(lvalue.VariableName + " not declared.");
             if(lValueType.ListOf == null)
                 throw new Exception("Unable to add an element to a non-list variable.");
 
-            codecontext.Write(".AddElement(");
+            ExpressionType rValueType;
 
-            ExpressionType rValueType = rvalue.EmitCs(codecontext);
+            if (!lvalue.VariableName.Contains("."))
+            {   // add an element directly
+                // lvalue.AddElement( rvalue );
+                codecontext.Write(lvalue.VariableName);
 
-            codecontext.Write(")");
+                codecontext.Write(".AddElement(");
+                rValueType = rvalue.EmitCs(codecontext);
+                codecontext.Write(")");
+            }
+            else
+            {   // element cannot be added directly
+                // must be created action that add the element when list is actually enumerated
 
-            if(!rValueType.Equals(lValueType.ListOf))
+                codecontext.Write("AddElementAction(" + scopeLocalVarName + ".context, " + lvalue.VariableName + ", ");
+                rValueType = rvalue.EmitCs(codecontext);
+                codecontext.Write(")");
+            }
+
+            if (!rValueType.Equals(lValueType.ListOf))
                 throw new Exception("Type mishmash, adding an element of type " + rValueType.CsName + " to the list of " + lValueType.ListOf.CsName);
-
+            
             return lValueType.ListOf;
         }
     }
@@ -124,6 +231,25 @@ namespace linqtoweb.CodeGenerator.AST
         {
 
         }
+
+        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
+        {
+            ExpressionType lType, rType;
+
+            // ((l) && (r))
+
+            codecontext.Write("((");
+            lType = LValue.EmitCs(codecontext);
+            codecontext.Write(")&&(");
+            rType = RValue.EmitCs(codecontext);
+            codecontext.Write("))");
+
+            if (lType.TypeName != ExpressionType.KnownTypes.TBool ||
+                rType.TypeName != ExpressionType.KnownTypes.TBool)
+                throw new Exception("Values must be of type bool.");
+
+            return ExpressionType.BoolType;
+        }
     }
 
     public class LogicalOrExpression : BinaryExpression
@@ -133,6 +259,25 @@ namespace linqtoweb.CodeGenerator.AST
         {
 
         }
+
+        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
+        {
+            ExpressionType lType, rType;
+
+            // ((l) || (r))
+
+            codecontext.Write("((");
+            lType = LValue.EmitCs(codecontext);
+            codecontext.Write(")||(");
+            rType = RValue.EmitCs(codecontext);
+            codecontext.Write("))");
+
+            if (lType.TypeName != ExpressionType.KnownTypes.TBool ||
+                rType.TypeName != ExpressionType.KnownTypes.TBool)
+                throw new Exception("Values must be of type bool.");
+
+            return ExpressionType.BoolType;
+        }
     }
 
     public class LogicalXorExpression : BinaryExpression
@@ -141,6 +286,25 @@ namespace linqtoweb.CodeGenerator.AST
             : base(position, lValue, rValue)
         {
 
+        }
+
+        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
+        {
+            ExpressionType lType, rType;
+
+            // ((l) xor (r))
+
+            codecontext.Write("((");
+            lType = LValue.EmitCs(codecontext);
+            codecontext.Write(")^(");
+            rType = RValue.EmitCs(codecontext);
+            codecontext.Write("))");
+
+            if (lType.TypeName != ExpressionType.KnownTypes.TBool ||
+                rType.TypeName != ExpressionType.KnownTypes.TBool)
+                throw new Exception("Values must be of type bool.");
+
+            return ExpressionType.BoolType;
         }
     }
 
@@ -155,6 +319,23 @@ namespace linqtoweb.CodeGenerator.AST
         {
 
         }
+
+        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
+        {
+            ExpressionType lType, rType;
+
+            codecontext.Write("((");
+            lType = LValue.EmitCs(codecontext);
+            codecontext.Write(")==(");
+            rType = RValue.EmitCs(codecontext);
+            codecontext.Write("))");
+
+            /*if (lType.TypeName != ExpressionType.KnownTypes.TBool ||
+                rType.TypeName != ExpressionType.KnownTypes.TBool)
+                throw new Exception("Values must be of type bool.");*/
+
+            return ExpressionType.BoolType;
+        }
     }
 
     public class NotEqExpression : BinaryExpression
@@ -163,6 +344,23 @@ namespace linqtoweb.CodeGenerator.AST
             : base(position, lValue, rValue)
         {
 
+        }
+
+        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
+        {
+            ExpressionType lType, rType;
+
+            codecontext.Write("((");
+            lType = LValue.EmitCs(codecontext);
+            codecontext.Write(")!=(");
+            rType = RValue.EmitCs(codecontext);
+            codecontext.Write("))");
+
+            /*if (lType.TypeName != ExpressionType.KnownTypes.TBool ||
+                rType.TypeName != ExpressionType.KnownTypes.TBool)
+                throw new Exception("Values must be of type bool.");*/
+
+            return ExpressionType.BoolType;
         }
     }
 
@@ -173,6 +371,22 @@ namespace linqtoweb.CodeGenerator.AST
         {
 
         }
+        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
+        {
+            ExpressionType lType, rType;
+
+            codecontext.Write("((");
+            lType = LValue.EmitCs(codecontext);
+            codecontext.Write(")<(");
+            rType = RValue.EmitCs(codecontext);
+            codecontext.Write("))");
+
+            /*if (lType.TypeName != ExpressionType.KnownTypes.TBool ||
+                rType.TypeName != ExpressionType.KnownTypes.TBool)
+                throw new Exception("Values must be of type bool.");*/
+
+            return ExpressionType.BoolType;
+        }
     }
     public class BinaryGreaterExpression : BinaryExpression
     {
@@ -180,6 +394,22 @@ namespace linqtoweb.CodeGenerator.AST
             : base(position, lValue, rValue)
         {
 
+        }
+        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
+        {
+            ExpressionType lType, rType;
+
+            codecontext.Write("((");
+            lType = LValue.EmitCs(codecontext);
+            codecontext.Write(")>(");
+            rType = RValue.EmitCs(codecontext);
+            codecontext.Write("))");
+
+            /*if (lType.TypeName != ExpressionType.KnownTypes.TBool ||
+                rType.TypeName != ExpressionType.KnownTypes.TBool)
+                throw new Exception("Values must be of type bool.");*/
+
+            return ExpressionType.BoolType;
         }
     }
 
@@ -190,6 +420,22 @@ namespace linqtoweb.CodeGenerator.AST
         {
 
         }
+        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
+        {
+            ExpressionType lType, rType;
+
+            codecontext.Write("((");
+            lType = LValue.EmitCs(codecontext);
+            codecontext.Write(")<=(");
+            rType = RValue.EmitCs(codecontext);
+            codecontext.Write("))");
+
+            /*if (lType.TypeName != ExpressionType.KnownTypes.TBool ||
+                rType.TypeName != ExpressionType.KnownTypes.TBool)
+                throw new Exception("Values must be of type bool.");*/
+
+            return ExpressionType.BoolType;
+        }
     }
     public class BinaryGreaterEqExpression : BinaryExpression
     {
@@ -197,6 +443,22 @@ namespace linqtoweb.CodeGenerator.AST
             : base(position, lValue, rValue)
         {
 
+        }
+        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
+        {
+            ExpressionType lType, rType;
+
+            codecontext.Write("((");
+            lType = LValue.EmitCs(codecontext);
+            codecontext.Write(")>=(");
+            rType = RValue.EmitCs(codecontext);
+            codecontext.Write("))");
+
+            /*if (lType.TypeName != ExpressionType.KnownTypes.TBool ||
+                rType.TypeName != ExpressionType.KnownTypes.TBool)
+                throw new Exception("Values must be of type bool.");*/
+
+            return ExpressionType.BoolType;
         }
     }
 

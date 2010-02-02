@@ -65,6 +65,7 @@ list je special objekt, restartuje se pri kazde enumeraci, neenumerovane listy j
 	- jako enumerator pouze, pokud je metoda volana primo z enumeratoru
   - enumerator normalne
 
+- muze byt vic metod se stejnym nazvem a stejnymi parametry -> to se pak vykonaji vsechny
 
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 future:
@@ -74,7 +75,6 @@ future:
 - obecny graf, semanticke uloziste (mapovani objektu do semantickeho uloziste)
 <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-
 // classes declaration
 // nazev tridy je podmet/predmet
 // nazev promenne predstavuje nazev relace
@@ -82,49 +82,55 @@ class XXX
 {
 	string a;//private write once semantic, on get, continue with extraction until the property is loaded, get is prohibited
 	string b;//write once
-	list<string> c;
-	list<XXX> d;
+	string[] c;
+	XXX[] d;
 }
 
 
 // global objects are specified within the arguments of main methods
 // main is initial method for all global objects, has some default context, without content
 // all main functions are "called" (added to todo list) at the startup
-main(list<XXX> xxxs)// main is automatically added into the TODO list of global objects
+main(XXX[] xxxs)// main is automatically added into the TODO list of global objects
 {
-	context("www.example.com").subpage(xxxs);	// call(subpage, new context(this,"www.example.com"), new object[]{xxxs});// metoda call prida akci do TODO listu vsem parametrum
-	context("www.example.com", "referrer...", "cookies", "3600").subpage(xxxs);
-	//xxxs.add(...) => call("a.add(b);",this,new object[]{a=xxxs,b=...});
+	["www.example.com"]
+	subpage(xxxs);	// call(subpage, new context(this,"www.example.com"), new object[]{xxxs});// metoda call prida akci do TODO listu vsem parametrum
+
+	["www.example.com", "referrer...", "cookies", "3600"]
+	subpage(xxxs);
+
+	xxxs[] = XXX(a="X", b="Y");// xxxs.add( new XXX(){ ... } ) // return XXX
 }
 // it is possible to define more main methods
-main(list<XXX> xxxs)//another main method
+main(XXX[] xxxs)//another main method
 {
-	context("www.example2.com").subpage(xxxs);
+	[open("www.example2.com")]
+	[submit("OK",[])]
+	subpage(xxxs);// OpenCOntextDynamic().OpenContextDynamic().AddAction( subpage, []{xxxs} )
 }
 
 
 // functions
-subpage(list<XXX> xxxs)
+subpage(XXX[] xxxs)
 {
-	foreach( regexp )//regexp on current context // foreach ( Match m in RegExp("...").Match(this.loaded_content) ){ r1=m["r1"], ...; }
+	foreach( regexp )//regexp on current context // foreach ( LocalVariables x in regexi("...") ){ r1=m["r1"], ...; }
 	{
-		xxxs.add(x = new XXX( a = r1, b = r2 ))
-		//x.c.add("text");// nelze, pridavani elementu do podrazeneho listu
-		//x.c.add("text"); => call("a.add(b);",this,new object[]{a=x.c, b="text"})
+		xxxs[] = x = XXX( a = r1, b = r2 ))
+		//x.c[]("text");// nelze, pridavani elementu do podrazeneho listu
+		//x.c[]("text"); => call("a[]=b;",this,new object[]{a=x.c, b="text"})
 
-		context(r3).page_xyz(x, new YYY(), r4)
+		[r3] page_xyz(x, YYY(), r4+1+"x")
 		
 	}
-	context("www.example.com").page_xyz( xxxs.add(new XXX()) );
+	["www.example.com"]page_sss( xxxs[] = XXX() );	// call(page_sss,context..., new object[]{ xxxxs.add(new XXX()) } )
 }
 
-page_xyz( list<XXX> c, YYY data2, string cat )
+page_xyz( XXX[] c, YYY data2, string cat )
 {
 	foreach(regexp)
 	{
-		c.add(r1);
+		c[]=r1;
 		
-		context(r1).page_sss(d);
+		[r1]page_sss(d);
 	}
 }
 

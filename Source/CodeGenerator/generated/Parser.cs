@@ -4,7 +4,7 @@
 
 // GPPG version 1.3.6
 // Machine:  COREDUO
-// DateTime: 1.2.2010 16:43:50
+// DateTime: 2.2.2010 18:32:25
 // UserName: Jakub
 // Input file <generators\Parser.y>
 
@@ -541,7 +541,7 @@ public class Parser: ShiftReduceParser<ValueType, ExprPosition>
 	private List<VariableDecl> VariableDecls( object decls, VariableDecl vardecl )
 	{
 		var newdecls = (decls!=null)?(new List<VariableDecl>( (List<VariableDecl>)decls )):(new List<VariableDecl>());
-		if(vardecl!=null)newdecls.Add(vardecl);		
+		if(vardecl!=null)newdecls.Insert(0,vardecl);		
 		return newdecls;
 	}
 	
@@ -557,11 +557,11 @@ public class Parser: ShiftReduceParser<ValueType, ExprPosition>
 			{	// reduces the tree (empty CodeBlock or CodeBlock with only one expression is reduced)
 				if (exprbl.Statements.Count > 0)
 				{
-					newexprs.Add( (exprbl.Statements.Count==1 && exprbl.DataContexts.Count == 0)?exprbl.Statements[0]:exprbl );
+					newexprs.Insert( 0, (exprbl.Statements.Count==1 && exprbl.DataContexts.Count == 0)?exprbl.Statements[0]:exprbl );
 				}
 			}
 			else
-				newexprs.Add( expr );
+				newexprs.Insert( 0, expr );
 		}
 		return newexprs;
 	}

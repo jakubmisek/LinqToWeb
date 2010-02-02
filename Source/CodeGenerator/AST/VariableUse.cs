@@ -15,28 +15,32 @@ namespace linqtoweb.CodeGenerator.AST
             VariableName = name;
         }
 
+        /// <summary>
+        /// Emit variable read.
+        /// </summary>
+        /// <param name="codecontext"></param>
+        /// <returns></returns>
         internal override ExpressionType EmitCs(EmitCodeContext codecontext)
         {
-            ExpressionType varType;
-            string varuseString;
+            ExpressionType varType = codecontext.GetLocalVarType(VariableName);
 
-            // TODO: dotted identifier
-
-            if (codecontext.DeclaredLocalVars.TryGetValue(VariableName, out varType))
+            if (varType != null)
             {
                 // VariableName
-                varuseString = VariableName;
+                codecontext.Write(VariableName);
+                return varType;
             }
             else
             {
+                if (VariableName.Contains("."))
+                    throw new Exception("Undeclared variable " + VariableName);
+
                 // ((string)__l["VariableName"])    // dynamic var
-                varType = ExpressionType.StringType;
-                varuseString = "((string)" + scopeLocalVarName + "[\"" + VariableName + "\"])";
+                codecontext.Write("((string)" + scopeLocalVarName + "[\"" + VariableName + "\"])");
+                return ExpressionType.StringType;
             }
 
-            codecontext.Write(varuseString);
-
-            return varType;
+            
         }
     }
 }

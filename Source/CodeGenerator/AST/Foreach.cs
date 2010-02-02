@@ -28,6 +28,8 @@ namespace linqtoweb.CodeGenerator.AST
                 if(foreachMethod == null)
                     throw new Exception("argument of foreach must be a method call");
 
+                // TODO check foreachMethod arguments and return value
+
                 /*  // emit this
                     foreach (var x in ForeachMethods.regexp(l.context, @"Porno\s+(?<Title>\w+)"))
                     {

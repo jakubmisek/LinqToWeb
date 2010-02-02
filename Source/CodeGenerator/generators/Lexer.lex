@@ -49,6 +49,7 @@ or				{return (int)Tokens.OP_LOGIC_OR;}
 \&\&			{return (int)Tokens.OP_LOGIC_AND;}
 and				{return (int)Tokens.OP_LOGIC_AND;}
 xor				{return (int)Tokens.OP_LOGIC_XOR;}
+\^				{return (int)Tokens.OP_LOGIC_XOR;}
 \!				{return (int)Tokens.OP_LOGIC_NOT;}
 not				{return (int)Tokens.OP_LOGIC_NOT;}
 \=\=			{return (int)Tokens.OP_EQ;}

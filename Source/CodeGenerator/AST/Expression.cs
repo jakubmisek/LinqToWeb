@@ -118,7 +118,39 @@ namespace linqtoweb.CodeGenerator.AST
                 ExpressionType rettype = varvalue.EmitCs(this);
                 this.Write(";" + Output.NewLine);
 
-                Debug.Assert(rettype == vartype, "Assigning different types: '" + vartype.CsName + "' and '" + rettype.CsName + "'");
+                Debug.Assert(rettype.Equals(vartype), "Assigning different types: '" + vartype.CsName + "' and '" + rettype.CsName + "'");
+            }
+
+            public ExpressionType GetLocalVarType( string varname )
+            {
+                if (string.IsNullOrEmpty(varname))
+                    return null;
+
+                string[] chainName = varname.Split(new char[]{'.'});
+
+                ExpressionType retType;
+                if (!DeclaredLocalVars.TryGetValue(chainName[0], out retType))
+                    return null;
+
+                if (chainName.Length > 1)
+                {
+                    for (int i = 1; i < chainName.Length; ++i)
+                    {
+                        if (retType.UserTypeName == null)
+                            throw new Exception("Member chain of non-user class not supported.");
+
+                        ClassDecl classdecl;
+                        if (!Declarations.Classes.TryGetValue(retType.UserTypeName, out classdecl))
+                            throw new Exception("Undeclared type " + retType.UserTypeName);
+
+                        retType = classdecl.ContainsProperty(chainName[i]);
+
+                        if (retType == null)
+                            throw new Exception("Undeclared property " + chainName[i]);
+                    }
+                }
+
+                return retType;
             }
 
             public EmitCodeContext NewScope()

@@ -161,7 +161,7 @@ nextcallargs:	expr	{ $$.obj = ExpressionList(null,(Expression)$1.obj); }
 	private List<VariableDecl> VariableDecls( object decls, VariableDecl vardecl )
 	{
 		var newdecls = (decls!=null)?(new List<VariableDecl>( (List<VariableDecl>)decls )):(new List<VariableDecl>());
-		if(vardecl!=null)newdecls.Add(vardecl);		
+		if(vardecl!=null)newdecls.Insert(0,vardecl);		
 		return newdecls;
 	}
 	
@@ -177,11 +177,11 @@ nextcallargs:	expr	{ $$.obj = ExpressionList(null,(Expression)$1.obj); }
 			{	// reduces the tree (empty CodeBlock or CodeBlock with only one expression is reduced)
 				if (exprbl.Statements.Count > 0)
 				{
-					newexprs.Add( (exprbl.Statements.Count==1 && exprbl.DataContexts.Count == 0)?exprbl.Statements[0]:exprbl );
+					newexprs.Insert( 0, (exprbl.Statements.Count==1 && exprbl.DataContexts.Count == 0)?exprbl.Statements[0]:exprbl );
 				}
 			}
 			else
-				newexprs.Add( expr );
+				newexprs.Insert( 0, expr );
 		}
 		return newexprs;
 	}

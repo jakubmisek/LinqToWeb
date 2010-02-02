@@ -43,5 +43,35 @@ namespace linqtoweb.Core.extraction
         }
 
         #endregion
+
+        #region Helper
+
+        /// <summary>
+        /// Method that can be called by ActionList mechanism, that adds an element into the list.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="datacontext"></param>
+        /// <param name="parameters"></param>
+        private static void AddElementMethod<T>( DataContext datacontext, LocalVariables parameters )
+        {
+            ((ExtractionListBase<T>)parameters["list"]).AddElement((T)parameters["element"]);
+        }
+
+        /// <summary>
+        /// Creates an action that adds an element into given list.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="context"></param>
+        /// <param name="list"></param>
+        /// <param name="element"></param>
+        /// <returns></returns>
+        protected static T AddElementAction<T>( DataContext context, ExtractionListBase<T> list, T element )
+        {
+            ActionItem.AddAction(AddElementMethod<T>, context, new LocalVariables(new Dictionary<string, object>() { { "list", list }, { "element", element } }));
+
+            return element;
+        }
+
+        #endregion
     }
 }
