@@ -8,13 +8,13 @@ using System.Diagnostics;
 
 namespace linqtoweb.CodeGenerator.AST
 {
-    public class Foreach:Expression
+    public class ForeachStmt : Expression
     {
         public readonly Expression ForeachExpression;
         public readonly Expression Body;    // if null, ignore this foreach
 
-        public Foreach(ExprPosition position, Expression foreachexpr, Expression body)
-            :base(position)
+        public ForeachStmt(ExprPosition position, Expression foreachexpr, Expression body)
+            : base(position)
         {
             this.Body = body;
             this.ForeachExpression = foreachexpr;
@@ -25,7 +25,7 @@ namespace linqtoweb.CodeGenerator.AST
             if (Body != null)
             {
                 MethodCall foreachMethod = ForeachExpression as MethodCall;
-                if(foreachMethod == null)
+                if (foreachMethod == null)
                     throw new Exception("argument of foreach must be a method call");
 
                 // TODO check foreachMethod arguments and return value

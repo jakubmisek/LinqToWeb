@@ -66,7 +66,7 @@ namespace linqtoweb.CodeGenerator.AST
                    
                 }
 
-                codecontext.Write("}, "+scopeLocalVarName+".context, new LocalVariables(new Dictionary<string, object>() {" + codecontext.Output.NewLine);
+                codecontext.Write("}, "+scopeLocalVarName+".context, new LocalVariables() {" + codecontext.Output.NewLine);
 
                 codecontext.Level++;
 
@@ -82,7 +82,7 @@ namespace linqtoweb.CodeGenerator.AST
                         throw new Exception("Type mishmash.");
                 }
 
-                codecontext.Write(" }))");
+                codecontext.Write(" })");
                 codecontext.Level--;
 
                 return ExpressionType.VoidType;

@@ -4,7 +4,7 @@
 
 // GPPG version 1.3.6
 // Machine:  COREDUO
-// DateTime: 3.2.2010 1:27:31
+// DateTime: 3.2.2010 1:50:00
 // UserName: Jakub
 // Input file <generators\Parser.y>
 
@@ -392,7 +392,7 @@ public class Parser: ShiftReduceParser<ValueType, ExprPosition>
 { CurrentSemanticValue.obj = new CodeBlock( LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]), (List<Expression>)ValueStack[ValueStack.Depth-2].obj ); }
         break;
       case 33: // statement -> FOREACH, LPAREN, expr, RPAREN, contextstatement
-{ CurrentSemanticValue.obj = new Foreach(LocationStack[LocationStack.Depth-5].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-3].obj,(Expression)ValueStack[ValueStack.Depth-1].obj); }
+{ CurrentSemanticValue.obj = new ForeachStmt(LocationStack[LocationStack.Depth-5].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-3].obj,(Expression)ValueStack[ValueStack.Depth-1].obj); }
         break;
       case 34: // expr -> expr2
 {CurrentSemanticValue.obj = ValueStack[ValueStack.Depth-1].obj;}

@@ -97,7 +97,7 @@ statement:		SEMICOLON	{ $$.obj = null; /*empty statement*/ }
 			|	expr SEMICOLON { $$.obj = new Statement(@1.Merge(@2),(Expression)$1.obj); }
 			|	LBRACE RBRACE	{ $$.obj = null; }
 			|	LBRACE statementlist RBRACE { $$.obj = new CodeBlock( @1.Merge(@3), (List<Expression>)$2.obj ); }
-			|	FOREACH LPAREN expr RPAREN contextstatement { $$.obj = new Foreach(@1.Merge(@5),(Expression)$3.obj,(Expression)$5.obj); }
+			|	FOREACH LPAREN expr RPAREN contextstatement { $$.obj = new ForeachStmt(@1.Merge(@5),(Expression)$3.obj,(Expression)$5.obj); }
 			;
 
 expr:			expr2						{$$.obj = $1.obj;}
