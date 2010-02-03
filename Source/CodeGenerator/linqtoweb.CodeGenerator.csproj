@@ -52,6 +52,7 @@
     <Compile Include="AST\Expression\BinaryExpr.cs" />
     <Compile Include="AST\Statement\ClassDecl.cs" />
     <Compile Include="AST\Statement\CodeBlock.cs" />
+    <Compile Include="AST\Statement\Statement.cs" />
     <Compile Include="AST\Statement\ForeachStmt.cs" />
     <Compile Include="AST\Expression\TernaryExpr.cs" />
     <Compile Include="AST\Expression\MethodCall.cs" />
