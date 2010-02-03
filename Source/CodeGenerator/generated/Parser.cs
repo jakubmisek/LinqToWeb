@@ -4,7 +4,7 @@
 
 // GPPG version 1.3.6
 // Machine:  COREDUO
-// DateTime: 2.2.2010 18:32:25
+// DateTime: 3.2.2010 1:27:31
 // UserName: Jakub
 // Input file <generators\Parser.y>
 
@@ -398,61 +398,61 @@ public class Parser: ShiftReduceParser<ValueType, ExprPosition>
 {CurrentSemanticValue.obj = ValueStack[ValueStack.Depth-1].obj;}
         break;
       case 35: // expr -> expr, OP_LOGIC_OR, expr2
-{CurrentSemanticValue.obj = new LogicalOrExpression(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj);}
+{CurrentSemanticValue.obj = new ExpressionLogicalOr(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj);}
         break;
       case 36: // expr -> expr, OP_LOGIC_AND, expr2
-{CurrentSemanticValue.obj = new LogicalAndExpression(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj);}
+{CurrentSemanticValue.obj = new ExpressionLogicalAnd(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj);}
         break;
       case 37: // expr -> expr, OP_LOGIC_XOR, expr2
-{CurrentSemanticValue.obj = new LogicalXorExpression(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj);}
+{CurrentSemanticValue.obj = new ExpressionLogicalXor(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj);}
         break;
       case 38: // expr -> expr, OP_QUESTION, expr, OP_COLON, expr
 {CurrentSemanticValue.obj = new TernaryCondExpression(LocationStack[LocationStack.Depth-5].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-5].obj,(Expression)ValueStack[ValueStack.Depth-3].obj,(Expression)ValueStack[ValueStack.Depth-1].obj);}
         break;
       case 39: // expr -> varuse, OP_ASSIGN, expr
-{CurrentSemanticValue.obj = new BinaryAssignExpression(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]), (Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj);}
+{CurrentSemanticValue.obj = new ExpressionAssign(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]), (Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj);}
         break;
       case 40: // expr -> varuse, LBRACKET, RBRACKET, OP_ASSIGN, expr
-{ CurrentSemanticValue.obj = new AddElementExpression(LocationStack[LocationStack.Depth-5].Merge(LocationStack[LocationStack.Depth-1]),(VariableUse)ValueStack[ValueStack.Depth-5].obj, (Expression)ValueStack[ValueStack.Depth-1].obj); }
+{ CurrentSemanticValue.obj = new ExpressionAddElement(LocationStack[LocationStack.Depth-5].Merge(LocationStack[LocationStack.Depth-1]),(VariableUse)ValueStack[ValueStack.Depth-5].obj, (Expression)ValueStack[ValueStack.Depth-1].obj); }
         break;
       case 41: // expr2 -> expr3
 {CurrentSemanticValue.obj = ValueStack[ValueStack.Depth-1].obj;}
         break;
       case 42: // expr2 -> expr2, OP_EQ, expr3
-{CurrentSemanticValue.obj = new EqExpression(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj);}
+{CurrentSemanticValue.obj = new ExpressionEq(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj);}
         break;
       case 43: // expr2 -> expr2, OP_NOTEQ, expr3
-{CurrentSemanticValue.obj = new NotEqExpression(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj);}
+{CurrentSemanticValue.obj = new ExpressionNotEq(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj);}
         break;
       case 44: // expr2 -> expr2, OP_LESS, expr3
-{CurrentSemanticValue.obj = new BinaryLessExpression(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj);}
+{CurrentSemanticValue.obj = new ExpressionLess(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj);}
         break;
       case 45: // expr2 -> expr2, OP_GREATER, expr3
-{CurrentSemanticValue.obj = new BinaryGreaterExpression(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj);}
+{CurrentSemanticValue.obj = new ExpressionGreater(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj);}
         break;
       case 46: // expr2 -> expr2, OP_LESSEQ, expr3
-{CurrentSemanticValue.obj = new BinaryLessEqExpression(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj);}
+{CurrentSemanticValue.obj = new ExpressionLessEq(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj);}
         break;
       case 47: // expr2 -> expr2, OP_GREATEREQ, expr3
-{CurrentSemanticValue.obj = new BinaryGreaterEqExpression(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj);}
+{CurrentSemanticValue.obj = new ExpressionGreaterEq(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj);}
         break;
       case 48: // expr3 -> term
 { CurrentSemanticValue.obj = ValueStack[ValueStack.Depth-1].obj; }
         break;
       case 49: // expr3 -> expr3, OP_ADD, term
-{ CurrentSemanticValue.obj = new BinaryAddExpression(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]), (Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj); }
+{ CurrentSemanticValue.obj = new ExpressionAdd(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]), (Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj); }
         break;
       case 50: // expr3 -> expr3, OP_SUB, term
-{ CurrentSemanticValue.obj = new BinarySubExpression(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]), (Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj); }
+{ CurrentSemanticValue.obj = new ExpressionSub(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]), (Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj); }
         break;
       case 51: // term -> factor
 { CurrentSemanticValue.obj = ValueStack[ValueStack.Depth-1].obj; }
         break;
       case 52: // term -> term, OP_MUL, factor
-{ CurrentSemanticValue.obj = new BinaryMulExpression(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]), (Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj); }
+{ CurrentSemanticValue.obj = new ExpressionMul(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]), (Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj); }
         break;
       case 53: // term -> term, OP_DIV, factor
-{ CurrentSemanticValue.obj = new BinaryDivExpression(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]), (Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj); }
+{ CurrentSemanticValue.obj = new ExpressionDiv(LocationStack[LocationStack.Depth-3].Merge(LocationStack[LocationStack.Depth-1]), (Expression)ValueStack[ValueStack.Depth-3].obj, (Expression)ValueStack[ValueStack.Depth-1].obj); }
         break;
       case 54: // factor -> varuse
 { CurrentSemanticValue.obj = ValueStack[ValueStack.Depth-1].obj; }
@@ -461,25 +461,25 @@ public class Parser: ShiftReduceParser<ValueType, ExprPosition>
 { CurrentSemanticValue.obj = ValueStack[ValueStack.Depth-1].obj; }
         break;
       case 56: // factor -> OP_LOGIC_NOT, factor
-{CurrentSemanticValue.obj = new LogicalNotExpression(LocationStack[LocationStack.Depth-2].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-1].obj); }
+{CurrentSemanticValue.obj = new ExpressionLogicalNot(LocationStack[LocationStack.Depth-2].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-1].obj); }
         break;
       case 57: // factor -> OP_SUB, factor
-{  CurrentSemanticValue.obj = new UnaryMinusExpression(LocationStack[LocationStack.Depth-2].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-1].obj); }
+{  CurrentSemanticValue.obj = new ExpressionUnaryMinus(LocationStack[LocationStack.Depth-2].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-1].obj); }
         break;
       case 58: // factor -> OP_ADD, factor
 {  CurrentSemanticValue.obj = ValueStack[ValueStack.Depth-1].obj; }
         break;
       case 59: // factor -> OP_SUB1, factor
-{  CurrentSemanticValue.obj = new BinaryAddExpression(LocationStack[LocationStack.Depth-2].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-1].obj, new IntLiteral(LocationStack[LocationStack.Depth-2],-1)); }
+{  CurrentSemanticValue.obj = new ExpressionAdd(LocationStack[LocationStack.Depth-2].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-1].obj, new IntLiteral(LocationStack[LocationStack.Depth-2],-1)); }
         break;
       case 60: // factor -> OP_ADD1, factor
-{  CurrentSemanticValue.obj = new BinaryAddExpression(LocationStack[LocationStack.Depth-2].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-1].obj, new IntLiteral(LocationStack[LocationStack.Depth-2],+1)); }
+{  CurrentSemanticValue.obj = new ExpressionAdd(LocationStack[LocationStack.Depth-2].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-1].obj, new IntLiteral(LocationStack[LocationStack.Depth-2],+1)); }
         break;
       case 61: // factor -> factor, OP_SUB1
-{  CurrentSemanticValue.obj = new BinaryAddExpression(LocationStack[LocationStack.Depth-2].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-2].obj, new IntLiteral(LocationStack[LocationStack.Depth-2],-1)); }
+{  CurrentSemanticValue.obj = new ExpressionAdd(LocationStack[LocationStack.Depth-2].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-2].obj, new IntLiteral(LocationStack[LocationStack.Depth-2],-1)); }
         break;
       case 62: // factor -> factor, OP_ADD1
-{  CurrentSemanticValue.obj = new BinaryAddExpression(LocationStack[LocationStack.Depth-2].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-2].obj, new IntLiteral(LocationStack[LocationStack.Depth-2],+1)); }
+{  CurrentSemanticValue.obj = new ExpressionAdd(LocationStack[LocationStack.Depth-2].Merge(LocationStack[LocationStack.Depth-1]),(Expression)ValueStack[ValueStack.Depth-2].obj, new IntLiteral(LocationStack[LocationStack.Depth-2],+1)); }
         break;
       case 63: // factor -> LPAREN, expr, RPAREN
 { CurrentSemanticValue.obj = ValueStack[ValueStack.Depth-2].obj; }

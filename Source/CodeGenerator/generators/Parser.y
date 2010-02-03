@@ -101,39 +101,39 @@ statement:		SEMICOLON	{ $$.obj = null; /*empty statement*/ }
 			;
 
 expr:			expr2						{$$.obj = $1.obj;}
-			|	expr OP_LOGIC_OR expr2		{$$.obj = new LogicalOrExpression(@1.Merge(@3),(Expression)$1.obj, (Expression)$3.obj);}
-			|	expr OP_LOGIC_AND expr2		{$$.obj = new LogicalAndExpression(@1.Merge(@3),(Expression)$1.obj, (Expression)$3.obj);}
-			|	expr OP_LOGIC_XOR expr2		{$$.obj = new LogicalXorExpression(@1.Merge(@3),(Expression)$1.obj, (Expression)$3.obj);}
+			|	expr OP_LOGIC_OR expr2		{$$.obj = new ExpressionLogicalOr(@1.Merge(@3),(Expression)$1.obj, (Expression)$3.obj);}
+			|	expr OP_LOGIC_AND expr2		{$$.obj = new ExpressionLogicalAnd(@1.Merge(@3),(Expression)$1.obj, (Expression)$3.obj);}
+			|	expr OP_LOGIC_XOR expr2		{$$.obj = new ExpressionLogicalXor(@1.Merge(@3),(Expression)$1.obj, (Expression)$3.obj);}
 			|	expr OP_QUESTION expr OP_COLON expr	{$$.obj = new TernaryCondExpression(@1.Merge(@5),(Expression)$1.obj,(Expression)$3.obj,(Expression)$5.obj);}
-			|	varuse OP_ASSIGN expr		{$$.obj = new BinaryAssignExpression(@1.Merge(@3), (Expression)$1.obj, (Expression)$3.obj);}
-			|	varuse LBRACKET RBRACKET OP_ASSIGN expr	{ $$.obj = new AddElementExpression(@1.Merge(@5),(VariableUse)$1.obj, (Expression)$5.obj); }
+			|	varuse OP_ASSIGN expr		{$$.obj = new ExpressionAssign(@1.Merge(@3), (Expression)$1.obj, (Expression)$3.obj);}
+			|	varuse LBRACKET RBRACKET OP_ASSIGN expr	{ $$.obj = new ExpressionAddElement(@1.Merge(@5),(VariableUse)$1.obj, (Expression)$5.obj); }
 			;
 			
 expr2:			expr3						{$$.obj = $1.obj;}
-			|	expr2 OP_EQ expr3			{$$.obj = new EqExpression(@1.Merge(@3),(Expression)$1.obj, (Expression)$3.obj);}
-			|	expr2 OP_NOTEQ expr3		{$$.obj = new NotEqExpression(@1.Merge(@3),(Expression)$1.obj, (Expression)$3.obj);}
-			|	expr2 OP_LESS expr3			{$$.obj = new BinaryLessExpression(@1.Merge(@3),(Expression)$1.obj, (Expression)$3.obj);}
-			|	expr2 OP_GREATER expr3		{$$.obj = new BinaryGreaterExpression(@1.Merge(@3),(Expression)$1.obj, (Expression)$3.obj);}
-			|	expr2 OP_LESSEQ expr3		{$$.obj = new BinaryLessEqExpression(@1.Merge(@3),(Expression)$1.obj, (Expression)$3.obj);}
-			|	expr2 OP_GREATEREQ expr3	{$$.obj = new BinaryGreaterEqExpression(@1.Merge(@3),(Expression)$1.obj, (Expression)$3.obj);}
+			|	expr2 OP_EQ expr3			{$$.obj = new ExpressionEq(@1.Merge(@3),(Expression)$1.obj, (Expression)$3.obj);}
+			|	expr2 OP_NOTEQ expr3		{$$.obj = new ExpressionNotEq(@1.Merge(@3),(Expression)$1.obj, (Expression)$3.obj);}
+			|	expr2 OP_LESS expr3			{$$.obj = new ExpressionLess(@1.Merge(@3),(Expression)$1.obj, (Expression)$3.obj);}
+			|	expr2 OP_GREATER expr3		{$$.obj = new ExpressionGreater(@1.Merge(@3),(Expression)$1.obj, (Expression)$3.obj);}
+			|	expr2 OP_LESSEQ expr3		{$$.obj = new ExpressionLessEq(@1.Merge(@3),(Expression)$1.obj, (Expression)$3.obj);}
+			|	expr2 OP_GREATEREQ expr3	{$$.obj = new ExpressionGreaterEq(@1.Merge(@3),(Expression)$1.obj, (Expression)$3.obj);}
 			;
 expr3:			term				{ $$.obj = $1.obj; }
-			|	expr3 OP_ADD term	{ $$.obj = new BinaryAddExpression(@1.Merge(@3), (Expression)$1.obj, (Expression)$3.obj); }
-			|	expr3 OP_SUB term	{ $$.obj = new BinarySubExpression(@1.Merge(@3), (Expression)$1.obj, (Expression)$3.obj); }
+			|	expr3 OP_ADD term	{ $$.obj = new ExpressionAdd(@1.Merge(@3), (Expression)$1.obj, (Expression)$3.obj); }
+			|	expr3 OP_SUB term	{ $$.obj = new ExpressionSub(@1.Merge(@3), (Expression)$1.obj, (Expression)$3.obj); }
 			;
 term:			factor				{ $$.obj = $1.obj; }
-			|	term OP_MUL factor	{ $$.obj = new BinaryMulExpression(@1.Merge(@3), (Expression)$1.obj, (Expression)$3.obj); }
-			|	term OP_DIV factor	{ $$.obj = new BinaryDivExpression(@1.Merge(@3), (Expression)$1.obj, (Expression)$3.obj); }
+			|	term OP_MUL factor	{ $$.obj = new ExpressionMul(@1.Merge(@3), (Expression)$1.obj, (Expression)$3.obj); }
+			|	term OP_DIV factor	{ $$.obj = new ExpressionDiv(@1.Merge(@3), (Expression)$1.obj, (Expression)$3.obj); }
 			;
 factor:			varuse				{ $$.obj = $1.obj; }
 			|	literal				{ $$.obj = $1.obj; }
-			|	OP_LOGIC_NOT factor	{$$.obj = new LogicalNotExpression(@1.Merge(@2),(Expression)$2.obj); }
-			|	OP_SUB factor	{  $$.obj = new UnaryMinusExpression(@1.Merge(@2),(Expression)$2.obj); }
+			|	OP_LOGIC_NOT factor	{$$.obj = new ExpressionLogicalNot(@1.Merge(@2),(Expression)$2.obj); }
+			|	OP_SUB factor	{  $$.obj = new ExpressionUnaryMinus(@1.Merge(@2),(Expression)$2.obj); }
 			|	OP_ADD factor	{  $$.obj = $2.obj; }
-			|	OP_SUB1 factor	{  $$.obj = new BinaryAddExpression(@1.Merge(@2),(Expression)$2.obj, new IntLiteral(@1,-1)); }
-			|	OP_ADD1 factor	{  $$.obj = new BinaryAddExpression(@1.Merge(@2),(Expression)$2.obj, new IntLiteral(@1,+1)); }
-			|	factor OP_SUB1	{  $$.obj = new BinaryAddExpression(@1.Merge(@2),(Expression)$1.obj, new IntLiteral(@1,-1)); }
-			|	factor OP_ADD1	{  $$.obj = new BinaryAddExpression(@1.Merge(@2),(Expression)$1.obj, new IntLiteral(@1,+1)); }
+			|	OP_SUB1 factor	{  $$.obj = new ExpressionAdd(@1.Merge(@2),(Expression)$2.obj, new IntLiteral(@1,-1)); }
+			|	OP_ADD1 factor	{  $$.obj = new ExpressionAdd(@1.Merge(@2),(Expression)$2.obj, new IntLiteral(@1,+1)); }
+			|	factor OP_SUB1	{  $$.obj = new ExpressionAdd(@1.Merge(@2),(Expression)$1.obj, new IntLiteral(@1,-1)); }
+			|	factor OP_ADD1	{  $$.obj = new ExpressionAdd(@1.Merge(@2),(Expression)$1.obj, new IntLiteral(@1,+1)); }
 			|	LPAREN expr RPAREN	{ $$.obj = $2.obj; }
 			|	LPAREN singlebasetype RPAREN factor	{ $$.obj = new TypeCastExpression( @1.Merge(@4), (ExpressionType)$2.obj, (Expression)$4.obj ); }
 			|	methodcall	{ $$.obj = $1.obj; }

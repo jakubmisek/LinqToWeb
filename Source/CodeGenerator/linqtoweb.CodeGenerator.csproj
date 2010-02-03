@@ -49,21 +49,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AST\BinaryExpression.cs" />
-    <Compile Include="AST\ClassDecl.cs" />
-    <Compile Include="AST\CodeBlock.cs" />
-    <Compile Include="AST\Foreach.cs" />
-    <Compile Include="AST\TernaryExpression.cs" />
-    <Compile Include="AST\MethodCall.cs" />
-    <Compile Include="AST\TypeCast.cs" />
-    <Compile Include="AST\UnaryExpression.cs" />
-    <Compile Include="AST\VariableDecl.cs" />
+    <Compile Include="AST\Expression\BinaryExpr.cs" />
+    <Compile Include="AST\Statement\ClassDecl.cs" />
+    <Compile Include="AST\Statement\CodeBlock.cs" />
+    <Compile Include="AST\Statement\ForeachStmt.cs" />
+    <Compile Include="AST\Expression\TernaryExpr.cs" />
+    <Compile Include="AST\Expression\MethodCall.cs" />
+    <Compile Include="AST\Expression\TypeCast.cs" />
+    <Compile Include="AST\Expression\UnaryExpr.cs" />
+    <Compile Include="AST\Statement\VariableDecl.cs" />
     <Compile Include="AST\ExpressionType.cs" />
-    <Compile Include="AST\GlobalCode.cs" />
-    <Compile Include="AST\Expression.cs" />
-    <Compile Include="AST\Literals.cs" />
-    <Compile Include="AST\MethodDecl.cs" />
-    <Compile Include="AST\VariableUse.cs" />
+    <Compile Include="AST\Statement\GlobalCode.cs" />
+    <Compile Include="AST\Expression\Expression.cs" />
+    <Compile Include="AST\Expression\Literals.cs" />
+    <Compile Include="AST\Statement\MethodDecl.cs" />
+    <Compile Include="AST\Expression\VariableUse.cs" />
     <Compile Include="generated\Lexer.cs" />
     <Compile Include="generated\Parser.cs" />
     <Compile Include="Parser\Position.cs" />

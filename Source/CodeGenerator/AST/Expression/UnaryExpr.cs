@@ -5,7 +5,7 @@ using System.Text;
 
 namespace linqtoweb.CodeGenerator.AST
 {
-    public class UnaryExpression : Expression
+    public abstract class UnaryExpr : Expression
     {
         /// <summary>
         /// the value of the unary expression.
@@ -17,7 +17,7 @@ namespace linqtoweb.CodeGenerator.AST
         /// </summary>
         /// <param name="position"></param>
         /// <param name="value"></param>
-        public UnaryExpression(ExprPosition position, Expression value)
+        public UnaryExpr(ExprPosition position, Expression value)
             :base(position)
         {
             this.Value = value;
@@ -27,9 +27,9 @@ namespace linqtoweb.CodeGenerator.AST
     /// <summary>
     /// !value
     /// </summary>
-    public class LogicalNotExpression : UnaryExpression
+    public class ExpressionLogicalNot : UnaryExpr
     {
-        public LogicalNotExpression(ExprPosition position, Expression value)
+        public ExpressionLogicalNot(ExprPosition position, Expression value)
             :base(position, value)
         {
             
@@ -56,9 +56,9 @@ namespace linqtoweb.CodeGenerator.AST
     /// <summary>
     /// -value
     /// </summary>
-    public class UnaryMinusExpression : UnaryExpression
+    public class ExpressionUnaryMinus : UnaryExpr
     {
-        public UnaryMinusExpression(ExprPosition position, Expression value)
+        public ExpressionUnaryMinus(ExprPosition position, Expression value)
             : base(position, value)
         {
 

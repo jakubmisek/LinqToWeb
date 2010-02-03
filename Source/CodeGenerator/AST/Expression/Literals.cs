@@ -9,7 +9,7 @@ namespace linqtoweb.CodeGenerator.AST
     /// <summary>
     /// Literal expression.
     /// </summary>
-    class Literal : Expression
+    public abstract class Literal : Expression
     {
         public Literal(ExprPosition position)
             : base(position)
@@ -22,7 +22,7 @@ namespace linqtoweb.CodeGenerator.AST
     /// <summary>
     /// String literal or identifier.
     /// </summary>
-    class StringLiteral : Literal
+    public class StringLiteral : Literal
     {
         /// <summary>
         /// The value of the string literal. C# string.
@@ -48,7 +48,7 @@ namespace linqtoweb.CodeGenerator.AST
     /// <summary>
     /// Int literal.
     /// </summary>
-    class IntLiteral:Literal
+    public class IntLiteral : Literal
     {
         /// <summary>
         /// The value of the int literal.
@@ -72,7 +72,7 @@ namespace linqtoweb.CodeGenerator.AST
     /// <summary>
     /// Double literal.
     /// </summary>
-    class DoubleLiteral : Literal
+    public class DoubleLiteral : Literal
     {
         /// <summary>
         /// The value of the double literal.
@@ -96,7 +96,7 @@ namespace linqtoweb.CodeGenerator.AST
     /// <summary>
     /// DateTime literal.
     /// </summary>
-    class DateTimeLiteral : Literal
+    public class DateTimeLiteral : Literal
     {
         /// <summary>
         /// The value of the double literal.
@@ -120,7 +120,7 @@ namespace linqtoweb.CodeGenerator.AST
     /// <summary>
     /// Bool literal.
     /// </summary>
-    class BoolLiteral : Literal
+    public class BoolLiteral : Literal
     {
         /// <summary>
         /// The value of the double literal.

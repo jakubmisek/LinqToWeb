@@ -13,16 +13,6 @@ namespace linqtoweb.CodeGenerator.AST
     public class GlobalCode : Expression
     {
         /// <summary>
-        /// The name of the emitted class that will contain types and methods.
-        /// </summary>
-        public string ContextName { get; private set; }
-
-        /// <summary>
-        /// The name of the emitted namespace that will contain the context class.
-        /// </summary>
-        public string NamespaceName { get; private set; }
-
-        /// <summary>
         /// List of declared classes and methods.
         /// </summary>
         public DeclarationsList Declarations { get; private set; }
@@ -37,28 +27,23 @@ namespace linqtoweb.CodeGenerator.AST
             Debug.Assert(decls != null);
 
             this.Declarations = decls;
-
-            ContextName = "WebContext";
-            NamespaceName = "linqtoweb.Example";
+            
         }
 
         public override string ToString()
         {
-            return 
-                "namespace " + NamespaceName + "\n{" +
-                Declarations.ToString() +
-                "}";
+            return Declarations.ToString();
         }
 
         /// <summary>
         /// Emit the C# source code.
         /// </summary>
         /// <param name="output">OUtput stream.</param>
-        public void EmitCs(System.IO.StreamWriter output)
+        public void EmitCs(StreamWriter output, string namespaceName, string contextName)
         {
             output.NewLine = "\r\n";
 
-            EmitCs(new EmitCodeContext(Declarations, output));
+            EmitCs(new EmitCodeContext(Declarations, output, namespaceName, contextName));
 
             output.Flush();
         }
@@ -79,12 +64,12 @@ namespace linqtoweb.CodeGenerator.AST
             codecontext.WriteLine("using linqtoweb.Core.extraction;");
             codecontext.WriteLine("using linqtoweb.Core.methods;");
 
-            codecontext.WriteLine("namespace " + NamespaceName);
+            codecontext.WriteLine("namespace " + codecontext.NamespaceName);
             codecontext.WriteLine("{");
 
             EmitCodeContext indentc = codecontext.NewScope();
 
-            indentc.WriteLine("public partial class " + ContextName + " : ExtractionContext");
+            indentc.WriteLine("public partial class " + codecontext.ContextName + " : ExtractionContext");
             indentc.WriteLine("{");
 
             Declarations.EmitCs(indentc.NewScope());

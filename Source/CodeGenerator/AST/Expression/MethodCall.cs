@@ -99,7 +99,7 @@ namespace linqtoweb.CodeGenerator.AST
 
                     for ( int arg = 0; arg < CallArguments.Count; ++arg )
                     {
-                        BinaryAssignExpression ass = CallArguments[arg] as BinaryAssignExpression;
+                        ExpressionAssign ass = CallArguments[arg] as ExpressionAssign;
                         VariableUse lvalue;
                         if (ass == null || (lvalue = ass.LValue as VariableUse) == null)
                             throw new ArgumentException("Argument " + arg + ": class construct arguments must be in a form of 'PropertyName = Expression'");

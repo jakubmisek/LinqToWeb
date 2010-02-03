@@ -10,7 +10,7 @@ namespace linqtoweb.CodeGenerator.AST
     /// <summary>
     /// Base AST node representing any expression.
     /// </summary>
-    public class Expression
+    public abstract class Expression
     {
         public const string scopeLocalVarName = "__l";
 
@@ -46,6 +46,16 @@ namespace linqtoweb.CodeGenerator.AST
         internal class EmitCodeContext
         {
             /// <summary>
+            /// The name of the emitted class that will contain types and methods.
+            /// </summary>
+            public string ContextName { get; private set; }
+
+            /// <summary>
+            /// The name of the emitted namespace that will contain the context class.
+            /// </summary>
+            public string NamespaceName { get; private set; }
+
+            /// <summary>
             /// Map of declared variables and their types.
             /// </summary>
             public readonly Dictionary<string, ExpressionType> DeclaredLocalVars = new Dictionary<string, ExpressionType>();
@@ -69,13 +79,34 @@ namespace linqtoweb.CodeGenerator.AST
             /// Init.
             /// </summary>
             /// <param name="declarations"></param>
-            public EmitCodeContext(DeclarationsList declarations, StreamWriter output)
+            public EmitCodeContext(DeclarationsList declarations, StreamWriter output, string namespaceName, string contextName)
             {
                 Debug.Assert(declarations != null);
                 Debug.Assert(output != null);
 
                 this.Output = output;
                 this.Declarations = declarations;
+
+                this.NamespaceName = namespaceName;
+                this.ContextName = contextName;
+            }
+
+            /// <summary>
+            /// Copz Code context with different output.
+            /// </summary>
+            /// <param name="codecontext"></param>
+            /// <param name="output"></param>
+            public EmitCodeContext(EmitCodeContext codecontext, StreamWriter output)
+            {
+                this.Output = output;
+                this.Declarations = codecontext.Declarations;
+                this.Level = codecontext.Level;
+
+                this.NamespaceName = codecontext.NamespaceName;
+                this.ContextName = codecontext.ContextName;
+
+                foreach (var x in codecontext.DeclaredLocalVars)
+                    DeclaredLocalVars[x.Key] = x.Value;
             }
 
             public void WriteLine( string str )
@@ -155,10 +186,7 @@ namespace linqtoweb.CodeGenerator.AST
 
             public EmitCodeContext NewScope()
             {
-                EmitCodeContext code = new EmitCodeContext(Declarations, Output);
-
-                foreach (var x in DeclaredLocalVars)
-                    code.DeclaredLocalVars[x.Key] = x.Value;
+                EmitCodeContext code = new EmitCodeContext(this, this.Output);
 
                 code.Level = this.Level + 1;
 

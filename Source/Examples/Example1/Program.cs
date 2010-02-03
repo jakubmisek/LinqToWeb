@@ -10,8 +10,6 @@ using linqtoweb.CodeGenerator.AST;
 
 using System.IO;
 
-using linqtoweb.Example;
-
 namespace Example1
 {
     class Program
@@ -34,7 +32,7 @@ namespace Example1
             {
                 GlobalCode x = parser.Ast;
 
-                x.EmitCs(new StreamWriter("code.cs", false, Encoding.Unicode));
+                x.EmitCs(new StreamWriter("code.cs", false, Encoding.Unicode), "Example1", "WebContext");
             }
         }
     }

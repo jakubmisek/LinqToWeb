@@ -24,10 +24,8 @@ namespace linqtoweb.CodeGenerator.AST
             MemoryStream valstr = new MemoryStream();
             StreamWriter valoutput = new StreamWriter(valstr);
             
-            EmitCodeContext valcontext = new EmitCodeContext(codecontext.Declarations, valoutput);
-            foreach (var x in codecontext.DeclaredLocalVars)// copy declared variables
-                    valcontext.DeclaredLocalVars[x.Key] = x.Value;
-
+            EmitCodeContext valcontext = new EmitCodeContext(codecontext, valoutput);
+            
             ExpressionType valType = Expr.EmitCs(valcontext);
 
             valoutput.Flush();
@@ -112,6 +110,11 @@ namespace linqtoweb.CodeGenerator.AST
                                 break;
                         }
                         break;
+                    default:
+                        if (NewType.TypeName == ExpressionType.KnownTypes.TString)
+                            result = string.Format("{0}.ToString()", valvalue); // anything to string
+                        break;
+
                 }
 
                 if (string.IsNullOrEmpty(result))
