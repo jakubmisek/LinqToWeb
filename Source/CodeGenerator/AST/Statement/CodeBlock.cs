@@ -15,16 +15,26 @@ namespace linqtoweb.CodeGenerator.AST
         /// </summary>
         public List<Expression> Statements { get; protected set; }
 
+        /// <summary>
+        /// Chain of data contexts, or empty.
+        /// </summary>
         public readonly LinkedList<MethodCall> DataContexts = new LinkedList<MethodCall>();
 
-        // TODO: Chain of DataContexts
-
+        /// <summary>
+        /// Create statements block.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="statements"></param>
         public CodeBlock(ExprPosition position, List<Expression> statements)
             :base(position)
         {
             this.Statements = (statements != null) ? statements : new List<Expression>();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             StringBuilder str = new StringBuilder();
@@ -44,6 +54,11 @@ namespace linqtoweb.CodeGenerator.AST
             return str.ToString();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="codecontext"></param>
+        /// <returns></returns>
         internal override ExpressionType EmitCs(EmitCodeContext codecontext)
         {
             codecontext.WriteLine("{");

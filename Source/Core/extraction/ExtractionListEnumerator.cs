@@ -23,6 +23,9 @@ namespace linqtoweb.Core.extraction
         /// </summary>
         private readonly Dictionary<object, object> parametersTransform;
 
+        /// <summary>
+        /// List of actions that was added into the local ActionsToDo list.
+        /// </summary>
         private readonly Dictionary<ActionItem, bool> AddedActionsToDo;
 
         /// <summary>
@@ -90,12 +93,23 @@ namespace linqtoweb.Core.extraction
                     break;
 
                 // list of the Initial actions to do of the listContainer could be changed
+                CheckForNewActionsToDo();
+            }
+        }
+
+        /// <summary>
+        /// Checks the listContainer for new actions to do.
+        /// They could be added during the Parent.DoNextAction() called by this.DoNextAction().
+        /// </summary>
+        private void CheckForNewActionsToDo()
+        {
+            if (listContainer.ActionsToDo.Count > AddedActionsToDo.Count)
                 lock (listContainer.ActionsToDo)
                 {
                     foreach (var action in listContainer.ActionsToDo)
                     {
                         bool exists;
-                        if ( AddedActionsToDo.TryGetValue(action, out exists) && exists )
+                        if (AddedActionsToDo.TryGetValue(action, out exists) && exists)
                         {
                             // action already known by this enumerator
                         }
@@ -107,7 +121,6 @@ namespace linqtoweb.Core.extraction
                         }
                     }
                 }
-            }
         }
 
         #endregion

@@ -16,8 +16,7 @@ namespace linqtoweb.Core.datacontext
     /// Used by extraction method.
     /// Contains
     /// - information about the page (data source).
-    /// - cache object
-    /// - extraction techniques (methods like RegExp, DOM, ...)
+    /// - TODO: cache object
     /// - methods for creating new DataContexts
     /// - downloading and processing methods
     /// </summary>

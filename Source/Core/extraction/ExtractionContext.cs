@@ -25,7 +25,7 @@ namespace linqtoweb.Core.extraction
         /// <summary>
         /// Initialize the context.
         /// </summary>
-        public ExtractionContext( /*cache*/ )
+        public ExtractionContext( /*TODO: cache*/ )
         {
             InitialDataContext = new DataContext( null, null );
 

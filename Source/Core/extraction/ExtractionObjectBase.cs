@@ -86,6 +86,9 @@ namespace linqtoweb.Core.extraction
         {
             Debug.Assert(ActionsToDo != null, "Objects using DoNextAction() must initialize their ActionsToDo list.");
 
+            // TODO: another thread can try to process the same action in the same time
+            // TODO: lock DoNextAction, CallAction on separated thread, wait for some thread to finish
+
             ActionItem action = ActionsToDo.GetNextAction();
 
             if (action != null)
