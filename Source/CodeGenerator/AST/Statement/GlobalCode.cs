@@ -116,6 +116,7 @@ namespace linqtoweb.CodeGenerator.AST
             }
 
             // emit properties
+            codecontext.WriteLine("#region Public extracted data");
             foreach (var v in mainVars)
             {
                 string varTypeName;
@@ -135,8 +136,10 @@ namespace linqtoweb.CodeGenerator.AST
                 // emit prop
                 codecontext.WriteLine("public readonly " + varTypeName + " " + v.Key + " = new " + varTypeName + "();");
             }
+            codecontext.WriteLine("#endregion" + codecontext.Output.NewLine);
 
             // emit InitActionsToDo
+            codecontext.WriteLine("#region Data initialization");
             codecontext.WriteLine("protected override void InitActionsToDo()");
             codecontext.WriteLine("{"); codecontext.Level++;
             codecontext.WriteLine("base.InitActionsToDo();");
@@ -158,9 +161,11 @@ namespace linqtoweb.CodeGenerator.AST
                 codecontext.Level --;
                 
             }
-
+            
             codecontext.Level--;
             codecontext.WriteLine("}");
+
+            codecontext.WriteLine("#endregion" + codecontext.Output.NewLine);
         }
     }
 
@@ -246,11 +251,15 @@ namespace linqtoweb.CodeGenerator.AST
 
         internal override ExpressionType EmitCs(EmitCodeContext codecontext)
         {
+            codecontext.WriteLine("#region Public classes declaration");
             foreach (var c in Classes)
                 c.Value.EmitCs(codecontext);
+            codecontext.WriteLine("#endregion" + codecontext.Output.NewLine);
 
+            codecontext.WriteLine("#region Private extraction methods");
             foreach (var m in Methods)
                 m.EmitCs(codecontext);
+            codecontext.WriteLine("#endregion" + codecontext.Output.NewLine);
 
             return ExpressionType.VoidType;
         }

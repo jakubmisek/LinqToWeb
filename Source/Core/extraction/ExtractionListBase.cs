@@ -21,8 +21,17 @@ namespace linqtoweb.Core.extraction
         /// Initialization with initial action list.
         /// </summary>
         /// <param name="initialActionList">Initial ActionList.</param>
-        public ExtractionListBase(ActionList initialActionList)
-            :base(initialActionList)
+        public ExtractionListBase(ExtractionObjectBase parent)
+            :base(parent)
+        {
+
+        }
+        /// <summary>
+        /// Initialization with initial action list.
+        /// </summary>
+        /// <param name="initialActionList">Initial ActionList.</param>
+        public ExtractionListBase(ExtractionObjectBase parent, ActionList initialActions)
+            :base(parent, initialActions)
         {
 
         }

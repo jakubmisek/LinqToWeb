@@ -69,17 +69,23 @@ namespace linqtoweb.CodeGenerator.AST
 
         private void EmitCsInnerClass(EmitCodeContext codecontext)
         {
+            // 
+            List<string> propsInit = new List<string>();
+
+            // properties
+            codecontext.WriteLine("#region Properties");
+
             foreach (var x in ClassProperties)
             {
                 if (x.VariableName.StartsWith("_"))
                     throw new Exception("Class property cannot start with _.");
 
-                string protype= PropertyType(x.VariableType);
+                string protype = PropertyType(x.VariableType);
                 // private property value
-                
+
                 if (x.VariableType.IsExtractionObject)
                 {
-                    string initvalue = "new " + protype + "()";
+                    string initvalue = "new " + protype + "(this)";
 
                     string decl = "public readonly " + PropertyType(x.VariableType) + " " + x.VariableName;
                     codecontext.WriteLine(decl + " = " + initvalue + ";");
@@ -109,9 +115,18 @@ namespace linqtoweb.CodeGenerator.AST
                 }
 
                 codecontext.WriteLine("");
-                
+
             }
+
+            codecontext.WriteLine("#endregion");
+
+            // ctor
+            codecontext.WriteLine("#region Constructors");
+            // TODO ctor
+
+            codecontext.WriteLine("#endregion");
         }
+
         internal override ExpressionType EmitCs(EmitCodeContext codecontext)
         {
             codecontext.WriteLine("public partial class " + ClassName + " : ExtractionObjectBase");

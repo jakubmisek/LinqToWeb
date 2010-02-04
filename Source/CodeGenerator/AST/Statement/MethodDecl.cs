@@ -86,7 +86,7 @@ namespace linqtoweb.CodeGenerator.AST
             Body.EmitCs(bodycontext);
 
             //
-            codecontext.WriteLine("}");
+            codecontext.WriteLine("}" + codecontext.Output.NewLine);
 
             return ExpressionType.VoidType;
         }

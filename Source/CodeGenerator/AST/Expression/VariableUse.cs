@@ -36,7 +36,7 @@ namespace linqtoweb.CodeGenerator.AST
                     throw new Exception("Undeclared variable " + VariableName);
 
                 // ((string)__l["VariableName"])    // dynamic var
-                codecontext.Write("((string)" + scopeLocalVarName + "[\"" + VariableName + "\"])");
+                codecontext.Write("(" + scopeLocalVarName + "[\"" + VariableName + "\"].ToString())");
                 return ExpressionType.StringType;
             }
 

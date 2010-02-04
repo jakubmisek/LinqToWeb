@@ -22,8 +22,7 @@ namespace Example1
             //{
             //    Console.WriteLine(x.str);
             //}
-
-
+            
             Scanner scanner = new Scanner();
             scanner.SetSource(File.ReadAllText("code.txt"), 0);
 

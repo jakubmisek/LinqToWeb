@@ -13,6 +13,25 @@ namespace linqtoweb.Core.extraction
     {    
         #region ExtractionListBase
 
+        /// <summary>
+        /// ctor
+        /// </summary>
+        public ExtractionList()
+            :base()
+        {
+
+        }
+
+        /// <summary>
+        /// ctor
+        /// </summary>
+        /// <param name="parent"></param>
+        public ExtractionList(ExtractionObjectBase parent)
+            :base(parent)
+        {
+
+        }
+
         public override T AddElement(T element)
         {
             // do nothing, should not be called!

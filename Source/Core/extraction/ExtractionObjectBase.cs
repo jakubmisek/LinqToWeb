@@ -47,20 +47,32 @@ namespace linqtoweb.Core.extraction
         internal readonly ActionList ActionsToDo;
 
         /// <summary>
+        /// Parent object. Can contain another ActionsToDo, that may be needed to get some data.
+        /// </summary>
+        internal readonly ExtractionObjectBase Parent;
+
+        /// <summary>
         /// Default ctor.
         /// </summary>
         public ExtractionObjectBase()
+            :this(null, new ActionList())
         {
-            ActionsToDo = new ActionList(); // empty list
         }
 
+        public ExtractionObjectBase(ExtractionObjectBase parent)
+            : this(parent, new ActionList())
+        {
+
+        }
+        
         /// <summary>
         /// Initialization with initial action list.
         /// </summary>
         /// <param name="initialActions">Initial ActionList.</param>
-        public ExtractionObjectBase(ActionList initialActions)
+        public ExtractionObjectBase(ExtractionObjectBase parent, ActionList initialActions)
         {
-            ActionsToDo = initialActions;   // initial actions
+            this.Parent = parent;
+            this.ActionsToDo = initialActions;   // initial actions
         }
 
         /// <summary>

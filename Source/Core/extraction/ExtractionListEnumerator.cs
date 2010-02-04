@@ -28,7 +28,7 @@ namespace linqtoweb.Core.extraction
         /// </summary>
         /// <param name="listContainer"></param>
         public ExtractionListEnumerator(ExtractionList<T> listContainer)
-            : base( new ActionList(listContainer.ActionsToDo) )
+            : base( listContainer.Parent, new ActionList(listContainer.ActionsToDo) )
         {
             this.listContainer = listContainer;
 
