@@ -145,11 +145,11 @@ namespace linqtoweb.CodeGenerator.AST
 
                 DeclaredLocalVars[varname] = vartype;
 
-                this.Write(vartype.CsName + " " + varname + " = ", Level);
+                this.Write(vartype.CsArgumentTypeName + " " + varname + " = ", Level);
                 ExpressionType rettype = varvalue.EmitCs(this);
                 this.Write(";" + Output.NewLine);
 
-                Debug.Assert(rettype.Equals(vartype), "Assigning different types: '" + vartype.CsName + "' and '" + rettype.CsName + "'");
+                Debug.Assert(rettype.Equals(vartype), "Assigning different types: '" + vartype.ToString() + "' and '" + rettype.ToString() + "'");
             }
 
             public ExpressionType GetLocalVarType( string varname )

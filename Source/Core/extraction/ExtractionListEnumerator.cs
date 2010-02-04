@@ -23,6 +23,8 @@ namespace linqtoweb.Core.extraction
         /// </summary>
         private readonly Dictionary<object, object> parametersTransform;
 
+        private readonly Dictionary<ActionItem, bool> AddedActionsToDo;
+
         /// <summary>
         /// Init the enumerator.
         /// </summary>
@@ -31,8 +33,11 @@ namespace linqtoweb.Core.extraction
             : base( listContainer.Parent, new ActionList(listContainer.ActionsToDo) )
         {
             this.listContainer = listContainer;
-
             this.parametersTransform = new Dictionary<object, object>(){ {listContainer, this} };
+
+            // save the list of known initial actions to do, listContainer may extend its list of ActionsToDo, so this.ActionsToDo must be updated
+            this.AddedActionsToDo = new Dictionary<ActionItem, bool>(ActionsToDo.Count);
+            foreach (var x in this.ActionsToDo) this.AddedActionsToDo[x] = true;
         }
 
         #endregion
@@ -83,6 +88,25 @@ namespace linqtoweb.Core.extraction
                 // extract next elements into the queue
                 if (!DoNextAction(parametersTransform))
                     break;
+
+                // list of the Initial actions to do of the listContainer could be changed
+                lock (listContainer.ActionsToDo)
+                {
+                    foreach (var action in listContainer.ActionsToDo)
+                    {
+                        bool exists;
+                        if ( AddedActionsToDo.TryGetValue(action, out exists) && exists )
+                        {
+                            // action already known by this enumerator
+                        }
+                        else
+                        {
+                            // action is new
+                            AddedActionsToDo[action] = true;
+                            ActionsToDo.AddAction(action);
+                        }
+                    }
+                }
             }
         }
 

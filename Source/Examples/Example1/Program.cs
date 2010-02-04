@@ -16,23 +16,23 @@ namespace Example1
     {
         static void Main(string[] args)
         {
-            //WebContext context = new WebContext();
-
-            //foreach (var x in context.sampleList)
-            //{
-            //    Console.WriteLine(x.str);
-            //}
+            WebContext context = new WebContext();
             
-            Scanner scanner = new Scanner();
-            scanner.SetSource(File.ReadAllText("code.txt"), 0);
-
-            Parser parser = new Parser(scanner);
-            if (parser.Parse())
+            foreach (var x in context.sampleList)
             {
-                GlobalCode x = parser.Ast;
-
-                x.EmitCs(new StreamWriter("code.cs", false, Encoding.Unicode), "Example1", "WebContext");
+                Console.WriteLine(x.str);
             }
+
+            //Scanner scanner = new Scanner();
+            //scanner.SetSource(File.ReadAllText("code.txt"), 0);
+
+            //Parser parser = new Parser(scanner);
+            //if (parser.Parse())
+            //{
+            //    GlobalCode x = parser.Ast;
+
+            //    x.EmitCs(new StreamWriter("code.cs", false, Encoding.Unicode), "Example1", "WebContext");
+            //}
 
         }
     }

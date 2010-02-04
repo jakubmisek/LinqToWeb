@@ -5,7 +5,7 @@ using System.Text;
 
 namespace linqtoweb.CodeGenerator.AST
 {
-    public class MethodDecl:Expression
+    public class MethodDecl : Expression
     {
         /// <summary>
         /// Method name as it was declared in the original source.
@@ -33,7 +33,7 @@ namespace linqtoweb.CodeGenerator.AST
         public Expression Body { get; protected set; }
 
         public MethodDecl(ExprPosition position, string methodname, List<VariableDecl> arguments, Expression body)
-            :base(position)
+            : base(position)
         {
             this.DeclMethodName = methodname;
             this.GeneratedMethodName = methodname + "_" + position.StartLine + "_" + position.StartColumn;
@@ -45,9 +45,9 @@ namespace linqtoweb.CodeGenerator.AST
         {
             StringBuilder str = new StringBuilder();
 
-            str.Append( DeclMethodName + "(" );
+            str.Append(DeclMethodName + "(");
 
-            for(int i = 0;i<MethodArguments.Count;++i)
+            for (int i = 0; i < MethodArguments.Count; ++i)
             {
                 str.Append(MethodArguments[i].ToString());
 
@@ -58,7 +58,7 @@ namespace linqtoweb.CodeGenerator.AST
             str.Append(")");
 
             if (Body != null) str.Append(Body.ToString());
-            
+
             return str.ToString();
         }
 
@@ -68,14 +68,14 @@ namespace linqtoweb.CodeGenerator.AST
             codecontext.WriteLine("{");
 
             EmitCodeContext bodycontext = codecontext.NewScope();
-            
+
             // declare parameters as local variables
             foreach (var x in MethodArguments)
             {
                 bodycontext.DeclareLocalVar(
                     x.VariableType,
                     x.VariableName,
-                    new CustomExpression(x.Position, x.VariableType, "(" + x.VariableType.CsName + ")parameters[\"" + x.VariableName + "\"]")
+                    new CustomExpression(x.Position, x.VariableType, "(" + x.VariableType.CsArgumentTypeName + ")parameters[\"" + x.VariableName + "\"]")
                     );
             }
 

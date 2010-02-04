@@ -45,7 +45,7 @@ namespace linqtoweb.CodeGenerator.AST
                 throw new Exception("Condition must be of type bool.");
 
             if (!expr1Type.Equals(expr2Type))
-                throw new Exception("Type mishmash, " + expr1Type.CsName + " and " + expr2Type.CsName);
+                throw new Exception("Type mishmash, " + expr1Type.ToString() + " and " + expr2Type.ToString());
 
             return expr1Type;
         }

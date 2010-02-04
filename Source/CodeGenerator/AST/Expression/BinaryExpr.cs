@@ -217,7 +217,7 @@ namespace linqtoweb.CodeGenerator.AST
             }
 
             if (!rValueType.Equals(lValueType.ListOf))
-                throw new Exception("Type mishmash, adding an element of type " + rValueType.CsName + " to the list of " + lValueType.ListOf.CsName);
+                throw new Exception("Type mishmash, adding an element of type " + rValueType.ToString() + " to the list of " + lValueType.ListOf.ToString());
             
             return lValueType.ListOf;
         }

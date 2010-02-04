@@ -44,29 +44,6 @@ namespace linqtoweb.CodeGenerator.AST
             return null;
         }
 
-        private string PropertyType( ExpressionType decl )
-        {
-            if (decl.ListOf != null)
-            {
-                return "ExtractionList<" + decl.ListOf.CsName + ">";
-            }
-            else
-            {
-                switch ( decl.TypeName )
-                {
-                    case ExpressionType.KnownTypes.TBool:
-                        return "bool?";
-                    case ExpressionType.KnownTypes.TDouble:
-                        return "double?";
-                    case ExpressionType.KnownTypes.TInt:
-                        return "int?";
-                    default:
-                        return decl.CsName;
-                        //throw new InvalidOperationException();
-                }
-            } 
-        }
-
         private void EmitCsInnerClass(EmitCodeContext codecontext)
         {
             // 
@@ -80,36 +57,23 @@ namespace linqtoweb.CodeGenerator.AST
                 if (x.VariableName.StartsWith("_"))
                     throw new Exception("Class property cannot start with _.");
 
-                string protype = PropertyType(x.VariableType);
                 // private property value
 
                 if (x.VariableType.IsExtractionObject)
                 {
-                    string initvalue = "new " + protype + "(this)";
-
-                    string decl = "public readonly " + PropertyType(x.VariableType) + " " + x.VariableName;
-                    codecontext.WriteLine(decl + " = " + initvalue + ";");
+                    codecontext.WriteLine("public readonly " + x.VariableType.CsPropertyTypeName + " " + x.VariableName + ";");
+                    propsInit.Add(x.VariableName + " = " + x.VariableType.CsPropertyInitValue + ";");
                 }
                 else
                 {
                     string privatePropName = "_" + x.VariableName;
 
-                    string defaultvalue;
-                    switch (x.VariableType.TypeName)
-                    {
-                        case ExpressionType.KnownTypes.TDateTime:
-                            defaultvalue = "DateTime.MinValue";
-                            break;
-                        default:
-                            defaultvalue = "null";
-                            break;
-                    }
-                    string decl = "private " + protype + " " + privatePropName;
-                    codecontext.WriteLine(decl + " = " + defaultvalue + ";");
+                    string decl = "private " + x.VariableType.CsPropertyTypeName + " " + privatePropName;
+                    codecontext.WriteLine(decl + " = " + x.VariableType.CsPropertyDefaultValue + ";");
 
                     // extracting on request (public property)
-                    string format = "public " + protype + " " + x.VariableName +
-                        "{get{while(" + privatePropName + "==" + defaultvalue + "){if (!DoNextAction(null))throw new NotExtractedDataException(\"" + x.VariableName + " cannot reach any data.\");} return " + privatePropName + ";}set{" + privatePropName + "=value;}}";
+                    string format = "public " + x.VariableType.CsPropertyTypeName + " " + x.VariableName +
+                        "{get{while(" + privatePropName + "==" + x.VariableType.CsPropertyDefaultValue + "){if (!DoNextAction(null))throw new NotExtractedDataException(\"" + x.VariableName + " cannot reach any data.\");} return " + privatePropName + ";}set{" + privatePropName + "=value;}}";
 
                     codecontext.WriteLine(format);
                 }
@@ -122,8 +86,18 @@ namespace linqtoweb.CodeGenerator.AST
 
             // ctor
             codecontext.WriteLine("#region Constructors");
-            // TODO ctor
 
+            // no-param ctor
+            codecontext.WriteLine("public " + ClassName + "():this(null){}");
+            // ctor with parent given
+            codecontext.WriteLine("public " + ClassName + "(ExtractionObjectBase parent):base(parent)");
+            codecontext.WriteLine("{");
+            codecontext.Level++;
+            foreach (string strline in propsInit)
+                codecontext.WriteLine(strline);
+            codecontext.Level--;
+            codecontext.WriteLine("}");
+            //
             codecontext.WriteLine("#endregion");
         }
 

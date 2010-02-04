@@ -96,7 +96,7 @@ namespace linqtoweb.Core.extraction
                 // object is the ExtractionObject
                 if ((eObj = obj as ExtractionObjectBase) != null)
                 {
-                    eObj.ActionsToDo.Remove(action);
+                    eObj.ActionsToDo.RemoveAction(action);
                 }
             }
         }

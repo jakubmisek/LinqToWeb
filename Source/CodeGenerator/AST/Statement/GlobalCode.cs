@@ -119,22 +119,8 @@ namespace linqtoweb.CodeGenerator.AST
             codecontext.WriteLine("#region Public extracted data");
             foreach (var v in mainVars)
             {
-                string varTypeName;
-
-                switch (v.Value.TypeName)
-                {
-                    case ExpressionType.KnownTypes.TUserType:
-                        varTypeName = v.Value.CsName;
-                        break;
-                    case ExpressionType.KnownTypes.TList:
-                        varTypeName = "ExtractionList<" + v.Value.ListOf.CsName + ">";
-                        break;
-                    default:
-                        throw new Exception("Invalid context property type.");
-                }
-
                 // emit prop
-                codecontext.WriteLine("public readonly " + varTypeName + " " + v.Key + " = new " + varTypeName + "();");
+                codecontext.WriteLine("public readonly " + v.Value.CsPropertyTypeName + " " + v.Key + " = " + v.Value.CsPropertyRootInitValue + ";");
             }
             codecontext.WriteLine("#endregion" + codecontext.Output.NewLine);
 

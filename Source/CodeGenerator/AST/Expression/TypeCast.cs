@@ -6,16 +6,14 @@ using System.IO;
 
 namespace linqtoweb.CodeGenerator.AST
 {
-    class TypeCastExpression : Expression
+    class TypeCastExpression : UnaryExpr
     {
         public readonly ExpressionType NewType;
-        public readonly Expression Expr;
-
+        
         public TypeCastExpression(ExprPosition position, ExpressionType newType, Expression expr)
-            : base(position)
+            : base(position, expr)
         {
             this.NewType = newType;
-            this.Expr = expr;
         }
 
         internal override ExpressionType EmitCs(EmitCodeContext codecontext)
@@ -26,7 +24,7 @@ namespace linqtoweb.CodeGenerator.AST
             
             EmitCodeContext valcontext = new EmitCodeContext(codecontext, valoutput);
             
-            ExpressionType valType = Expr.EmitCs(valcontext);
+            ExpressionType valType = Value.EmitCs(valcontext);
 
             valoutput.Flush();
 
@@ -118,7 +116,7 @@ namespace linqtoweb.CodeGenerator.AST
                 }
 
                 if (string.IsNullOrEmpty(result))
-                    throw new Exception("Unable to explicitly type the expression from " + valType.CsName + " to " + NewType.CsName + ".");
+                    throw new Exception("Unable to explicitly type the expression from " + valType.ToString() + " to " + NewType.ToString() + ".");
 
                 codecontext.Write("(" + result + ")");
             }

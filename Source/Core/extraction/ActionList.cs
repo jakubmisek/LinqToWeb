@@ -8,17 +8,10 @@ namespace linqtoweb.Core.extraction
     /// <summary>
     /// The list of actions.
     /// TODO: The object is able to get actions by a priority of specified query.
-    /// TODO: do not use linear list of actions (need of fast inserting and removing).
     /// </summary>
-    public class ActionList : List<ActionItem>
+    public class ActionList : LinkedList<ActionItem>
     {
         public ActionList()
-        {
-
-        }
-
-        public ActionList(int capacity)
-            : base(capacity)
         {
 
         }
@@ -35,7 +28,22 @@ namespace linqtoweb.Core.extraction
         /// <param name="action"></param>
         virtual public void AddAction(ActionItem action)
         {
-            this.Insert(0, action);
+            lock (this)
+            {
+                this.AddFirst(action);
+            }
+        }
+
+        /// <summary>
+        /// Remove specified action.
+        /// </summary>
+        /// <param name="action"></param>
+        virtual public void RemoveAction(ActionItem action)
+        {
+            lock(this)
+            {
+                this.Remove(action);
+            }
         }
 
         /// <summary>
@@ -44,9 +52,9 @@ namespace linqtoweb.Core.extraction
         /// <returns></returns>
         virtual public ActionItem GetNextAction()
         {
-            if (this.Count > 0)
+            if (this.First != null)
             {
-                return this[0];
+                return this.First.Value;
             }
             else
             {

@@ -96,7 +96,10 @@ namespace linqtoweb.Core.extraction
             }
             else
             {
-                return false;
+                if (Parent != null) // maybe parent object's action can initiate this object's properties
+                    return Parent.DoNextAction(parametersTransform);
+                else
+                    return false;
             }
         }
 

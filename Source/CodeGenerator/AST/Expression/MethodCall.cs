@@ -115,12 +115,12 @@ namespace linqtoweb.CodeGenerator.AST
                         ExpressionType propValueType =  ass.RValue.EmitCs(codecontext);
 
                         if (!propValueType.Equals(propType))
-                            throw new ArgumentException("Type mishmash, " + propType.CsName + " and " + propValueType.CsName);
+                            throw new ArgumentException("Type mishmash, " + propType.ToString() + " and " + propValueType.ToString());
                     }
 
                     codecontext.Write(" })");
 
-                    return new ExpressionType(decl.ClassName);
+                    return new ExpressionUserType(decl.ClassName);
                 }
             }
 

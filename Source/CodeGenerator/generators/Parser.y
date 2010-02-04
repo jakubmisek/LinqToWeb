@@ -72,7 +72,7 @@ singlebasetype:	TSTRING		{ $$.obj = ExpressionType.StringType; }
 			|	TBOOL		{ $$.obj = ExpressionType.BoolType; }
 			;
 singletype:		singlebasetype {$$.obj = $1.obj;}	
-			|	IDENTIFIER	{ $$.obj = new ExpressionType((string)$1.obj); }
+			|	IDENTIFIER	{ $$.obj = new ExpressionUserType((string)$1.obj); }
 			;
 						
 methoddecl:		IDENTIFIER LPAREN argslist RPAREN contextstatement { $$.obj = new MethodDecl( @1.Merge(@4), (string)$1.obj, (List<VariableDecl>)$3.obj, (Expression)$5.obj ); }
@@ -130,10 +130,10 @@ factor:			varuse				{ $$.obj = $1.obj; }
 			|	OP_LOGIC_NOT factor	{$$.obj = new ExpressionLogicalNot(@1.Merge(@2),(Expression)$2.obj); }
 			|	OP_SUB factor	{  $$.obj = new ExpressionUnaryMinus(@1.Merge(@2),(Expression)$2.obj); }
 			|	OP_ADD factor	{  $$.obj = $2.obj; }
-			|	OP_SUB1 factor	{  $$.obj = new ExpressionAdd(@1.Merge(@2),(Expression)$2.obj, new IntLiteral(@1,-1)); }
-			|	OP_ADD1 factor	{  $$.obj = new ExpressionAdd(@1.Merge(@2),(Expression)$2.obj, new IntLiteral(@1,+1)); }
-			|	factor OP_SUB1	{  $$.obj = new ExpressionAdd(@1.Merge(@2),(Expression)$1.obj, new IntLiteral(@1,-1)); }
-			|	factor OP_ADD1	{  $$.obj = new ExpressionAdd(@1.Merge(@2),(Expression)$1.obj, new IntLiteral(@1,+1)); }
+			|	OP_SUB1 factor	{  $$.obj = new ExpressionSubOneBefore(@1.Merge(@2),(Expression)$2.obj); }
+			|	OP_ADD1 factor	{  $$.obj = new ExpressionAddOneBefore(@1.Merge(@2),(Expression)$2.obj); }
+			|	factor OP_SUB1	{  $$.obj = new ExpressionSubOneAfter(@1.Merge(@2),(Expression)$1.obj); }
+			|	factor OP_ADD1	{  $$.obj = new ExpressionAddOneAfter(@1.Merge(@2),(Expression)$1.obj); }
 			|	LPAREN expr RPAREN	{ $$.obj = $2.obj; }
 			|	LPAREN singlebasetype RPAREN factor	{ $$.obj = new TypeCastExpression( @1.Merge(@4), (ExpressionType)$2.obj, (Expression)$4.obj ); }
 			|	methodcall	{ $$.obj = $1.obj; }
