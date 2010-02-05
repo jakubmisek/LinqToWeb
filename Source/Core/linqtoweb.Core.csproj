@@ -68,6 +68,7 @@
     <Compile Include="extraction\ExtractionObjectBase.cs" />
     <Compile Include="extraction\ExtractionListBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="storage\StorageBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="datacontext\readme.txt" />

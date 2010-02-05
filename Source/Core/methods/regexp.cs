@@ -93,6 +93,7 @@ namespace linqtoweb.Core.methods
         /// <returns>Enumerator of dictionary of matched groups (variables).</returns>
         public static RegExpEnumerator regexp(DataContext context, Regex exp)
         {
+            // TODO: cache the results
             return new RegExpEnumerator(context, exp);
         }
     }

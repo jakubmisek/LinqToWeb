@@ -17,10 +17,12 @@ namespace Example1
         static void Main(string[] args)
         {
             WebContext context = new WebContext();
-            
+
+            Console.WriteLine(context.el.str);
+
             foreach (var x in context.sampleList)
             {
-                Console.WriteLine(x.str);
+                Console.WriteLine(x.str + "    " + context.el.str);
             }
 
             //Scanner scanner = new Scanner();

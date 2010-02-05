@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 using linqtoweb.Core.extraction;
+using linqtoweb.Core.storage;
 using System.Diagnostics;
 using System.Net;
 using System.IO;
@@ -24,15 +25,28 @@ namespace linqtoweb.Core.datacontext
     {
         #region internal
 
-        // TODO: internal cache object
+        /// <summary>
+        /// Storage for already known data. Can be null.
+        /// </summary>
+        private readonly StorageBase DataCache;
 
         /// <summary>
         /// Empty (initial) data context. Does not contain any data.
         /// </summary>
-        internal DataContext( Uri uri, DataContext referer /*, cache*/)
+        internal DataContext( Uri uri, DataContext referer, StorageBase cache)
         {
             this.ContextUri = uri;
             this.RefererContext = referer;
+            this.DataCache = cache;
+        }
+
+        /// <summary>
+        /// Empty (initial) data context. Does not contain any data.
+        /// </summary>
+        internal DataContext(Uri uri, DataContext referer)
+            : this(uri, referer, (referer != null) ? referer.DataCache : null)
+        {
+
         }
 
         #endregion

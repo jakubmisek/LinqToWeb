@@ -13,7 +13,7 @@ namespace linqtoweb.Core.extraction
         /// <summary>
         /// Extraction method delegate. Declared into the MethodsContainer object.
         /// </summary>
-        public delegate void ExtractionMethod(DataContext datacontext, LocalVariables parameters);
+        public delegate void ExtractionMethod(DataContext _datacontext, LocalVariables _parameters);
 
         /// <summary>
         /// Method to be executed.
@@ -55,14 +55,34 @@ namespace linqtoweb.Core.extraction
         /// TODO: method will not be executed if some parameter does not satisfy conditions.
         /// </summary>
         /// <param name="parametersTransform">List of transformations that will be performed onto the parameters list.</param>
-        internal void CallAction(Dictionary<object, object> parametersTransform)
+        internal void CallAction<T>(ExtractionListEnumerator<T> callerEnumerator)
         {
-            // transform parameters to use with the extraction method (remove lists)
-            LocalVariables transformedParameters = new LocalVariables(parameters, parametersTransform);
+            // parameters that will be passed to the extraction method.
+            LocalVariables transformedParameters = new LocalVariables();
 
-            // remove this action from all the objects passed by parameter
-            transformedParameters.RemoveActionFromParameters(this);
+            // transform the parameters to use with the extraction method
+            foreach (var pair in parameters)
+            {
+                ExtractionObjectBase eObj;
+                
+                if ((eObj = pair.Value as ExtractionObjectBase) != null)
+                {   // transform the parameter by transformation method
 
+                    bool containsAction = (eObj.ActionsToDo != null && eObj.ActionsToDo.ContainsAction(this));
+                    ExtractionObjectBase newValue = eObj.TransformArgument(containsAction, callerEnumerator);
+                    newValue.RemoveActionToDo(this);
+                    
+                    transformedParameters[pair.Key] = newValue;
+
+                    if (!containsAction)// add variable that can add an ActionItem within the following method call
+                        transformedParameters.SetCannotAddActionForVariable(pair.Key);
+                }
+                else
+                {   // parameter is a value, do not transform
+                    transformedParameters[pair.Key] = pair.Value;
+                }
+            }
+            
             // call the method synchronously
             method(datacontext, transformedParameters);
         }

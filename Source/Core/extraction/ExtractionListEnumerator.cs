@@ -9,24 +9,19 @@ namespace linqtoweb.Core.extraction
     /// Enumerator of extracted collection.
     /// </summary>
     /// <typeparam name="T">Type of elements in enumerated collection.</typeparam>
-    class ExtractionListEnumerator<T> : ExtractionListBase<T>
+    public class ExtractionListEnumerator<T> : ExtractionListBase<T>
     {
         #region initialization
 
         /// <summary>
         /// Container of this enumeration. Used for action.call parameters transformation.
         /// </summary>
-        private readonly ExtractionList<T> /*!*/listContainer;
-
-        /// <summary>
-        /// Arguments of methods call that will be transformed in specified way. (listContainer -> this)
-        /// </summary>
-        private readonly Dictionary<object, object> parametersTransform;
+        internal readonly ExtractionList<T> /*!*/listContainer;
 
         /// <summary>
         /// List of actions that was added into the local ActionsToDo list.
         /// </summary>
-        private readonly Dictionary<ActionItem, bool> AddedActionsToDo;
+        private readonly ActionList AddedActionsToDo;
 
         /// <summary>
         /// Init the enumerator.
@@ -36,11 +31,9 @@ namespace linqtoweb.Core.extraction
             : base( listContainer.Parent, new ActionList(listContainer.ActionsToDo) )
         {
             this.listContainer = listContainer;
-            this.parametersTransform = new Dictionary<object, object>(){ {listContainer, this} };
-
+            
             // save the list of known initial actions to do, listContainer may extend its list of ActionsToDo, so this.ActionsToDo must be updated
-            this.AddedActionsToDo = new Dictionary<ActionItem, bool>(ActionsToDo.Count);
-            foreach (var x in this.ActionsToDo) this.AddedActionsToDo[x] = true;
+            this.AddedActionsToDo = new ActionList(listContainer.ActionsToDo);  // shadow copy of used ActionList
         }
 
         #endregion
@@ -89,7 +82,7 @@ namespace linqtoweb.Core.extraction
                 }
 
                 // extract next elements into the queue
-                if (!DoNextAction(parametersTransform))
+                if (!DoNextAction(this))
                     break;
 
                 // list of the Initial actions to do of the listContainer could be changed
@@ -103,20 +96,21 @@ namespace linqtoweb.Core.extraction
         /// </summary>
         private void CheckForNewActionsToDo()
         {
-            if (listContainer.ActionsToDo.Count > AddedActionsToDo.Count)
-                lock (listContainer.ActionsToDo)
+            if (listContainer.ActionsToDo.Items.Count > AddedActionsToDo.Items.Count)
+                lock (listContainer.ActionsToDo)// always not null
                 {
-                    foreach (var action in listContainer.ActionsToDo)
+                    foreach (var action in listContainer.ActionsToDo.Items)
                     {
-                        bool exists;
-                        if (AddedActionsToDo.TryGetValue(action, out exists) && exists)
+                        if (AddedActionsToDo.ItemsByAction.ContainsKey(action) /*&& exists*/)
                         {
                             // action already known by this enumerator
+                            // following actions will be known too, so exit
+                            return;
                         }
                         else
                         {
                             // action is new
-                            AddedActionsToDo[action] = true;
+                            AddedActionsToDo.AddAction(action);
                             ActionsToDo.AddAction(action);
                         }
                     }

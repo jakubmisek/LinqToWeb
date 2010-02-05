@@ -37,7 +37,7 @@ namespace linqtoweb.Core.extraction
         {
             // local variables
             variables.AddVariables(vars);
-
+            
             // data context
             if (context != null)
                 currentDataContext = context;

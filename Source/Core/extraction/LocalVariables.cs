@@ -9,11 +9,16 @@ namespace linqtoweb.Core.extraction
     public class LocalVariables : Dictionary<string, object>
     {
         /// <summary>
+        /// List of variables, which ActionsToDo can be extended in the current method call.
+        /// </summary>
+        private Dictionary<string, bool> CannotAddAction = null;
+
+        /// <summary>
         /// Creates an empty parameters collection.
         /// </summary>
         public LocalVariables()
         {
-
+            
         }
 
         /// <summary>
@@ -21,38 +26,10 @@ namespace linqtoweb.Core.extraction
         /// </summary>
         /// <param name="parameters"></param>
         public LocalVariables( Dictionary<string,object> parameters )
-            :base(parameters)
+            : base(parameters)
         {
 
         }
-
-        /// <summary>
-        /// Creates collection of parameters transformed from another collection of parameters.
-        /// </summary>
-        /// <param name="parameters"></param>
-        /// <param name="parametersTransform"></param>
-        public LocalVariables( LocalVariables parameters, Dictionary<object,object> parametersTransform )
-        {
-            foreach ( KeyValuePair<string, object> pair in parameters )
-            {
-                ExtractionObjectBase eObj;
-                object newValue;
-
-                if (parametersTransform != null && parametersTransform.TryGetValue(pair.Value, out newValue))
-                {   // transform the parameter by specified transformation map
-                    this[pair.Key] = newValue;
-                }
-                else if ((eObj = pair.Value as ExtractionObjectBase) != null)
-                {   // transform the parameter by default transformation method
-                    this[pair.Key] = eObj.TransformParameter();
-                }
-                else
-                {   // parameter is a value, do not transform
-                    this[pair.Key] = pair.Value;
-                }
-            }
-        }
-
 
         /// <summary>
         /// Add variables from another collection.
@@ -71,35 +48,52 @@ namespace linqtoweb.Core.extraction
         /// <param name="action"></param>
         public void AddActionToParameters( ActionItem action )
         {
-            foreach (object obj in this.Values)
+            foreach (var x in this)
             {
                 ExtractionObjectBase eObj;
+                
+                if (CannotAddAction != null && CannotAddAction.ContainsKey(x.Key))
+                    continue;
 
                 // object is the ExtractionObject
-                if ((eObj = obj as ExtractionObjectBase) != null)
+                if ((eObj = x.Value as ExtractionObjectBase) != null)
                 {
-                    eObj.ActionsToDo.AddAction(action);
+                    eObj.AddActionToDo(action);
                 }
             }
         }
 
         /// <summary>
-        /// Remove all the occurrences of specified action from the parameter's ActionsToDo list.
+        /// Set the variables to CannotAddAction list.
         /// </summary>
-        /// <param name="action"></param>
-        public void RemoveActionFromParameters( ActionItem action )
+        /// <param name="varsName">Array of variable names.</param>
+        /// <returns>this</returns>
+        public LocalVariables SetCannotAddAction( Dictionary<string,bool> vars )
         {
-            foreach (object obj in this.Values)
-            {
-                ExtractionObjectBase eObj;
+            foreach (var x in vars)
+                if (x.Value == true)
+                    SetCannotAddActionForVariable(x.Key);
 
-                // object is the ExtractionObject
-                if ((eObj = obj as ExtractionObjectBase) != null)
-                {
-                    eObj.ActionsToDo.RemoveAction(action);
-                }
-            }
+            return this;
         }
+
+        /// <summary>
+        /// Determines if the AddAction method can add an action into the given variable.
+        /// </summary>
+        /// <param name="varName"></param>
+        /// <returns></returns>
+        public bool CannotAddActionForVariable(string varName)
+        {
+            return (CannotAddAction != null && CannotAddAction.ContainsKey(varName));
+        }
+
+        public void SetCannotAddActionForVariable(string varName)
+        {
+            if (CannotAddAction == null) CannotAddAction = new Dictionary<string, bool>();
+
+            CannotAddAction[varName] = true;
+        }
+        
     }
 
 }

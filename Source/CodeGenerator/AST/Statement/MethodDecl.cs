@@ -64,7 +64,7 @@ namespace linqtoweb.CodeGenerator.AST
 
         internal override ExpressionType EmitCs(EmitCodeContext codecontext)
         {
-            codecontext.WriteLine("private static void " + GeneratedMethodName + "(DataContext datacontext, LocalVariables parameters)");
+            codecontext.WriteLine("private static void " + GeneratedMethodName + "(DataContext _datacontext, LocalVariables _parameters)");
             codecontext.WriteLine("{");
 
             EmitCodeContext bodycontext = codecontext.NewScope();
@@ -75,12 +75,12 @@ namespace linqtoweb.CodeGenerator.AST
                 bodycontext.DeclareLocalVar(
                     x.VariableType,
                     x.VariableName,
-                    new CustomExpression(x.Position, x.VariableType, "(" + x.VariableType.CsArgumentTypeName + ")parameters[\"" + x.VariableName + "\"]")
+                    new CustomExpression(x.Position, x.VariableType, "(" + x.VariableType.CsArgumentTypeName + ")_parameters[\"" + x.VariableName + "\"]")
                     );
             }
 
             // declare special scope variable
-            bodycontext.WriteLine("ScopesStack " + scopeLocalVarName + " = new ScopesStack(datacontext, null);");
+            bodycontext.WriteLine("ScopesStack " + scopeLocalVarName + " = new ScopesStack(_datacontext, null);");
 
             // emit method body
             Body.EmitCs(bodycontext);

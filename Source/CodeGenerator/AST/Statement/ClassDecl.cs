@@ -73,7 +73,7 @@ namespace linqtoweb.CodeGenerator.AST
 
                     // extracting on request (public property)
                     string format = "public " + x.VariableType.CsPropertyTypeName + " " + x.VariableName +
-                        "{get{while(" + privatePropName + "==" + x.VariableType.CsPropertyDefaultValue + "){if (!DoNextAction(null))throw new NotExtractedDataException(\"" + x.VariableName + " cannot reach any data.\");} return " + privatePropName + ";}set{" + privatePropName + "=value;}}";
+                        "{get{while(" + privatePropName + "==" + x.VariableType.CsPropertyDefaultValue + "){if (!DoNextAction<object>(null))throw new NotExtractedDataException(\"" + x.VariableName + " cannot reach any data.\");} return " + privatePropName + ";}set{" + privatePropName + "=value;}}";
 
                     codecontext.WriteLine(format);
                 }

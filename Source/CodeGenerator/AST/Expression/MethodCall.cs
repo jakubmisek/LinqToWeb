@@ -52,7 +52,7 @@ namespace linqtoweb.CodeGenerator.AST
                     matchingMethods.Add(decl);
                 }
             }
-
+            
             if (matchingMethods.Count > 0)
             {
                 codecontext.Write("ActionItem.AddAction( new ActionItem.ExtractionMethod[]{");
@@ -66,11 +66,12 @@ namespace linqtoweb.CodeGenerator.AST
                    
                 }
 
-                codecontext.Write("}, "+scopeLocalVarName+".context, new LocalVariables() {" + codecontext.Output.NewLine);
+                codecontext.Write("}, " + scopeLocalVarName + ".context, new LocalVariables() {" + codecontext.Output.NewLine);
 
                 codecontext.Level++;
 
                 MethodDecl somedecl = matchingMethods[0];
+                string cannotAddActionDict = null;
                 for (int arg = 0; arg < CallArguments.Count; ++arg )
                 {
                     if (arg > 0) codecontext.Write("," + codecontext.Output.NewLine);
@@ -80,9 +81,17 @@ namespace linqtoweb.CodeGenerator.AST
 
                     if (!t.Equals(somedecl.MethodArguments[arg].VariableType))
                         throw new Exception("Type mishmash.");
+
+                    // check if the argument is able to add new action
+                    VariableUse varuse;
+                    if ( (varuse = CallArguments[arg] as VariableUse) != null )
+                    {
+                        if (cannotAddActionDict != null) cannotAddActionDict += ",";
+                        cannotAddActionDict += "{\"" + somedecl.MethodArguments[arg].VariableName + "\",_parameters.CannotAddActionForVariable(\"" + varuse.VariableName + "\")}";
+                    }
                 }
 
-                codecontext.Write(" })");
+                codecontext.Write(" }.SetCannotAddAction(new Dictionary<string,bool>(){" + cannotAddActionDict + "}))");
                 codecontext.Level--;
 
                 return ExpressionType.VoidType;

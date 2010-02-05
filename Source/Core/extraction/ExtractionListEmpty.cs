@@ -21,7 +21,7 @@ namespace linqtoweb.Core.extraction
         /// Default initialization.
         /// </summary>
         public ExtractionListEmpty()
-            :base(null)
+            :base(null, null)
         {
 
         }
@@ -41,10 +41,10 @@ namespace linqtoweb.Core.extraction
         /// </summary>
         /// <param name="parametersTransform">ignored</param>
         /// <returns>Always false.</returns>
-        protected override bool DoNextAction(Dictionary<object, object> parametersTransform)
+        protected override bool DoNextAction<S>(ExtractionListEnumerator<S> callerEnumerator)
         {
-            // do nothing
             return false;
         }
+        
     }
 }

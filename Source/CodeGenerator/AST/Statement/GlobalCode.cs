@@ -63,7 +63,8 @@ namespace linqtoweb.CodeGenerator.AST
             codecontext.WriteLine("using linqtoweb.Core.datacontext;");
             codecontext.WriteLine("using linqtoweb.Core.extraction;");
             codecontext.WriteLine("using linqtoweb.Core.methods;");
-
+            codecontext.WriteLine("using linqtoweb.Core.storage;");
+            codecontext.WriteLine();
             codecontext.WriteLine("namespace " + codecontext.NamespaceName);
             codecontext.WriteLine("{");
 
@@ -76,6 +77,9 @@ namespace linqtoweb.CodeGenerator.AST
 
             // emit initialize, emit vars (use arguments from main methods)
             EmitCs_Init(indentc.NewScope());
+
+            // emit constructors
+            EmitCs_Ctors(indentc.NewScope());
 
             indentc.WriteLine("}");
 
@@ -152,6 +156,14 @@ namespace linqtoweb.CodeGenerator.AST
             codecontext.WriteLine("}");
 
             codecontext.WriteLine("#endregion" + codecontext.Output.NewLine);
+        }
+
+        internal void EmitCs_Ctors(EmitCodeContext codecontext)
+        {
+            codecontext.WriteLine("#region Constructors");
+            codecontext.WriteLine("public " + codecontext.ContextName + "():base(){}");
+            codecontext.WriteLine("public " + codecontext.ContextName + "(StorageBase cache):base(cache){}");
+            codecontext.WriteLine("#endregion");
         }
     }
 

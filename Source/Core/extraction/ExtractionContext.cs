@@ -5,6 +5,7 @@ using System.Text;
 
 using linqtoweb.Core.datacontext;
 using linqtoweb.Core.methods;
+using linqtoweb.Core.storage;
 
 namespace linqtoweb.Core.extraction
 {
@@ -25,11 +26,20 @@ namespace linqtoweb.Core.extraction
         /// <summary>
         /// Initialize the context.
         /// </summary>
-        public ExtractionContext( /*TODO: cache*/ )
+        public ExtractionContext(StorageBase cache)
         {
-            InitialDataContext = new DataContext( null, null );
+            InitialDataContext = new DataContext(null, null, cache);
 
             InitActionsToDo();
+        }
+
+        /// <summary>
+        /// Initialize the context with the default storage object.
+        /// </summary>
+        public ExtractionContext()
+            :this(new StorageBase()) // TODO: in-memory static cache
+        {
+
         }
 
         #region context objects initialization

@@ -15,7 +15,7 @@ namespace linqtoweb.Core.datacontext
         /// <param name="referrer"></param>
         /// <param name="url"></param>
         internal HtmlContext(DataContext referer, string relativeurl)
-            : base((referer != null && referer.ContextUri != null) ? (new Uri(referer.ContextUri, relativeurl)) : (new Uri(relativeurl)), referer)
+            : base((referer != null && referer.ContextUri != null) ? (new Uri(referer.ContextUri, relativeurl)) : (new Uri(relativeurl)),referer)
         {
 
         }

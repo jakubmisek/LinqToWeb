@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 
 namespace linqtoweb.Core.extraction
 {
@@ -38,22 +39,24 @@ namespace linqtoweb.Core.extraction
             throw new InvalidOperationException("Should not be called. AddElement() method should be called on the ExtractionListEnumerator<T> object instance only!");
         }
 
-        protected override bool DoNextAction(Dictionary<object, object> parametersTransform)
+        protected override bool DoNextAction<S>(ExtractionListEnumerator<S> callerEnumerator)
         {
             // do nothing, should not be called!
-            throw new InvalidOperationException("Should not be called. DoNextAction() method should be called on the ExtractionListEnumerator<T> object instance only!");
+            throw new InvalidOperationException("Should not be called. DoNextAction() method should be called on the ExtractionListEnumerator<T> object instance only!");    
         }
-
+        
         /// <summary>
-        /// List is not passed to extraction method. The collection is filled only when the collection is enumerated using GetEnumerator() method.
-        /// Therefore this list container is ignored in extraction methods and it does not invoke other extraction methods (has empty ActionsToDo constantly).
-        /// The returned object is also not reachable by the user.
+        /// This list is not passed to extraction methods. The collection is filled only when the collection is enumerated using GetEnumerator() method.
+        /// Therefore this list container is ignored in extraction methods and it does not invoke other extraction methods (has empty ActionsToDo all the time).
         /// </summary>
-        /// <returns>Static EmptyList, without action list, without elements. Unable to add elements into this.</returns>
-        internal override object TransformParameter()
+        /// <returns>If hasAction is false or caller is not enumerator of this, it returns Static EmptyList, without action list, without elements - unable to add elements into this.</returns>
+        internal override ExtractionObjectBase TransformArgument<S>(bool hasAction, ExtractionListEnumerator<S> callerEnumerator)
         {
-            return ExtractionListEmpty<T>.EmptyList;
-        }
+            if (hasAction && callerEnumerator != null && this.Equals(callerEnumerator.listContainer))
+                return callerEnumerator;
+            else
+                return ExtractionListEmpty<T>.EmptyList;
+        }        
 
         #endregion
 

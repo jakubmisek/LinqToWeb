@@ -119,6 +119,11 @@ namespace linqtoweb.CodeGenerator.AST
                 Output.WriteLine(str);
             }
 
+            public void WriteLine()
+            {
+                Output.WriteLine();
+            }
+
             public void Write(string str, int spaces)
             {
                 for(int i = 0; i < spaces; ++i)
