@@ -56,6 +56,7 @@ namespace linqtoweb.CodeGenerator.AST
         /// <param name="declaredVariables">List of variables declared in the current context and their type.</param>
         internal override ExpressionType EmitCs(EmitCodeContext codecontext)
         {
+            codecontext.WriteLine("// Generated LinqToWeb context // " + DateTime.Now.ToString());
             codecontext.WriteLine("using System;");
             codecontext.WriteLine("using System.Collections.Generic;");
             codecontext.WriteLine("using System.Text;");
@@ -124,6 +125,7 @@ namespace linqtoweb.CodeGenerator.AST
             foreach (var v in mainVars)
             {
                 // emit prop
+                codecontext.WriteLine("// " + v.Value.ToString() + " " + v.Key);
                 codecontext.WriteLine("public readonly " + v.Value.CsPropertyTypeName + " " + v.Key + " = " + v.Value.CsPropertyRootInitValue + ";");
             }
             codecontext.WriteLine("#endregion" + codecontext.Output.NewLine);
@@ -136,18 +138,18 @@ namespace linqtoweb.CodeGenerator.AST
 
             foreach (var m in mainMethods)
             {
-                codecontext.WriteLine("ActionItem.AddAction(" + m.GeneratedMethodName + ", InitialDataContext, new LocalVariables(new Dictionary<string, object>() {");
+                codecontext.WriteLine("ActionItem.AddAction(" + m.GeneratedMethodName + ", InitialDataContext, new LocalVariables(){");
                 codecontext.Level ++;
 
                 bool bfirstarg = true;
                 foreach (var arg in m.MethodArguments)
                 {
                     if (bfirstarg) bfirstarg = false;
-                    else codecontext.Write(", ", codecontext.Level);
-                    codecontext.WriteLine("{\"" + arg.VariableName + "\", " + arg.VariableName + "}");
+                    else codecontext.Write("," + codecontext.Output.NewLine);
+                    codecontext.Write("{\"" + arg.VariableName + "\", " + arg.VariableName + "}", codecontext.Level);
                 }
 
-                codecontext.WriteLine("}));");
+                codecontext.Write("});" + codecontext.Output.NewLine);
                 codecontext.Level --;
                 
             }

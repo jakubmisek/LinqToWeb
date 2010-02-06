@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using linqtoweb.Core.extraction;
+
 namespace linqtoweb.CodeGenerator.AST
 {
     #region abstract ExpressionType
@@ -88,6 +90,11 @@ namespace linqtoweb.CodeGenerator.AST
         /// Type name when it's passed in method argument.
         /// </summary>
         public virtual string CsArgumentTypeName { get { throw new NotImplementedException(); } }
+
+        /// <summary>
+        /// .NET compatible type.
+        /// </summary>
+        public virtual Type CorrespondingSystemType { get { throw new NotImplementedException(); } }
 
         /*/// <summary>
         /// Get the C# equivalent type name.
@@ -180,6 +187,10 @@ namespace linqtoweb.CodeGenerator.AST
             this.ListOf = listelement;
         }
 
+        public override string ToString()
+        {
+            return ListOf.ToString() + "[]";
+        }
         public override string CsArgumentTypeName
         {
             get
@@ -206,6 +217,13 @@ namespace linqtoweb.CodeGenerator.AST
             get
             {
                 return "new " + CsPropertyTypeName + "()";
+            }
+        }
+        public override Type CorrespondingSystemType
+        {
+            get
+            {
+                return Type.GetType(CsArgumentTypeName);
             }
         }
     }
@@ -242,6 +260,13 @@ namespace linqtoweb.CodeGenerator.AST
                 return CsPropertyInitValue;
             }
         }
+        public override Type CorrespondingSystemType
+        {
+            get
+            {
+                return typeof(bool);
+            }
+        }
     }
     public class ExpressionIntType : ExpressionType
     {
@@ -273,6 +298,13 @@ namespace linqtoweb.CodeGenerator.AST
             get
             {
                 return CsPropertyInitValue;
+            }
+        }
+        public override Type CorrespondingSystemType
+        {
+            get
+            {
+                return typeof(int);
             }
         }
     }
@@ -308,6 +340,13 @@ namespace linqtoweb.CodeGenerator.AST
                 return CsPropertyInitValue;
             }
         }
+        public override Type CorrespondingSystemType
+        {
+            get
+            {
+                return typeof(double);
+            }
+        }
     }
     public class ExpressionStringType : ExpressionType
     {
@@ -339,6 +378,13 @@ namespace linqtoweb.CodeGenerator.AST
             get
             {
                 return CsPropertyInitValue;
+            }
+        }
+        public override Type CorrespondingSystemType
+        {
+            get
+            {
+                return typeof(string);
             }
         }
     }
@@ -374,6 +420,13 @@ namespace linqtoweb.CodeGenerator.AST
                 return CsPropertyInitValue;
             }
         }
+        public override Type CorrespondingSystemType
+        {
+            get
+            {
+                return typeof(DateTime);
+            }
+        }
     }
     public class ExpressionUserType : ExpressionType
     {
@@ -407,6 +460,13 @@ namespace linqtoweb.CodeGenerator.AST
                 return "new " + CsPropertyTypeName + "()";
             }
         }
+        public override Type CorrespondingSystemType
+        {
+            get
+            {
+                return Type.GetType(UserTypeName);
+            }
+        }
     }
     public class ExpressionVoidType : ExpressionType
     {
@@ -417,6 +477,14 @@ namespace linqtoweb.CodeGenerator.AST
             get
             {
                 return "void";
+            }
+        }
+
+        public override Type CorrespondingSystemType
+        {
+            get
+            {
+                return typeof(void);
             }
         }
     }

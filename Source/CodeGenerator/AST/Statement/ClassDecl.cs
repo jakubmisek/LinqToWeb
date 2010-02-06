@@ -55,9 +55,10 @@ namespace linqtoweb.CodeGenerator.AST
             foreach (var x in ClassProperties)
             {
                 if (x.VariableName.StartsWith("_"))
-                    throw new Exception("Class property cannot start with _.");
+                    throw new Exception("Class property cannot start with _. It is reserved system name.");
 
-                // private property value
+                // comment
+                codecontext.WriteLine("// " + x.ToString());
 
                 if (x.VariableType.IsExtractionObject)
                 {
@@ -68,14 +69,17 @@ namespace linqtoweb.CodeGenerator.AST
                 {
                     string privatePropName = "_" + x.VariableName;
 
-                    string decl = "private " + x.VariableType.CsPropertyTypeName + " " + privatePropName;
-                    codecontext.WriteLine(decl + " = " + x.VariableType.CsPropertyDefaultValue + ";");
-
                     // extracting on request (public property)
+                    // public property
                     string format = "public " + x.VariableType.CsPropertyTypeName + " " + x.VariableName +
                         "{get{while(" + privatePropName + "==" + x.VariableType.CsPropertyDefaultValue + "){if (!DoNextAction<object>(null))throw new NotExtractedDataException(\"" + x.VariableName + " cannot reach any data.\");} return " + privatePropName + ";}set{" + privatePropName + "=value;}}";
 
                     codecontext.WriteLine(format);
+
+                    // private property value
+                    string decl = "private " + x.VariableType.CsPropertyTypeName + " " + privatePropName;
+                    codecontext.WriteLine(decl + " = " + x.VariableType.CsPropertyDefaultValue + ";");
+
                 }
 
                 codecontext.WriteLine("");

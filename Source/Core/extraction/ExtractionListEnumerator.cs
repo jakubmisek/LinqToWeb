@@ -19,21 +19,18 @@ namespace linqtoweb.Core.extraction
         internal readonly ExtractionList<T> /*!*/listContainer;
 
         /// <summary>
-        /// List of actions that was added into the local ActionsToDo list.
+        /// Actions already processed.
         /// </summary>
-        private readonly ActionList AddedActionsToDo;
+        private readonly HashSet<ActionItem> ProcessedActions = new HashSet<ActionItem>();
 
         /// <summary>
         /// Init the enumerator.
         /// </summary>
         /// <param name="listContainer"></param>
         public ExtractionListEnumerator(ExtractionList<T> listContainer)
-            : base( listContainer.Parent, new ActionList(listContainer.ActionsToDo) )
+            : base( listContainer.Parent )
         {
             this.listContainer = listContainer;
-            
-            // save the list of known initial actions to do, listContainer may extend its list of ActionsToDo, so this.ActionsToDo must be updated
-            this.AddedActionsToDo = new ActionList(listContainer.ActionsToDo);  // shadow copy of used ActionList
         }
 
         #endregion
@@ -84,37 +81,31 @@ namespace linqtoweb.Core.extraction
                 // extract next elements into the queue
                 if (!DoNextAction(this))
                     break;
-
-                // list of the Initial actions to do of the listContainer could be changed
-                CheckForNewActionsToDo();
             }
         }
 
         /// <summary>
-        /// Checks the listContainer for new actions to do.
-        /// They could be added during the Parent.DoNextAction() called by this.DoNextAction().
+        /// Do next action to do, if there are no more actions to do, check the listContainer for some new action.
         /// </summary>
-        private void CheckForNewActionsToDo()
+        /// <typeparam name="S"></typeparam>
+        /// <param name="callerEnumerator">Always this.</param>
+        /// <returns>True if there was processed some action.</returns>
+        protected override bool DoNextAction<S>(ExtractionListEnumerator<S> callerEnumerator)
         {
-            if (listContainer.ActionsToDo.Items.Count > AddedActionsToDo.Items.Count)
-                lock (listContainer.ActionsToDo)// always not null
+            if (ActionsToDo.Count == 0 && ProcessedActions.Count < listContainer.ActionsToDo.Count )
+            {   // no more actions to do, and listCOntainer contains some new actions
+                foreach (var x in listContainer.ActionsToDo)
                 {
-                    foreach (var action in listContainer.ActionsToDo.Items)
+                    if (!ProcessedActions.Contains(x))
                     {
-                        if (AddedActionsToDo.ItemsByAction.ContainsKey(action) /*&& exists*/)
-                        {
-                            // action already known by this enumerator
-                            // following actions will be known too, so exit
-                            return;
-                        }
-                        else
-                        {
-                            // action is new
-                            AddedActionsToDo.AddAction(action);
-                            ActionsToDo.AddAction(action);
-                        }
+                        ProcessedActions.Add(x);
+                        ActionsToDo.AddAction(x);
                     }
                 }
+            }
+
+            // process the actions to do (mine or parent's)
+            return base.DoNextAction<S>(callerEnumerator);
         }
 
         #endregion

@@ -18,15 +18,9 @@ namespace linqtoweb.Core.datacontext
     public partial class DataContext
     {
         /// <summary>
-        /// The name of the method that is able to create new context, if the name of the method is not specified.
-        /// Method must return DataContext object.
-        /// </summary>
-        private static string DefaultOpenContextMethodName = "open";
-
-        /// <summary>
         /// Dynamically find a method that creates new context using specified arguments.
         /// </summary>
-        /// <param name="methodName">The method name. The parameter can be null, then the default method name is used.</param>
+        /// <param name="methodName">The method name. Cannot be null.</param>
         /// <param name="arguments">Arguments that will be passed to the method.</param>
         /// <returns>New DataContext.</returns>
         /// <remarks>An exception ArgumentOutOfRangeException can be thrown if no matching method is found.</remarks>
@@ -34,23 +28,16 @@ namespace linqtoweb.Core.datacontext
         {
             // method name
             if (methodName == null)
-                methodName = DefaultOpenContextMethodName;
+                throw new ArgumentNullException("methodName");
 
             //
             Type t = this.GetType();
 
-            // get arguments type
-            List<Type> typeArgs = new List<Type>(arguments.Length);
-
-            if (arguments != null)
-                foreach (object obj in arguments)
-                    typeArgs.Add(obj.GetType());
-
             // find a method
-            MethodInfo m = t.GetMethod(methodName, typeArgs.ToArray());
+            MethodInfo m = t.GetMethod(methodName, (arguments != null) ? Type.GetTypeArray(arguments) : new Type[0]);
             
             if (m == null || m.ReturnType != typeof(DataContext))
-                throw new ArgumentOutOfRangeException("Specified arguments does not match any method .");
+                throw new ArgumentOutOfRangeException("Specified arguments does not match any method.");
 
             // call method
             return (DataContext)m.Invoke(this, arguments);

@@ -8,22 +8,18 @@ namespace linqtoweb.Core.extraction
     /// <summary>
     /// The list of actions.
     /// </summary>
-    public class ActionList
+    public class ActionList : IEnumerable<ActionItem>
     {
         /// <summary>
-        /// ActionItems in linked list (add/remove first element).
+        /// Set of items to do. No ordering.
         /// </summary>
-        internal LinkedList<ActionItem> Items = new LinkedList<ActionItem>();
+        internal readonly HashSet<ActionItem> ItemsSet;
 
-        /// <summary>
-        /// References to linked list of ActionItems by the specific ActionItem.
-        /// </summary>
-        internal Dictionary<ActionItem, LinkedListNode<ActionItem>> ItemsByAction = new Dictionary<ActionItem, LinkedListNode<ActionItem>>();
-        
         /// <summary>
         /// Empty ActionList.
         /// </summary>
         public ActionList()
+            : this(null)
         {
             
         }
@@ -32,24 +28,23 @@ namespace linqtoweb.Core.extraction
         /// Copy of another ActionList.
         /// </summary>
         /// <param name="collection"></param>
-        public ActionList(ActionList collection)
+        public ActionList(IEnumerable<ActionItem> collection)
         {
-            foreach (var x in collection.Items)
-            {
-                ItemsByAction[x] = Items.AddLast(x);
-            }
+            if (collection == null)
+                ItemsSet = new HashSet<ActionItem>();
+            else
+                ItemsSet = new HashSet<ActionItem>(collection);
         }
 
         /// <summary>
-        /// Insert an action to do at the beginning of the list.
+        /// Insert an action to do.
         /// </summary>
         /// <param name="action">ActionItem to insert.</param>
         virtual public void AddAction(ActionItem action)
         {
             lock (this)
             {
-                // must be the First ! (or check the ExtractionListEnumerator.CheckForNewActionsToDo())
-                ItemsByAction[action] = Items.AddFirst(action);
+                ItemsSet.Add(action);
             }
         }
 
@@ -61,12 +56,7 @@ namespace linqtoweb.Core.extraction
         {
             lock(this)
             {
-                LinkedListNode<ActionItem>  node;
-                if (ItemsByAction.TryGetValue(action, out node))
-                {
-                    Items.Remove(node);
-                    ItemsByAction.Remove(action);
-                }
+                ItemsSet.Remove(action);    // O(1)
             }
         }
 
@@ -79,28 +69,53 @@ namespace linqtoweb.Core.extraction
         {
             lock (this)
             {
-                return ItemsByAction.ContainsKey(action);
+                return ItemsSet.Contains(action);   // O(1)
             }
         }
 
         /// <summary>
         /// Returns next action to do.
-        /// TODO: get next action using some priority or restrictions
+        /// TODO: get next action using some priority (shortest way to leaves) or restrictions (e.g. "I need to know this ..." or known filtering restrictions(Where condition))
         /// </summary>
         /// <returns></returns>
         virtual public ActionItem GetNextAction()
         {
             lock(this)
             {
-                if (Items.First != null)
-                {
-                    return Items.First.Value;
-                }
+                if (ItemsSet.Count > 0)
+                    return ItemsSet.First();    // first item using HashSet enumerator, O(1)
                 else
-                {
                     return null;
-                }
             }
         }
+
+        /// <summary>
+        /// Amount of items.
+        /// </summary>
+        public int Count
+        {
+            get
+            {
+                return ItemsSet.Count;
+            }
+        }
+
+        #region IEnumerable<ActionItem> Members
+
+        public IEnumerator<ActionItem> GetEnumerator()
+        {
+            return ItemsSet.GetEnumerator();
+        }
+
+        #endregion
+
+        #region IEnumerable Members
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return ItemsSet.GetEnumerator();
+        }
+
+        #endregion
     }
 }

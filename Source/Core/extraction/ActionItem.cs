@@ -51,8 +51,6 @@ namespace linqtoweb.Core.extraction
         /// <summary>
         /// Execute the action.
         /// Call the method on the specified data context with specified parameters.
-        /// 
-        /// TODO: method will not be executed if some parameter does not satisfy conditions.
         /// </summary>
         /// <param name="parametersTransform">List of transformations that will be performed onto the parameters list.</param>
         internal void CallAction<T>(ExtractionListEnumerator<T> callerEnumerator)
@@ -74,7 +72,7 @@ namespace linqtoweb.Core.extraction
                     
                     transformedParameters[pair.Key] = newValue;
 
-                    if (!containsAction)// add variable that can add an ActionItem within the following method call
+                    if (!containsAction)// add variable that cannot add an ActionItem within the following method call
                         transformedParameters.SetCannotAddActionForVariable(pair.Key);
                 }
                 else

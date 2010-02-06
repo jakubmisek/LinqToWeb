@@ -35,7 +35,7 @@ namespace linqtoweb.Core.datacontext
                 if (RequestProcessed) return; // test again
                 RequestProcessed = true;
 
-                // cache
+                // TODO: lookup in cache
 
                 // get response
                 HttpWebResponse resp = GetHttpResponse(

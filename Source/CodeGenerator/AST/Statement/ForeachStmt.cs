@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using linqtoweb.Core.methods;
 using System.Diagnostics;
+using System.Reflection;
 
 namespace linqtoweb.CodeGenerator.AST
 {
@@ -20,6 +20,40 @@ namespace linqtoweb.CodeGenerator.AST
             this.ForeachExpression = foreachexpr;
         }
 
+        /// <summary>
+        /// Checks the foreach method arguments and return type.
+        /// Throws an exception if something is wrong.
+        /// </summary>
+        /// <param name="foreachMethodName"></param>
+        /// <param name="argTypes"></param>
+        private void CheckMethodSignature( string foreachMethodName, ExpressionType[] argTypes )
+        {
+            // class containing foreach methods
+            Type feType = typeof(linqtoweb.Core.methods.ForeachMethods);
+
+            // arguments type
+            Type[] args = new Type[argTypes.Length + 1];
+            args[0] = typeof(linqtoweb.Core.datacontext.DataContext);   // the first argument is the DataContext
+            for (int i = 0; i < argTypes.Length; ++i)
+            {
+                args[i + 1] = argTypes[i].CorrespondingSystemType;
+            }
+
+            // find the foreach method
+            MethodInfo feMethod = feType.GetMethod(foreachMethodName, args);
+
+            if (feMethod == null)
+                throw new Exception("Method " + foreachMethodName + " could not be found within the class " + feType.FullName + ", or arguments type mishmash.");
+
+            // check the return type, which must implement the IEnumerable<LocalVariables> interface
+            Type enumType = typeof(IEnumerable<linqtoweb.Core.extraction.LocalVariables>);
+            foreach (var x in feMethod.ReturnType.GetInterfaces())
+                if (x == enumType)
+                    return; // OK
+            
+            throw new Exception("Method " + foreachMethodName + " does not return object that implements IEnumerable<LocalVariables> interface.");
+        }
+
         internal override ExpressionType EmitCs(EmitCodeContext codecontext)
         {
             if (Body != null)
@@ -28,15 +62,13 @@ namespace linqtoweb.CodeGenerator.AST
                 if (foreachMethod == null)
                     throw new Exception("argument of foreach must be a method call");
 
-                // TODO check foreachMethod arguments and return value
-
                 /*  // emit this
                     foreach (var x in ForeachMethods.regexp(l.context, @"Porno\s+(?<Title>\w+)"))
                     {
                         l.Push(null, x);
 
                         {Body}
-
+                
                         l.Pop();
                     }
                 */
@@ -60,6 +92,9 @@ namespace linqtoweb.CodeGenerator.AST
                 codecontext.Level++;
 
                 codecontext.WriteLine(scopeLocalVarName + ".Push(null," + foreachVarName + ");");
+
+                // check signature
+                CheckMethodSignature(foreachMethod.MethodName, methodargs.ToArray());
 
                 // Body
                 Body.EmitCs(codecontext);

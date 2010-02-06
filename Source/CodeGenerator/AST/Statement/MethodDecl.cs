@@ -64,6 +64,7 @@ namespace linqtoweb.CodeGenerator.AST
 
         internal override ExpressionType EmitCs(EmitCodeContext codecontext)
         {
+            codecontext.WriteLine("// " + DeclMethodName);
             codecontext.WriteLine("private static void " + GeneratedMethodName + "(DataContext _datacontext, LocalVariables _parameters)");
             codecontext.WriteLine("{");
 
