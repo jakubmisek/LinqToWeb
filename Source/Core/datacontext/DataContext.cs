@@ -17,7 +17,7 @@ namespace linqtoweb.Core.datacontext
     /// Used by extraction method.
     /// Contains
     /// - information about the page (data source).
-    /// - TODO: cache object
+    /// - cache object
     /// - methods for creating new DataContexts
     /// - downloading and processing methods
     /// </summary>
@@ -26,18 +26,28 @@ namespace linqtoweb.Core.datacontext
         #region internal
 
         /// <summary>
-        /// Storage for already known data. Can be null.
+        /// Storage for already known data. Cannot be null.
         /// </summary>
-        private readonly StorageBase DataCache;
+        public StorageBase DataCache
+        {
+            get
+            {
+                return _DataCache;
+            }
+        }
+        private StorageBase _DataCache = null;
 
         /// <summary>
         /// Empty (initial) data context. Does not contain any data.
         /// </summary>
         internal DataContext( Uri uri, DataContext referer, StorageBase cache)
         {
-            this.ContextUri = uri;
-            this.RefererContext = referer;
-            this.DataCache = cache;
+            if (cache == null)
+                throw new ArgumentNullException("cache");
+
+            _ContextUri = uri;
+            _RefererContext = referer;
+            _DataCache = cache;
         }
 
         /// <summary>
@@ -56,15 +66,29 @@ namespace linqtoweb.Core.datacontext
         /// <summary>
         /// Referer data context. Can be null.
         /// </summary>
-        public DataContext RefererContext { get; private set; }
+        public virtual DataContext RefererContext
+        {
+            get
+            {
+                return _RefererContext;
+            }
+        }
+        protected DataContext _RefererContext = null;
 
         /// <summary>
         /// The data content URI identifier. Can be null.
         /// </summary>
-        public Uri ContextUri { get; private set; }
+        public virtual Uri ContextUri
+        {
+            get
+            {
+                return _ContextUri;
+            }
+        }
+        protected Uri _ContextUri = null;
 
         /// <summary>
-        /// Cookies in the current context. Can be null (no cookies).
+        /// All the known cookies in the current context. Can be null (no cookies).
         /// </summary>
         public virtual CookieCollection Cookies
         {

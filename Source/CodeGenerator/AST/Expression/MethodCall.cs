@@ -37,9 +37,8 @@ namespace linqtoweb.CodeGenerator.AST
             return str.ToString();
         }
 
-        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
+        private ExpressionType TryEmitExtractionMethodCall(EmitCodeContext codecontext)
         {
-            // is it an extraction method ?
             List<MethodDecl> matchingMethods = new List<MethodDecl>();
 
             foreach (var decl in codecontext.Declarations.Methods)
@@ -52,7 +51,7 @@ namespace linqtoweb.CodeGenerator.AST
                     matchingMethods.Add(decl);
                 }
             }
-            
+
             if (matchingMethods.Count > 0)
             {
                 codecontext.Write("ActionItem.AddAction( new ActionItem.ExtractionMethod[]{");
@@ -63,7 +62,7 @@ namespace linqtoweb.CodeGenerator.AST
                     if (bFirstMethod) bFirstMethod = false;
                     else codecontext.Write(", ");
                     codecontext.Write(decl.GeneratedMethodName);
-                   
+
                 }
 
                 codecontext.Write("}, " + scopeLocalVarName + ".context, new LocalVariables() {" + codecontext.Output.NewLine);
@@ -72,7 +71,7 @@ namespace linqtoweb.CodeGenerator.AST
 
                 MethodDecl somedecl = matchingMethods[0];
                 string cannotAddActionDict = null;
-                for (int arg = 0; arg < CallArguments.Count; ++arg )
+                for (int arg = 0; arg < CallArguments.Count; ++arg)
                 {
                     if (arg > 0) codecontext.Write("," + codecontext.Output.NewLine);
                     codecontext.Write("{\"" + somedecl.MethodArguments[arg].VariableName + "\", ", codecontext.Level);
@@ -84,7 +83,7 @@ namespace linqtoweb.CodeGenerator.AST
 
                     // check if the argument is able to add new action
                     VariableUse varuse;
-                    if ( (varuse = CallArguments[arg] as VariableUse) != null )
+                    if ((varuse = CallArguments[arg] as VariableUse) != null)
                     {
                         if (cannotAddActionDict != null) cannotAddActionDict += ",";
                         cannotAddActionDict += "{\"" + somedecl.MethodArguments[arg].VariableName + "\",_parameters.CannotAddActionForVariable(\"" + varuse.VariableName + "\")}";
@@ -96,8 +95,13 @@ namespace linqtoweb.CodeGenerator.AST
 
                 return ExpressionType.VoidType;
             }
-
-            // is it a class construction ?
+            else
+            {
+                return null;
+            }
+        }
+        private ExpressionType TryEmitClassConstruct(EmitCodeContext codecontext)
+        {
             foreach (var decl in codecontext.Declarations.Classes.Values)
             {
                 if (decl.ClassName == MethodName)
@@ -106,7 +110,7 @@ namespace linqtoweb.CodeGenerator.AST
 
                     codecontext.Write("(new " + MethodName + "(){ ");
 
-                    for ( int arg = 0; arg < CallArguments.Count; ++arg )
+                    for (int arg = 0; arg < CallArguments.Count; ++arg)
                     {
                         ExpressionAssign ass = CallArguments[arg] as ExpressionAssign;
                         VariableUse lvalue;
@@ -121,7 +125,7 @@ namespace linqtoweb.CodeGenerator.AST
                             throw new Exception(lvalue.VariableName + " is not a property of " + decl.ClassName);
 
                         codecontext.Write(lvalue.VariableName + " = ");
-                        ExpressionType propValueType =  ass.RValue.EmitCs(codecontext);
+                        ExpressionType propValueType = ass.RValue.EmitCs(codecontext);
 
                         if (!propValueType.Equals(propType))
                             throw new ArgumentException("Type mishmash, " + propType.ToString() + " and " + propValueType.ToString());
@@ -133,7 +137,38 @@ namespace linqtoweb.CodeGenerator.AST
                 }
             }
 
-            //
+            return null;
+        }
+
+        /// <summary>
+        /// Emit the C# method call, defined in the context class (codecontext.ContextName).
+        /// </summary>
+        /// <param name="codecontext"></param>
+        /// <returns></returns>
+        private ExpressionType TryEmitCsMethodCall(EmitCodeContext codecontext)
+        {
+            // TODO: emit .NET method call, MethodName must be in the dotted form, method must be static, arguments type and return type must be compatible
+
+            return null;
+        }
+
+        internal override ExpressionType EmitCs(EmitCodeContext codecontext)
+        {
+            ExpressionType retType;
+
+            // is it an extraction method ?
+            if ((retType = TryEmitExtractionMethodCall(codecontext)) != null)
+                return retType;
+
+            // is it a class construction ?
+            if ((retType = TryEmitClassConstruct(codecontext)) != null)
+                return retType;
+
+            //  emit .NET method call (in the same context class)
+            if ((retType = TryEmitCsMethodCall(codecontext)) != null)
+                return retType;
+
+            // 
             throw new Exception("Undeclared method or class " + MethodName);
         }
     }

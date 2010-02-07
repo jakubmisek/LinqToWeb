@@ -20,6 +20,24 @@ namespace linqtoweb.Core.datacontext
 
         }
 
+        private string StorageKey
+        {
+            get
+            {
+                return
+                    ContextUri.AbsoluteUri +
+                    ((RefererContext != null)?RefererContext.ContextUri.AbsoluteUri.GetHashCode():0) +
+                    ((RefererContext != null && RefererContext.Cookies != null)?("todo"):(string.Empty))
+                    ;
+            }
+        }
+
+        private class StorageValue
+        {
+            public string Content { get; set; }
+            public CookieCollection Cookies { get; set; }
+        }
+
         private bool RequestProcessed = false;
 
         /// <summary>
@@ -35,38 +53,49 @@ namespace linqtoweb.Core.datacontext
                 if (RequestProcessed) return; // test again
                 RequestProcessed = true;
 
-                // TODO: lookup in cache
+                StorageValue data = (StorageValue)DataCache.GetItem(StorageKey,
+                    delegate(out DateTime expiration)
+                    {
+                        // get response
+                        HttpWebResponse resp = GetHttpResponse(
+                            ContextUri,
+                            (RefererContext != null && RefererContext.ContextUri != null) ? RefererContext.ContextUri.AbsoluteUri : null,
+                            DefaultUserAgent,
+                            15000,
+                            false,
+                            false,
+                            (RefererContext != null) ? RefererContext.Cookies : null);
 
-                // get response
-                HttpWebResponse resp = GetHttpResponse(
-                    ContextUri,
-                    (RefererContext != null && RefererContext.ContextUri != null) ? RefererContext.ContextUri.AbsoluteUri : null,
-                    DefaultUserAgent,
-                    15000,
-                    false,
-                    false,
-                    (RefererContext != null) ? RefererContext.Cookies : null);
+                        // page content
+                        Stream RespStream = resp.GetResponseStream();
+                        string RespContent = new StreamReader(RespStream, Encoding.GetEncoding(resp.ContentEncoding)).ReadToEnd();
+                        RespStream.Close();
 
-                // page content
-                _Content = new StreamReader(resp.GetResponseStream()).ReadToEnd();
+                        // cookies
+                        CookieCollection RespCookies = null;
+                        if (resp.Cookies != null && resp.Cookies.Count > 0)
+                        {
+                            RespCookies = new CookieCollection();
+                            RespCookies.Add(resp.Cookies);
+                        }
 
-                // cookies
-                if (resp.Cookies != null && resp.Cookies.Count > 0)
-                {
-                    _Cookies = new CookieCollection();
-                    _Cookies.Add(resp.Cookies);
-                }
+                        // headers
 
-                // headers
+                        // content type, encoding, Response URI
 
-                // content type, encoding
+                        // close response
+                        resp.Close();
 
-                // close response
-                resp.Close();
+                        expiration = DateTime.Now.AddHours(1.0);    // TODO: time based on HTML header or HtmlContext parameters
+                        
+                        return new StorageValue() { Content = RespContent, Cookies = RespCookies };
+                    }
+                    );
+
+                _Content = data.Content;
+                _Cookies = data.Cookies;
             }
         }
-
-        private CookieCollection _Cookies = null;
 
         /// <summary>
         /// Page cookies.
@@ -80,8 +109,9 @@ namespace linqtoweb.Core.datacontext
                 return _Cookies;
             }
         }
+        private CookieCollection _Cookies = null;
 
-        private string _Content = null;
+        
 
         /// <summary>
         /// HTML page content.
@@ -95,5 +125,6 @@ namespace linqtoweb.Core.datacontext
                 return _Content;
             }
         }
+        private string _Content = null;
     }
 }

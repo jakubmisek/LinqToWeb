@@ -37,7 +37,7 @@ namespace linqtoweb.Core.extraction
         /// Initialize the context with the default storage object.
         /// </summary>
         public ExtractionContext()
-            :this(new StorageBase()) // TODO: in-memory static cache
+            :this(new StorageMemory())
         {
 
         }

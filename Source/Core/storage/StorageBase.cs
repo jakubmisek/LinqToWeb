@@ -8,8 +8,10 @@ namespace linqtoweb.Core.storage
     /// <summary>
     /// Base class for the storage mechanism in the linqtoweb extraction processes.
     /// </summary>
-    public class StorageBase
+    public abstract class StorageBase
     {
+        public delegate object ComputeItemMethod(out DateTime expiration);
 
+        public abstract object GetItem(string key, ComputeItemMethod method);
     }
 }
