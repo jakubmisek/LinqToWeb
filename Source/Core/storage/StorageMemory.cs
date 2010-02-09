@@ -25,7 +25,7 @@ namespace linqtoweb.Core.storage
 
         public override object GetItem(string key, StorageBase.ComputeItemMethod method)
         {
-            lock (locks[key.GetHashCode() % locks.Length])
+            lock (locks[(uint)key.GetHashCode() % locks.Length])
             {
                 DictionaryValue item;
                 if (!Items.TryGetValue(key, out item) || item.ExpirationTime <= DateTime.Now)

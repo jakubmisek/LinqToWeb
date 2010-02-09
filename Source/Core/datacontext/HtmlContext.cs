@@ -26,7 +26,7 @@ namespace linqtoweb.Core.datacontext
             {
                 return
                     ContextUri.AbsoluteUri +
-                    ((RefererContext != null)?RefererContext.ContextUri.AbsoluteUri.GetHashCode():0) +
+                    ((RefererContext != null && RefererContext.ContextUri != null) ? RefererContext.ContextUri.AbsoluteUri.GetHashCode() : 0) +
                     ((RefererContext != null && RefererContext.Cookies != null)?("todo"):(string.Empty))
                     ;
             }
@@ -68,7 +68,7 @@ namespace linqtoweb.Core.datacontext
 
                         // page content
                         Stream RespStream = resp.GetResponseStream();
-                        string RespContent = new StreamReader(RespStream, Encoding.GetEncoding(resp.ContentEncoding)).ReadToEnd();
+                        string RespContent = new StreamReader(RespStream/*, Encoding.GetEncoding(resp.ContentEncoding)*/).ReadToEnd();
                         RespStream.Close();
 
                         // cookies
@@ -79,11 +79,9 @@ namespace linqtoweb.Core.datacontext
                             RespCookies.Add(resp.Cookies);
                         }
 
-                        // headers
+                        // TODO: headers (language, cache expire, content type, encoding, Response URI, ...)
 
-                        // content type, encoding, Response URI
-
-                        // close response
+                        // close the response
                         resp.Close();
 
                         expiration = DateTime.Now.AddHours(1.0);    // TODO: time based on HTML header or HtmlContext parameters
