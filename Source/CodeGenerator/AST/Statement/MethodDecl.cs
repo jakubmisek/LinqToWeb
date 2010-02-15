@@ -73,6 +73,8 @@ namespace linqtoweb.CodeGenerator.AST
             // declare parameters as local variables
             foreach (var x in MethodArguments)
             {
+                // declare variable from _parameters argument
+                // checks for declaration duplicity
                 bodycontext.DeclareLocalVar(
                     x.VariableType,
                     x.VariableName,

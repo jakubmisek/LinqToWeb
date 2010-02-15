@@ -56,7 +56,10 @@ namespace linqtoweb.CodeGenerator.AST
         /// <param name="declaredVariables">List of variables declared in the current context and their type.</param>
         internal override ExpressionType EmitCs(EmitCodeContext codecontext)
         {
-            codecontext.WriteLine("// Generated LinqToWeb context // " + DateTime.Now.ToString());
+            codecontext.WriteLine("/* Generated LinqToWeb context");
+            codecontext.WriteLine(" * Date: " + DateTime.Now.ToString());
+            codecontext.WriteLine(" */");
+            codecontext.WriteLine();
             codecontext.WriteLine("using System;");
             codecontext.WriteLine("using System.Collections.Generic;");
             codecontext.WriteLine("using System.Text;");
@@ -76,11 +79,8 @@ namespace linqtoweb.CodeGenerator.AST
 
             Declarations.EmitCs(indentc.NewScope());
 
-            // emit initialize, emit vars (use arguments from main methods)
+            // emit initialize, emit vars (use arguments from main methods), constructors
             EmitCs_Init(indentc.NewScope());
-
-            // emit constructors
-            EmitCs_Ctors(indentc.NewScope());
 
             indentc.WriteLine("}");
 
@@ -89,12 +89,13 @@ namespace linqtoweb.CodeGenerator.AST
 
             return ExpressionType.VoidType;
         }
-        internal void EmitCs_Init(EmitCodeContext codecontext)
+        internal void EmitCs_Init(EmitCodeContext codecontext )
         {
-            Dictionary<string, ExpressionType> mainVars = new Dictionary<string, ExpressionType>();
+            Dictionary<string, ExpressionType> contextVars = new Dictionary<string, ExpressionType>();
+
             List<MethodDecl> mainMethods = new List<MethodDecl>();
 
-            // collect global vars
+            // collect global vars, extraction arguments
             foreach (var m in codecontext.Declarations.Methods)
             {
                 if (m.IsMainMethod)
@@ -103,18 +104,15 @@ namespace linqtoweb.CodeGenerator.AST
 
                     foreach (var arg in m.MethodArguments)
                     {
-                        if (!arg.VariableType.IsExtractionObject)
-                            throw new Exception("Main methods can be called only with List or User-defined type arguments.");
-
                         ExpressionType vartype;
-                        if (mainVars.TryGetValue(arg.VariableName, out vartype))
+                        if (contextVars.TryGetValue(arg.VariableName, out vartype))
                         {
                             if (vartype != arg.VariableType)
-                                throw new Exception("Two global properties with different type defined.");
+                                throw new Exception("Two context variables with different type defined.");
                         }
                         else
                         {
-                            mainVars[arg.VariableName] = arg.VariableType;
+                            contextVars[arg.VariableName] = arg.VariableType;
                         }
                     }
                 }
@@ -122,20 +120,46 @@ namespace linqtoweb.CodeGenerator.AST
 
             // emit properties
             codecontext.WriteLine("#region Public extracted data");
-            foreach (var v in mainVars)
+            foreach (var v in contextVars)
             {
-                // emit prop
                 codecontext.WriteLine("// " + v.Value.ToString() + " " + v.Key);
-                codecontext.WriteLine("public readonly " + v.Value.CsPropertyTypeName + " " + v.Key + " = " + v.Value.CsPropertyRootInitValue + ";");
+                    
+                if (v.Value.IsExtractionObject)
+                {
+                    // emit prop
+                    codecontext.WriteLine("public readonly " + v.Value.CsPropertyTypeName + " " + v.Key + " = " + v.Value.CsPropertyRootInitValue + ";");
+                }
+                /*else
+                {
+                    // emit context parameter
+                    codecontext.WriteLine("private readonly " + v.Value.CsArgumentTypeName + " " + v.Key + ";");
+                }*/
             }
             codecontext.WriteLine("#endregion" + codecontext.Output.NewLine);
 
-            // emit InitActionsToDo
-            codecontext.WriteLine("#region Data initialization");
-            codecontext.WriteLine("protected override void InitActionsToDo()");
-            codecontext.WriteLine("{"); codecontext.Level++;
-            codecontext.WriteLine("base.InitActionsToDo();");
+            //
+            // context arguments, initialization
+            //
+            string ctorArgs = null;
+            string argsPass = null;
+            foreach (var x in contextVars)
+            {
+                if (!x.Value.IsExtractionObject)
+                {
+                    // argument
+                    if (ctorArgs != null) ctorArgs += ", ";
+                    if (argsPass != null) argsPass += ", ";
 
+                    ctorArgs = ctorArgs + x.Value.CsArgumentTypeName + " " + x.Key;
+                    argsPass = argsPass + x.Key;
+                }
+            }
+
+            // emit initializing actions
+            codecontext.WriteLine("#region Context construct");
+            codecontext.WriteLine("private void InitActionsToDo(" + ctorArgs + ")");
+            codecontext.WriteLine("{"); codecontext.Level++;
+            
             foreach (var m in mainMethods)
             {
                 codecontext.WriteLine("ActionItem.AddAction(" + m.GeneratedMethodName + ", InitialDataContext, new LocalVariables(){");
@@ -157,16 +181,15 @@ namespace linqtoweb.CodeGenerator.AST
             codecontext.Level--;
             codecontext.WriteLine("}");
 
+            // emit ctors
+            codecontext.WriteLine("#region Constructors");
+            codecontext.WriteLine("public " + codecontext.ContextName + "(" + ctorArgs + "):base(){InitActionsToDo(" + argsPass + ");}");
+            codecontext.WriteLine("public " + codecontext.ContextName + "(StorageBase cache" + ((ctorArgs == null) ? "" : (", " + ctorArgs)) + "):base(cache){InitActionsToDo(" + argsPass + ");}");
+            codecontext.WriteLine("#endregion");
+
             codecontext.WriteLine("#endregion" + codecontext.Output.NewLine);
         }
 
-        internal void EmitCs_Ctors(EmitCodeContext codecontext)
-        {
-            codecontext.WriteLine("#region Constructors");
-            codecontext.WriteLine("public " + codecontext.ContextName + "():base(){}");
-            codecontext.WriteLine("public " + codecontext.ContextName + "(StorageBase cache):base(cache){}");
-            codecontext.WriteLine("#endregion");
-        }
     }
 
     /// <summary>

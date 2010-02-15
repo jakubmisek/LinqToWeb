@@ -1,0 +1,18 @@
+class XXX
+{
+	string text;
+	datetime time;
+}
+
+(XXX[] list, XXX content, string key)
+{
+	content.text = "";
+
+	[open(key)]
+	foreach(regexp("(?<word>\\w+)"))
+	{
+		list[] = XXX(text=word,time=(datetime)"1/2/2010");
+
+		content.text = content.text + " " + word;
+	}
+}

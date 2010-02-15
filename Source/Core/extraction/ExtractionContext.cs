@@ -29,8 +29,6 @@ namespace linqtoweb.Core.extraction
         public ExtractionContext(StorageBase cache)
         {
             InitialDataContext = new DataContext(null, null, cache);
-
-            InitActionsToDo();
         }
 
         /// <summary>
@@ -41,18 +39,6 @@ namespace linqtoweb.Core.extraction
         {
 
         }
-
-        #region context objects initialization
-
-        /// <summary>
-        /// Initialize ActionsToDo lists for context objects.
-        /// </summary>
-        protected virtual void InitActionsToDo()
-        {
-           
-        }
-
-        #endregion
 
         #region Helper
 

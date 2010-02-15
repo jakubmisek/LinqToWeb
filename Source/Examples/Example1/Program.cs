@@ -16,25 +16,24 @@ namespace Example1
     {
         static void Main(string[] args)
         {
-            WebContext context = new WebContext();
+            WebContext context = new WebContext("http://linqtoweb.codeplex.com/");
 
-            Console.WriteLine(context.el.str);
-
-
-            foreach (var x in context.sampleList)
+            foreach (var x in context.list)
             {
-                Console.WriteLine(x.str + "    " + context.el.str);
+                Console.WriteLine(x.text + " ");
             }
 
+            Console.WriteLine(context.content.text);
+
             //Scanner scanner = new Scanner();
-            //scanner.SetSource(File.ReadAllText("code.txt"), 0);
+            //scanner.SetSource(File.ReadAllText("..\\..\\code.txt"), 0);
 
             //Parser parser = new Parser(scanner);
             //if (parser.Parse())
             //{
             //    GlobalCode x = parser.Ast;
 
-            //    x.EmitCs(new StreamWriter("code.cs", false, Encoding.Unicode), "Example1", "WebContext");
+            //    x.EmitCs(new StreamWriter("..\\..\\code.cs", false, Encoding.Unicode), "Example1", "WebContext");
             //}
 
         }

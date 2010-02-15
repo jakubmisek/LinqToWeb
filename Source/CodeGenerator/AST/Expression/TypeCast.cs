@@ -106,6 +106,9 @@ namespace linqtoweb.CodeGenerator.AST
                             case ExpressionType.KnownTypes.TDouble:
                                 result = string.Format("double.Parse{0}", valvalue);
                                 break;
+                            case ExpressionType.KnownTypes.TDateTime:
+                                result = string.Format("DateTime.Parse{0}", valvalue);
+                                break;
                         }
                         break;
                     default:
