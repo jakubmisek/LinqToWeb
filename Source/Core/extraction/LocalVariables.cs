@@ -84,12 +84,23 @@ namespace linqtoweb.Core.extraction
         /// <returns></returns>
         public bool CannotAddActionForVariable(string varName)
         {
-            return (CannotAddAction != null && CannotAddAction.ContainsKey(varName));
+            if (string.IsNullOrEmpty(varName))
+                throw new ArgumentNullException("varName");
+
+            string varRootName = varName.Split(new char[] { '.' })[0];
+
+            return (CannotAddAction != null && CannotAddAction.ContainsKey(varRootName));
         }
 
         public void SetCannotAddActionForVariable(string varName)
         {
             if (CannotAddAction == null) CannotAddAction = new Dictionary<string, bool>();
+
+            if (string.IsNullOrEmpty(varName))
+                throw new ArgumentNullException("varName");
+
+            if (varName.Contains('.'))
+                throw new ArgumentException("Simple variable name expected.", "varName");
 
             CannotAddAction[varName] = true;
         }

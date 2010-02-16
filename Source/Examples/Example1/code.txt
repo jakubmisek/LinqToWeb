@@ -2,6 +2,8 @@ class XXX
 {
 	string text;
 	datetime time;
+
+	int[] nums;
 }
 
 (XXX[] list, XXX content, string key)
@@ -15,4 +17,9 @@ class XXX
 
 		content.text = content.text + " " + word;
 	}
+
+	content.nums[]=0;
+	content.nums[]=1;
+	content.nums[]=2;
+	content.nums[]=3;
 }

@@ -184,7 +184,7 @@ namespace linqtoweb.CodeGenerator.AST
             // emit ctors
             codecontext.WriteLine("#region Constructors");
             codecontext.WriteLine("public " + codecontext.ContextName + "(" + ctorArgs + "):base(){InitActionsToDo(" + argsPass + ");}");
-            codecontext.WriteLine("public " + codecontext.ContextName + "(StorageBase cache" + ((ctorArgs == null) ? "" : (", " + ctorArgs)) + "):base(cache){InitActionsToDo(" + argsPass + ");}");
+            codecontext.WriteLine("public " + codecontext.ContextName + "(" + ((ctorArgs == null) ? "" : (ctorArgs + ", ")) + "StorageBase cache):base(cache){InitActionsToDo(" + argsPass + ");}");
             codecontext.WriteLine("#endregion");
 
             codecontext.WriteLine("#endregion" + codecontext.Output.NewLine);

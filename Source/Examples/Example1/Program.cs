@@ -20,10 +20,14 @@ namespace Example1
 
             foreach (var x in context.list)
             {
-                Console.WriteLine(x.text + " ");
+                //Console.WriteLine(x.text + " ");
             }
-
-            Console.WriteLine(context.content.text);
+            
+            foreach (var x in context.content.nums)
+            {
+                Console.Write(x + " ");
+            }
+            Console.WriteLine();
 
             //Scanner scanner = new Scanner();
             //scanner.SetSource(File.ReadAllText("..\\..\\code.txt"), 0);

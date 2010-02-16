@@ -61,9 +61,14 @@ namespace linqtoweb.Core.extraction
         /// <param name="list"></param>
         /// <param name="element"></param>
         /// <returns></returns>
-        protected static T AddElementAction<T>( DataContext context, ExtractionListBase<T> list, T element )
+        protected static T AddElementAction<T>( DataContext context, LocalVariables parameters, string listVarName, ExtractionListBase<T> list, T element )
         {
-            ActionItem.AddAction(AddElementMethod<T>, context, new LocalVariables(new Dictionary<string, object>() { { "list", list }, { "element", element } }));
+            ActionItem.AddAction(
+                AddElementMethod<T>,
+                context,
+                new LocalVariables(new Dictionary<string, object>() { { "list", list }, { "element", element } })
+                    .SetCannotAddAction(new Dictionary<string, bool>() { { "list", parameters.CannotAddActionForVariable(listVarName) } })
+                    );
 
             return element;
         }

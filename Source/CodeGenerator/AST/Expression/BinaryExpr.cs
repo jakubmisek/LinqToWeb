@@ -211,7 +211,7 @@ namespace linqtoweb.CodeGenerator.AST
             {   // element cannot be added directly
                 // must be created action that add the element when list is actually enumerated
                 // TODO: throw warning, can cause memory leaks, adding elements one-by-one through the actions.
-                codecontext.Write("AddElementAction(" + scopeLocalVarName + ".context, " + lvalue.VariableName + ", ");
+                codecontext.Write("AddElementAction(" + scopeLocalVarName + ".context, _parameters, \"" + lvalue.VariableName + "\", " + lvalue.VariableName + ", ");
                 rValueType = rvalue.EmitCs(codecontext);
                 codecontext.Write(")");
             }
