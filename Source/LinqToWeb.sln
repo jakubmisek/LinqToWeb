@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example1", "Examples\Exampl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "linqtoweb.CodeGenerator", "CodeGenerator\linqtoweb.CodeGenerator.csproj", "{F399BE34-8E3F-44FC-B4B4-3C7B2C2F4D52}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{4FD513E0-8B85-433F-A0A7-7DF125C57D20}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 4
@@ -17,6 +19,7 @@ Global
 		SccProjectName1 = Core
 		SccLocalPath1 = Core
 		SccProjectUniqueName2 = Examples\\Example1\\Example1.csproj
+		SccProjectTopLevelParentUniqueName2 = LinqToWeb.sln
 		SccProjectName2 = Examples/Example1
 		SccLocalPath2 = Examples\\Example1
 		SccProjectUniqueName3 = CodeGenerator\\linqtoweb.CodeGenerator.csproj
@@ -43,5 +46,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{EAFAE698-D0F9-47EF-90EF-9FBC45C93161} = {4FD513E0-8B85-433F-A0A7-7DF125C57D20}
 	EndGlobalSection
 EndGlobal

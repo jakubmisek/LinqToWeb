@@ -165,12 +165,18 @@ namespace linqtoweb.CodeGenerator.AST
             if (lType.ListOf != null)
                 throw new Exception("Unable to assign to a list.");
 
+            // TODO: lValue cannot be the method argument, unable to assign to the method argument, only adding to lists or modifying object properties.
+            // arg1 = .. // error
+            // arg1.prop1 = ... // ok
+            // arg2[] = ... // ok
+
             codecontext.Write(lValueVariable.VariableName + " = ");
 
             ExpressionType rType = RValue.EmitCs(codecontext);
 
             if (!(lType.Equals(rType)))
                 throw new Exception("Type mishmash.");
+
 
             return lType;
         }
