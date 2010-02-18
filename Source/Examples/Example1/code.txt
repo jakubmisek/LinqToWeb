@@ -1,25 +1,25 @@
-class XXX
+class Result
 {
-	string text;
-	datetime time;
-
-	int[] nums;
+	string title;
+	string url;
 }
 
-(XXX[] list, XXX content, string key)
+string urlencode(string str) c# "return System.Web.HttpUtility.UrlEncode(str);"
+string htmldecode(string str) c# "return System.Web.HttpUtility.HtmlDecode(str);"
+
+(Result[] GoogleResults, string query)
 {
-	content.text = "";
+	[open("http://www.google.com/search?q=" + urlencode(query))]
+	googlepage(GoogleResults);
+}
 
-	[open(key)]
-	foreach(regexp("(?<word>\\w+)"))
+googlepage(Result[] items)
+{
+	foreach(regexp("\\<h3\\sclass=r\\>\\<a\\shref=\\\"(?<rurl>[^\\\"]*)\\\"[^\\>]*\\>(?<rtitle>[^(.)]*)\\</a\\>\\</h3\\>"))
 	{
-		list[] = XXX(text=word,time=(datetime)"1/2/2010");
-
-		content.text = content.text + " " + word;
+		items[] = Result(url=htmldecode(rurl),title=rtitle);
 	}
-
-	content.nums[]=0;
-	content.nums[]=1;
-	content.nums[]=2;
-	content.nums[]=3;
+	
+	foreach(regexp("\\<a\\shref=\\\"(?<rurl>[^\\\"]*)\\\"[^\\>]*\\>\\<span\\sclass=\\\"csb\\sch\\\"\\sstyle=\\\"background-position:-76px"))
+		[open(htmldecode(rurl))]googlepage(items);
 }

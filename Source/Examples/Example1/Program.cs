@@ -16,29 +16,36 @@ namespace Example1
     {
         static void Main(string[] args)
         {
-            WebContext context = new WebContext("http://linqtoweb.codeplex.com/");
-
-            foreach (var x in context.list)
+            if (true)
             {
-                //Console.WriteLine(x.text + " ");
+                WebContext context = new WebContext("jakub misek");
+
+                foreach (var x in context.GoogleResults/*.Where(x => x.url.Contains(".cz"))*/)
+                {
+                    Console.WriteLine(x.title);
+                    Console.WriteLine(" - " + x.url);
+                }
+
+                Console.WriteLine("people.devsense.com position: " + context.GoogleResults.TakeWhile(x => !x.url.ToLower().Contains("people.devsense.com")).Count());
+
+                //Console.WriteLine("results count: " + context.GoogleResults.Count());
+
             }
-            
-            foreach (var x in context.content.nums)
+            else
             {
-                Console.Write(x + " ");
+                Scanner scanner = new Scanner();
+                scanner.SetSource(File.ReadAllText("..\\..\\code.txt"), 0);
+
+                Parser parser = new Parser(scanner);
+                if (parser.Parse())
+                {
+                    GlobalCode x = parser.Ast;
+
+                    x.EmitCs(new StreamWriter("..\\..\\code.cs", false, Encoding.Unicode), "Example1", "WebContext");
+
+                    Console.WriteLine("Code emitted");
+                }
             }
-            Console.WriteLine();
-
-            //Scanner scanner = new Scanner();
-            //scanner.SetSource(File.ReadAllText("..\\..\\code.txt"), 0);
-
-            //Parser parser = new Parser(scanner);
-            //if (parser.Parse())
-            //{
-            //    GlobalCode x = parser.Ast;
-
-            //    x.EmitCs(new StreamWriter("..\\..\\code.cs", false, Encoding.Unicode), "Example1", "WebContext");
-            //}
 
         }
     }

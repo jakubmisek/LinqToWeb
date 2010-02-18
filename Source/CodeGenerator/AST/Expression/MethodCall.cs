@@ -43,7 +43,7 @@ namespace linqtoweb.CodeGenerator.AST
 
             foreach (var decl in codecontext.Declarations.Methods)
             {
-                if (decl.DeclMethodName == MethodName)
+                if (decl.DeclMethodName == MethodName && decl.Body != null)
                 {
                     if (decl.MethodArguments.Count != CallArguments.Count)
                         throw new Exception("Invalid arguments count in method call " + MethodName);
@@ -147,7 +147,43 @@ namespace linqtoweb.CodeGenerator.AST
         /// <returns></returns>
         private ExpressionType TryEmitCsMethodCall(EmitCodeContext codecontext)
         {
-            // TODO: emit .NET method call, MethodName must be in the dotted form, method must be static, arguments type and return type must be compatible
+            List<MethodDecl> matchingMethods = new List<MethodDecl>();
+
+            foreach (var decl in codecontext.Declarations.Methods)
+            {
+                if (decl.DeclMethodName == MethodName && decl.BodyCSharp != null)
+                {
+                    if (decl.MethodArguments != null && decl.MethodArguments.Count != CallArguments.Count)
+                        throw new Exception("Invalid arguments count in method call " + MethodName);
+
+                    matchingMethods.Add(decl);
+                }
+            }
+
+            if (matchingMethods.Count > 1)
+            {
+                throw new Exception("Ambiguous C# method call.");
+            }
+
+            if (matchingMethods.Count == 1)
+            {
+                MethodDecl decl = matchingMethods[0];
+
+                codecontext.Write(decl.GeneratedMethodName + "(");
+
+                bool bFirst = true;
+                if (CallArguments != null)
+                foreach (var x in CallArguments)
+                {
+                    if (!bFirst) codecontext.Write(", ");
+                    else bFirst = false;
+
+                    x.EmitCs(codecontext);
+                }
+                codecontext.Write(")");
+
+                return decl.ReturnType;
+            }
 
             return null;
         }

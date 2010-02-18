@@ -28,6 +28,7 @@ namespace linqtoweb.CodeGenerator.AST
         /// The value of the string literal. C# string.
         /// </summary>
         public string CsValue { get; private set; }
+        public string Value { get { return CsValue.Trim(new char[]{'\"'}).Replace("\\\"", "\""); } }
 
         public StringLiteral( ExprPosition position, string value )
             :base(position)

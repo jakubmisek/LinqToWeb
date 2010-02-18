@@ -9,7 +9,7 @@
 %x comment
 
 HexDigit                [0-9A-Fa-f]
-StringChar				[^\r\n\"\\]|[\\.]
+StringChar				[^\r\n\"\\]|[\\.]|(\\\")
 
 LNUM                    [0-9]+
 DNUM                    ([0-9]*[.][0-9]+)|([0-9]+[.][0-9]*)
@@ -63,6 +63,7 @@ not				{return (int)Tokens.OP_LOGIC_NOT;}
 
 class			{return (int)Tokens.CLASS;}
 foreach			{return (int)Tokens.FOREACH;}
+c#				{return (int)Tokens.CSHARP;}
 
 string			{return (int)Tokens.TSTRING;}
 int				{return (int)Tokens.TINT;}
