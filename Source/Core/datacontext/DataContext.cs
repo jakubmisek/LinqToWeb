@@ -9,9 +9,52 @@ using linqtoweb.Core.storage;
 using System.Diagnostics;
 using System.Net;
 using System.IO;
+using System.Xml;
 
 namespace linqtoweb.Core.datacontext
 {
+    #region DataContext interfaces, some DataContexts can implement it
+
+    /// <summary>
+    /// DataContext defining content.
+    /// </summary>
+    public interface IDataContextContent
+    {
+        /// <summary>
+        /// The text content.
+        /// </summary>
+        string Content { get; }
+
+        /// <summary>
+        /// The content binary stream.
+        /// </summary>
+        Stream ContentStream { get; }
+    }
+
+    /// <summary>
+    /// DataContext with cookies.
+    /// </summary>
+    public interface IDataContextCookies
+    {
+        /// <summary>
+        /// Collection of cookies known by the DataContext.
+        /// </summary>
+        CookieCollection Cookies { get; }
+    }
+
+    /// <summary>
+    /// DataContext with the DOM tree.
+    /// </summary>
+    public interface IDataContextDOM
+    {
+        /// <summary>
+        /// Root node of the DOM tree.
+        /// </summary>
+        XmlDocument DOMTree { get; }
+    }
+
+    #endregion
+
     /// <summary>
     /// Page source data context, where the extraction method is called.
     /// Used by extraction method.
@@ -20,8 +63,9 @@ namespace linqtoweb.Core.datacontext
     /// - cache object
     /// - methods for creating new DataContexts
     /// - downloading and processing methods
+    /// - implements IDataContextContent and IDataContextCookies by default
     /// </summary>
-    public partial class DataContext
+    public partial class DataContext : IDataContextContent, IDataContextCookies
     {
         #region internal
 
@@ -40,7 +84,7 @@ namespace linqtoweb.Core.datacontext
         /// <summary>
         /// Empty (initial) data context. Does not contain any data.
         /// </summary>
-        internal DataContext( Uri uri, DataContext referer, StorageBase cache)
+        internal DataContext(Uri uri, DataContext referer, StorageBase cache)
         {
             if (cache == null)
                 throw new ArgumentNullException("cache");
@@ -61,7 +105,7 @@ namespace linqtoweb.Core.datacontext
 
         #endregion
 
-        #region data source common information
+        #region DataContext URI
 
         /// <summary>
         /// Referer data context. Can be null.
@@ -87,6 +131,10 @@ namespace linqtoweb.Core.datacontext
         }
         protected Uri _ContextUri = null;
 
+        #endregion
+
+        #region IDataContextCookies Members
+
         /// <summary>
         /// All the known cookies in the current context. Can be null (no cookies).
         /// </summary>
@@ -97,6 +145,10 @@ namespace linqtoweb.Core.datacontext
                 return null;
             }
         }
+
+        #endregion
+
+        #region IDataContextContent Members
 
         /// <summary>
         /// Data content.
@@ -109,6 +161,17 @@ namespace linqtoweb.Core.datacontext
             }
         }
 
-        #endregion        
+        /// <summary>
+        /// Content stream. Can be null (stream not available).
+        /// </summary>
+        public virtual Stream ContentStream
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        #endregion
     }
 }

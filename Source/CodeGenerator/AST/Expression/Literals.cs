@@ -27,15 +27,30 @@ namespace linqtoweb.CodeGenerator.AST
         /// <summary>
         /// The value of the string literal. C# string.
         /// </summary>
-        public string CsValue { get; private set; }
-        public string Value { get { return CsValue.Trim(new char[]{'\"'}).Replace("\\\"", "\""); } }
+        public string CsValue
+        {
+            get
+            {
+                return
+                    "\"" +
+                    Value.
+                    Replace("\\", "\\\\").
+                    Replace("\"", "\\\"").
+                    Replace("\t", "\\t").
+                    Replace("\n", "\\n").
+                    Replace("\r", "\\r").
+                    Replace("\f", "\\f") +
+                    "\"";
+            }
+        }
+        public string Value { get; private set; }
 
         public StringLiteral( ExprPosition position, string value )
             :base(position)
         {
             Debug.Assert(value != null);
 
-            this.CsValue = value;
+            this.Value = value;
         }
 
         internal override ExpressionType EmitCs(EmitCodeContext codecontext)

@@ -24,7 +24,7 @@ namespace linqtoweb.CodeGenerator.AST
         {
             get
             {
-                return (DeclMethodName == null);
+                return (DeclMethodName == "main");
             }
         }
 
@@ -114,7 +114,9 @@ namespace linqtoweb.CodeGenerator.AST
                 codecontext.WriteLine("// " + DeclMethodName);
                 codecontext.WriteLine("private static " + ReturnType.CsArgumentTypeName + " " + GeneratedMethodName + "(" + CsArgList + ")");
                 codecontext.WriteLine("{");
-                codecontext.WriteLine(BodyCSharp);
+                string[] lines = BodyCSharp.Split(new string[] { codecontext.Output.NewLine }, StringSplitOptions.None);
+                foreach (var line in lines)
+                    codecontext.WriteLine(line);
                 codecontext.WriteLine("}");
 
                 return ReturnType;

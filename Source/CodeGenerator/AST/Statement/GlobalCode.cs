@@ -253,6 +253,7 @@ namespace linqtoweb.CodeGenerator.AST
 
             if (methoddecl != null)
             {
+                if (!methoddecl.IsMainMethod)
                 foreach ( var m in Methods )
                     if (m.DeclMethodName == methoddecl.DeclMethodName)
                     {   // arguments must match

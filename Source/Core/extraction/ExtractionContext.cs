@@ -28,7 +28,7 @@ namespace linqtoweb.Core.extraction
         /// </summary>
         public ExtractionContext(StorageBase cache)
         {
-            InitialDataContext = new DataContext(null, null, cache);
+            InitialDataContext = new DataContext(new Uri(System.Reflection.Assembly.GetEntryAssembly().Location), null, cache);
         }
 
         /// <summary>

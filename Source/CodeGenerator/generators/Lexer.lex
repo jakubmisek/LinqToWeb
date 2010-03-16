@@ -6,16 +6,18 @@
 
 %option nofiles
 
-%x comment
+%x incomment
+%x instringdouble
+%x infaststringdouble
+%x instringsingle
+%x infaststringsingle
 
 HexDigit                [0-9A-Fa-f]
-StringChar				[^\r\n\"\\]|[\\.]|(\\\")
 
 LNUM                    [0-9]+
 DNUM                    ([0-9]*[.][0-9]+)|([0-9]+[.][0-9]*)
 EXPONENT_DNUM           (({LNUM}|{DNUM})[eE][\+\-]\?{LNUM})
 HNUM                    "0x"{HexDigit}+
-STRINGVAL				\"{StringChar}*\"
 IDENTIFIER              [a-zA-Z_][a-zA-Z0-9_]*
 DOTTEDIDENTIFIER		{IDENTIFIER}(\.{IDENTIFIER})+
 WHITESPACE              [ \n\r\t\f]
@@ -84,16 +86,52 @@ false			{yylval.obj = false; return (int)Tokens.BOOLVAL;}
 
 {IDENTIFIER}	{yylval.obj = yytext; return (int)Tokens.IDENTIFIER;}
 {DOTTEDIDENTIFIER}		{yylval.obj = yytext; return (int)Tokens.DOTTEDIDENTIFIER;}
-{STRINGVAL}		{yylval.obj = yytext; return (int)Tokens.STRINGVAL;}
-
+/* {STRINGVAL}		{yylval.obj = yytext; return (int)Tokens.STRINGVAL;} */
 
 {WHITESPACE}+	/* skip whitespaces */
-//.{NEWLINE}	/* skip single-line comments */
+
+/* strings */
+\"				{ BEGIN(instringdouble); _stringval = string.Empty; }
+<instringdouble>{
+\\t				{ _stringval += "\t"; }
+\\n				{ _stringval += "\n"; }
+\\r				{ _stringval += "\r"; }
+\\f				{ _stringval += "\f"; }
+\\.				{ _stringval += yytext[1]; }
+[^\\\"]+		{ _stringval += yytext; }
+\"				{ BEGIN(INITIAL); yylval.obj = _stringval; return (int)Tokens.STRINGVAL; }
+}
+
+@\"				{ BEGIN(infaststringdouble); _stringval = string.Empty; }
+<infaststringdouble>{
+[^\"]+			{ _stringval += yytext; }
+\"				{ BEGIN(INITIAL); yylval.obj = _stringval; return (int)Tokens.STRINGVAL; }
+}
+
+\'				{ BEGIN(instringsingle); _stringval = string.Empty; }
+<instringsingle>{
+\\t				{ _stringval += "\t"; }
+\\n				{ _stringval += "\n"; }
+\\r				{ _stringval += "\r"; }
+\\f				{ _stringval += "\f"; }
+\\.				{ _stringval += yytext[1]; }
+[^\\\']+		{ _stringval += yytext; }
+\'				{ BEGIN(INITIAL); yylval.obj = _stringval; return (int)Tokens.STRINGVAL; }
+}
+
+@\'				{ BEGIN(infaststringsingle); _stringval = string.Empty; }
+<infaststringsingle>{
+[^\']+			{ _stringval += yytext; }
+\'				{ BEGIN(INITIAL); yylval.obj = _stringval; return (int)Tokens.STRINGVAL; }
+}
+
 
 /* comments */
 
-\/\*			{ BEGIN(comment); }
-<comment>{
+\/\/[^\n\r]*{NEWLINE}	/* skip single-line comments */
+
+\/\*			{ BEGIN(incomment); }
+<incomment>{
 [^(\*\/)]+		/* comment text, ignored */
 \*\/			{ BEGIN(INITIAL); }
 }
@@ -101,4 +139,8 @@ false			{yylval.obj = false; return (int)Tokens.BOOLVAL;}
 
 %%
 
+	// get the current token proper position
 	public override ExprPosition yylloc { get { return new ExprPosition(tokLin,tokCol,tokELin,tokECol); } set {  } }
+	
+	// internal string concatenation (STRINGVAL)
+	private string _stringval = null;

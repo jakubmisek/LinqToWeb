@@ -39,6 +39,8 @@ namespace linqtoweb.Core.methods
 
             public IEnumerator<LocalVariables> GetEnumerator()
             {
+                //IDataContextContent content = datacontext as IDataContextContent;
+
                 // enumerate the matches
                 foreach (Match m in exp.Matches(datacontext.Content))
                 {

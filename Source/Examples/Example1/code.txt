@@ -4,10 +4,16 @@ class Result
 	string url;
 }
 
-string urlencode(string str) c# "return System.Web.HttpUtility.UrlEncode(str);"
-string htmldecode(string str) c# "return System.Web.HttpUtility.HtmlDecode(str);"
+string urlencode(string str) c# @"
+	int x = 0;
+	x = x + 1;
+	return System.Web.HttpUtility.UrlEncode(str);
+"
+string htmldecode(string str) c# @"
+	return System.Web.HttpUtility.HtmlDecode(str);
+"
 
-(Result[] GoogleResults, string query)
+main(Result[] GoogleResults, string query)
 {
 	[open("http://www.google.com/search?q=" + urlencode(query))]
 	googlepage(GoogleResults);
@@ -15,11 +21,21 @@ string htmldecode(string str) c# "return System.Web.HttpUtility.HtmlDecode(str);
 
 googlepage(Result[] items)
 {
-	foreach(regexp("\\<h3\\sclass=r\\>\\<a\\shref=\\\"(?<rurl>[^\\\"]*)\\\"[^\\>]*\\>(?<rtitle>[^(.)]*)\\</a\\>\\</h3\\>"))
+	foreach(match(@'\<h3\sclass=r\>\<a\shref=\"(?<rurl>[^\"]*)\"[^\>]*\>(?<rtitle>[^(.)]*)\</a\>\</h3\>'))
 	{
 		items[] = Result(url=htmldecode(rurl),title=rtitle);
 	}
 	
-	foreach(regexp("\\<a\\shref=\\\"(?<rurl>[^\\\"]*)\\\"[^\\>]*\\>\\<span\\sclass=\\\"csb\\sch\\\"\\sstyle=\\\"background-position:-76px"))
+	foreach(regexp(@'\<a\shref=\"(?<rurl>[^\"]*)\"[^\>]*\>\<span\sclass=\"csb\sch\"\sstyle=\"background-position:-76px'))
 		[open(htmldecode(rurl))]googlepage(items);
+}
+
+
+main(string[] strs)
+{
+	[open(@"..\..\mshome.htm")]			// path relative to the current context, the initial context location is the executing program path
+	foreach(match(@'<item href="~@href,[^\"]*@~" label="~@label,[^\"]*@~" />'))
+	{
+		strs[] = label;
+	}
 }

@@ -7,7 +7,7 @@ using System.IO;
 
 namespace linqtoweb.Core.datacontext
 {
-    internal class HtmlContext : DataContext
+    internal class HtmlContext : DataContext, IDataContextDOM
     {
         /// <summary>
         /// Initialize the HTML context by given URL (or relative URL) address.
@@ -56,33 +56,58 @@ namespace linqtoweb.Core.datacontext
                 StorageValue data = (StorageValue)DataCache.GetItem(StorageKey,
                     delegate(out DateTime expiration)
                     {
-                        // get response
-                        HttpWebResponse resp = GetHttpResponse(
-                            ContextUri,
-                            (RefererContext != null && RefererContext.ContextUri != null) ? RefererContext.ContextUri.AbsoluteUri : null,
-                            DefaultUserAgent,
-                            15000,
-                            false,
-                            false,
-                            (RefererContext != null) ? RefererContext.Cookies : null);
+                        WebRequest webreq = WebRequest.Create(ContextUri);
 
-                        // page content
-                        Stream RespStream = resp.GetResponseStream();
-                        string RespContent = new StreamReader(RespStream/*, Encoding.GetEncoding(resp.ContentEncoding)*/).ReadToEnd();
-                        RespStream.Close();
-
-                        // cookies
+                        string RespContent = null;
                         CookieCollection RespCookies = null;
-                        if (resp.Cookies != null && resp.Cookies.Count > 0)
+
+                        if (webreq is HttpWebRequest)
                         {
-                            RespCookies = new CookieCollection();
-                            RespCookies.Add(resp.Cookies);
+                            HttpWebRequest req = (HttpWebRequest)webreq;
+
+                            req.Referer = (RefererContext != null && RefererContext.ContextUri != null) ? RefererContext.ContextUri.AbsoluteUri : null;
+                            req.UserAgent = DefaultUserAgent;
+                            req.Timeout = 15000;
+                            req.AllowAutoRedirect = false;
+                            req.KeepAlive = false;
+                            if (RefererContext != null)
+                            {   // TODO: filter cookies by domain and path
+                                req.CookieContainer.Add(RefererContext.Cookies);
+                            }
+                            //req.Headers.Add("Accept-Language", "en,cs");
+
+                            HttpWebResponse resp = (HttpWebResponse)req.GetResponse();
+
+                            // page content
+                            Stream RespStream = resp.GetResponseStream();
+                            RespContent = new StreamReader(RespStream/*, Encoding.GetEncoding(resp.ContentEncoding)*/).ReadToEnd();
+                            RespStream.Close();
+
+                            // cookies
+                            if (resp.Cookies != null && resp.Cookies.Count > 0)
+                            {
+                                RespCookies = new CookieCollection();
+                                RespCookies.Add(resp.Cookies);
+                            }
+
+                            // TODO: headers (language, cache expire, content type, encoding, Response URI, ...)
+
+                            // close the response
+                            resp.Close();
                         }
+                        else if (webreq is FileWebRequest)
+                        {
+                            FileWebRequest req = (FileWebRequest)webreq;
+                            FileWebResponse resp = (FileWebResponse)req.GetResponse();
 
-                        // TODO: headers (language, cache expire, content type, encoding, Response URI, ...)
+                            // page content
+                            Stream RespStream = resp.GetResponseStream();
+                            RespContent = new StreamReader(RespStream/*, Encoding.GetEncoding(resp.ContentEncoding)*/).ReadToEnd();
+                            RespStream.Close();
 
-                        // close the response
-                        resp.Close();
+                            // close the response
+                            resp.Close();
+                        }                        
 
                         expiration = DateTime.Now.AddHours(1.0);    // TODO: time based on HTML header or HtmlContext parameters
                         
@@ -94,6 +119,8 @@ namespace linqtoweb.Core.datacontext
                 _Cookies = data.Cookies;
             }
         }
+
+        #region IDataContextCookies Members
 
         /// <summary>
         /// Page cookies.
@@ -109,7 +136,9 @@ namespace linqtoweb.Core.datacontext
         }
         private CookieCollection _Cookies = null;
 
-        
+        #endregion
+
+        #region IDataContextContent Members
 
         /// <summary>
         /// HTML page content.
@@ -124,5 +153,16 @@ namespace linqtoweb.Core.datacontext
             }
         }
         private string _Content = null;
+
+        #endregion
+
+        #region IDataContextDOM Members
+
+        public virtual System.Xml.XmlDocument DOMTree
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        #endregion
     }
 }

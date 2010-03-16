@@ -20,16 +20,21 @@ namespace Example1
             {
                 WebContext context = new WebContext("jakub misek");
 
-                foreach (var x in context.GoogleResults/*.Where(x => x.url.Contains(".cz"))*/)
+                /*foreach (var x in context.GoogleResults.Take(12).Where(x => x.url.Contains(".cz")))
                 {
                     Console.WriteLine(x.title);
                     Console.WriteLine(" - " + x.url);
                 }
 
                 Console.WriteLine("people.devsense.com position: " + context.GoogleResults.TakeWhile(x => !x.url.ToLower().Contains("people.devsense.com")).Count());
+                */
 
                 //Console.WriteLine("results count: " + context.GoogleResults.Count());
 
+                foreach (var x in context.strs)
+                {
+                    Console.WriteLine(x);
+                }
             }
             else
             {

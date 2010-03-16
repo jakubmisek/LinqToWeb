@@ -45,6 +45,9 @@ namespace linqtoweb.CodeGenerator.AST
             {
                 if (decl.DeclMethodName == MethodName && decl.Body != null)
                 {
+                    if (decl.IsMainMethod)
+                        throw new Exception("main method cannot be called!");
+
                     if (decl.MethodArguments.Count != CallArguments.Count)
                         throw new Exception("Invalid arguments count in method call " + MethodName);
 
