@@ -96,7 +96,7 @@ namespace linqtoweb.Core.methods
                     --i;
 
                     if (exp == null)
-                        exp = ".*";
+                        exp = ".*?";
 
                     resultregexp.Append("(?<" + identifier + ">" + exp + ")");
                 }

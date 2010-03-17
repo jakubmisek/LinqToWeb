@@ -26,7 +26,7 @@ namespace linqtoweb.CodeGenerator.AST
         /// </summary>
         /// <param name="foreachMethodName"></param>
         /// <param name="argTypes"></param>
-        private void CheckMethodSignature( string foreachMethodName, ExpressionType[] argTypes )
+        private Type CheckMethodSignature( string foreachMethodName, ExpressionType[] argTypes )
         {
             // class containing foreach methods
             Type feType = typeof(linqtoweb.Core.methods.ForeachMethods);
@@ -49,9 +49,15 @@ namespace linqtoweb.CodeGenerator.AST
             Type enumType = typeof(IEnumerable<linqtoweb.Core.extraction.LocalVariables>);
             foreach (var x in feMethod.ReturnType.GetInterfaces())
                 if (x == enumType)
-                    return; // OK
-            
-            throw new Exception("Method " + foreachMethodName + " does not return object that implements IEnumerable<LocalVariables> interface.");
+                    return typeof(linqtoweb.Core.extraction.LocalVariables); // OK
+
+            // check the return type that implements IEnumerable<DataContext>
+            enumType = typeof(IEnumerable<linqtoweb.Core.datacontext.DataContext>);
+            foreach (var x in feMethod.ReturnType.GetInterfaces())
+                if (x == enumType)
+                    return typeof(linqtoweb.Core.datacontext.DataContext); // OK
+
+            throw new Exception("Method " + foreachMethodName + " does not return object that implements IEnumerable<LocalVariables> or IEnumerable<DataContext> interface.");
         }
 
         internal override ExpressionType EmitCs(EmitCodeContext codecontext)
@@ -65,7 +71,7 @@ namespace linqtoweb.CodeGenerator.AST
                 /*  // emit this
                     foreach (var x in ForeachMethods.regexp(l.context, @"Porno\s+(?<Title>\w+)"))
                     {
-                        l.Push(null, x);
+                        l.Push(null, x);    // or   l.Push(x, null);
 
                         {Body}
                 
@@ -86,15 +92,18 @@ namespace linqtoweb.CodeGenerator.AST
                 }
                 codecontext.Write("))" + codecontext.Output.NewLine);
 
+                // check signature
+                Type vartype = CheckMethodSignature(foreachMethod.MethodName, methodargs.ToArray());
+
                 // foreach block
                 codecontext.WriteLine("{");
 
                 codecontext.Level++;
 
-                codecontext.WriteLine(scopeLocalVarName + ".Push(null," + foreachVarName + ");");
+                string DataContextVar = (vartype == typeof(linqtoweb.Core.datacontext.DataContext)) ? foreachVarName : "null";
+                string VariablesVar = (vartype == typeof(linqtoweb.Core.extraction.LocalVariables)) ? foreachVarName : "null";
 
-                // check signature
-                CheckMethodSignature(foreachMethod.MethodName, methodargs.ToArray());
+                codecontext.WriteLine(scopeLocalVarName + ".Push(" + DataContextVar + "," + VariablesVar + ");");
 
                 // Body
                 Body.EmitCs(codecontext);

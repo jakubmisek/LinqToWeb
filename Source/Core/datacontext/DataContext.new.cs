@@ -66,6 +66,16 @@ namespace linqtoweb.Core.datacontext
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// The content of the selected XML nodes.
+        /// </summary>
+        /// <param name="query">XPath query.</param>
+        /// <returns></returns>
+        public virtual DataContext xpath(string query)
+        {
+            return new XPathContext(this, query);
+        }
+
         #endregion
 
     }

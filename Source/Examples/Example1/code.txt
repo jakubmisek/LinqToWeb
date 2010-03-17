@@ -34,8 +34,13 @@ googlepage(Result[] items)
 main(string[] strs)
 {
 	[open(@"..\..\mshome.htm")]			// path relative to the current context, the initial context location is the executing program path
-	foreach(match(@'<item href="~@href,[^\"]*@~" label="~@label,[^\"]*@~" />'))
+	/*foreach(match(@'<item href="~@href,[^\"]*@~" label="~@label,[^\"]*@~" />'))
 	{
 		strs[] = label;
+	}*/
+	[xpath(@"html/head/xml/menu/submenu/item/@href")]
+	foreach(match("~@x@~"))
+	{
+		strs[] = x;	
 	}
 }

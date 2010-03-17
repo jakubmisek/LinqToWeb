@@ -42,17 +42,6 @@ namespace linqtoweb.Core.datacontext
         CookieCollection Cookies { get; }
     }
 
-    /// <summary>
-    /// DataContext with the DOM tree.
-    /// </summary>
-    public interface IDataContextDOM
-    {
-        /// <summary>
-        /// Root node of the DOM tree.
-        /// </summary>
-        XmlDocument DOMTree { get; }
-    }
-
     #endregion
 
     /// <summary>

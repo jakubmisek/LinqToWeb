@@ -7,7 +7,7 @@ using System.IO;
 
 namespace linqtoweb.Core.datacontext
 {
-    internal class HtmlContext : DataContext, IDataContextDOM
+    internal class HtmlContext : DataContext
     {
         /// <summary>
         /// Initialize the HTML context by given URL (or relative URL) address.
@@ -156,13 +156,5 @@ namespace linqtoweb.Core.datacontext
 
         #endregion
 
-        #region IDataContextDOM Members
-
-        public virtual System.Xml.XmlDocument DOMTree
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        #endregion
     }
 }
