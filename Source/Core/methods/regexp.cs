@@ -50,7 +50,7 @@ namespace linqtoweb.Core.methods
                     // collection of matched variables
                     LocalVariables values = new LocalVariables();
 
-                    for (int i = 0; i < m.Groups.Count; ++i)
+                    for (int i = 1; i < m.Groups .Count; ++i)   // skip the first group, it's the whole match
                     {
                         string groupname = exp.GroupNameFromNumber(i);
 

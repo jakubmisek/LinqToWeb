@@ -118,7 +118,7 @@ namespace linqtoweb.Core.methods
         /// <param name="exp">Pattern string. ~@IDENTIFIER@~ indicates variable name.</returns>
         public static RegExpEnumerator match(DataContext context, string pattern)
         {
-            return new RegExpEnumerator(context.Content, new Regex(PatternToRegexp(pattern, true), RegexOptions.Multiline | RegexOptions.IgnoreCase));
+            return new RegExpEnumerator(context.Content, new Regex(PatternToRegexp(pattern, false), RegexOptions.Multiline | RegexOptions.IgnoreCase));
         }
         
     }
