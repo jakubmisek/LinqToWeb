@@ -24,6 +24,8 @@ namespace linqtoweb.Core.methods
             {
                 case ' ':
                     return "\\s";
+                case '\r':
+                    return string.Empty;
                 case '\"':
                 case '\'':
                 case '<':
@@ -78,25 +80,25 @@ namespace linqtoweb.Core.methods
             return false;
         }
 
-        /// <summary>
-        /// Matches given pattern onto the current Content.
-        /// </summary>
-        /// <param name="context">Data context.</param>
-        /// <param name="exp">Pattern string. ~@IDENTIFIER@~ indicates variable name.</returns>
-        public static RegExpEnumerator match(DataContext context, string pattern)
+        internal static string PatternToRegexp(string pattern, bool hungryVariable)
         {
             StringBuilder resultregexp = new StringBuilder(pattern.Length);
 
             string identifier, exp;
 
-            for (int i = 0; i < pattern.Length; ++i )
+            for (int i = 0; i < pattern.Length; ++i)
             {
                 if (TryMatchPatternIdentifier(pattern, ref i, out identifier, out exp))
                 {   // ~@identifier,regexp@~
                     --i;
 
                     if (exp == null)
-                        exp = ".*?";
+                    {
+                        if (hungryVariable)
+                            exp = @"[\s\S]*";
+                        else
+                            exp = @"[\s\S]*?";
+                    }
 
                     resultregexp.Append("(?<" + identifier + ">" + exp + ")");
                 }
@@ -106,7 +108,17 @@ namespace linqtoweb.Core.methods
                 }
             }
 
-            return regexp(context, resultregexp.ToString());
+            return resultregexp.ToString();
+        }
+
+        /// <summary>
+        /// Matches given pattern onto the current Content.
+        /// </summary>
+        /// <param name="context">Data context.</param>
+        /// <param name="exp">Pattern string. ~@IDENTIFIER@~ indicates variable name.</returns>
+        public static RegExpEnumerator match(DataContext context, string pattern)
+        {
+            return new RegExpEnumerator(context.Content, new Regex(PatternToRegexp(pattern, true), RegexOptions.Multiline | RegexOptions.IgnoreCase));
         }
         
     }

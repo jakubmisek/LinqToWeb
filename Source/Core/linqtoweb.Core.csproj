@@ -60,6 +60,7 @@
     <Compile Include="datacontext\DataContext.new.cs" />
     <Compile Include="datacontext\DataContext.helper.cs" />
     <Compile Include="extraction\ScopesStack.cs" />
+    <Compile Include="methods\xmlregexp.cs" />
     <Compile Include="methods\match.cs" />
     <Compile Include="methods\regexp.cs" />
     <Compile Include="datacontext\HtmlContext.cs" />

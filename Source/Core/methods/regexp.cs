@@ -24,14 +24,14 @@ namespace linqtoweb.Core.methods
         public class RegExpEnumerator : IEnumerable<LocalVariables>
         {
             private readonly Regex exp;
-            private readonly DataContext datacontext;
+            private readonly string content;
 
-            public RegExpEnumerator(DataContext datacontext, Regex exp)
+            public RegExpEnumerator(string content, Regex exp)
             {
-                Debug.Assert(datacontext != null, "Regular expression must be executed on some data context.");
+                Debug.Assert(content != null, "Regular expression must be executed on some data context.");
                 Debug.Assert(exp != null, "Given regular expression cannot be null.");
 
-                this.datacontext = datacontext;
+                this.content = content.Replace("\r", string.Empty);
                 this.exp = exp;
             }
 
@@ -42,8 +42,11 @@ namespace linqtoweb.Core.methods
                 //IDataContextContent content = datacontext as IDataContextContent;
 
                 // enumerate the matches
-                foreach (Match m in exp.Matches(datacontext.Content))
+                foreach (Match m in exp.Matches(content))
                 {
+                    if (m.Index > 0 && m.Index == content.Length)
+                        continue;   // empty match
+
                     // collection of matched variables
                     LocalVariables values = new LocalVariables();
 
@@ -96,7 +99,7 @@ namespace linqtoweb.Core.methods
         public static RegExpEnumerator regexp(DataContext context, Regex exp)
         {
             // TODO: cache the results
-            return new RegExpEnumerator(context, exp);
+            return new RegExpEnumerator(context.Content, exp);
         }
     }
 
