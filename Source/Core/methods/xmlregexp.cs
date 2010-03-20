@@ -154,7 +154,7 @@ namespace linqtoweb.Core.methods
 
                             if (patternNode.HasChildNodes)
                             {   // child variations
-                                foreach (var x in new XmlMatchEnumerator(rootNode, 0, null, patternNode.ChildNodes, 0, false))
+                                foreach (var x in new XmlMatchEnumerator(rootNode, 0, null, patternNode.ChildNodes, 0, false)) // TODO: allow deep search for child elements ?
                                     childVariations.Add(x);
                             }
                             else

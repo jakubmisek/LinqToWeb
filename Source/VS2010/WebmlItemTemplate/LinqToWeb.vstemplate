@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VSTemplate Version="3.0.0" Type="Item" xmlns="http://schemas.microsoft.com/developer/vstemplate/2005">
+  <TemplateData>
+    <Name>LinqToWeb</Name>
+    <Description>Provides strongly typed object model over the web resources. Used framework extracts data from the web automatically and updates the data structures when their values are requested.</Description>
+    <Icon>LinqToWeb.ico</Icon>
+    <TemplateID>036d6c2e-7fcd-4aa5-8ddc-f689ac436d54</TemplateID>
+    <ProjectType>CSharp</ProjectType>
+    <RequiredFrameworkVersion>3.5</RequiredFrameworkVersion>
+    <NumberOfParentCategoriesToRollUp>1</NumberOfParentCategoriesToRollUp>
+    <DefaultName>WebContext.webml</DefaultName>
+  </TemplateData>
+  <TemplateContent>
+    <References>
+      <Reference>
+        <Assembly>System</Assembly>
+      </Reference>
+      <Reference>
+        <Assembly>System.Core</Assembly>
+      </Reference>
+      <Reference>
+        <Assembly>System.Data.Linq</Assembly>
+      </Reference>
+      <Reference>
+        <Assembly>linqtoweb.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</Assembly>
+      </Reference>
+    </References>
+
+    <ProjectItem CustomTool="LinqToWebGenerator" TargetFileName="$fileinputname$.webml">src.webml</ProjectItem>
+
+  </TemplateContent>
+</VSTemplate>

@@ -1,4 +1,4 @@
-class Result
+﻿class Result
 {
 	string title;
 	string url;
@@ -11,12 +11,14 @@ string htmldecode(string str) c# @'
 	return System.Web.HttpUtility.HtmlDecode(str);
 '
 
+// the entry point
 main(Result[] GoogleResults, string query)
 {
 	[open("http://www.google.com/search?q=" + urlencode(query))]
 	googlepage(GoogleResults);
 }
 
+// extracting from google results page
 googlepage(Result[] items)
 {
 	foreach(match(@'\<h3\sclass=r\>\<a\shref=\"(?<rurl>[^\"]*)\"[^\>]*\>(?<rtitle>[^(.)]*)\</a\>\</h3\>'))
@@ -28,7 +30,7 @@ googlepage(Result[] items)
 		[open(htmldecode(rurl))]googlepage(items);
 }
 
-
+// second entry point
 main(string[] strs)
 {
 	[open(@"..\..\mshome.htm")]
