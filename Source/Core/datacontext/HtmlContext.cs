@@ -70,8 +70,9 @@ namespace linqtoweb.Core.datacontext
                             req.Timeout = 15000;
                             req.AllowAutoRedirect = false;
                             req.KeepAlive = false;
-                            if (RefererContext != null)
+                            if (RefererContext != null && RefererContext.Cookies != null)
                             {   // TODO: filter cookies by domain and path
+                                req.CookieContainer = new CookieContainer();
                                 req.CookieContainer.Add(RefererContext.Cookies);
                             }
                             //req.Headers.Add("Accept-Language", "en,cs");

@@ -27,7 +27,7 @@ namespace Example1
 
             //Console.WriteLine("results count: " + context.GoogleResults.Count());
 
-            foreach (var x in context.strs)
+            foreach (var x in context.GoogleResults)
             {
                 Console.WriteLine(x);
             }

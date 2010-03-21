@@ -9,24 +9,19 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "LinqToWeb Setup", "VS2010\S
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 3
+		SccNumberOfProjects = 4
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs03.codeplex.com/
 		SccProjectUniqueName0 = VS2010\\WebmlItemTemplate\\WebmlItemTemplate.csproj
 		SccProjectName0 = VS2010/WebmlItemTemplate
-		SccAuxPath0 = https://tfs03.codeplex.com
 		SccLocalPath0 = VS2010\\WebmlItemTemplate
-		SccProvider0 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccProjectUniqueName1 = VS2010\\LinqToWebGenerator\\LinqToWebGenerator.csproj
 		SccProjectName1 = VS2010/LinqToWebGenerator
-		SccAuxPath1 = https://tfs03.codeplex.com
 		SccLocalPath1 = VS2010\\LinqToWebGenerator
-		SccProvider1 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccProjectUniqueName2 = VS2010\\Setup\\Setup.vdproj
 		SccProjectName2 = VS2010/Setup
-		SccAuxPath2 = https://tfs03.codeplex.com
 		SccLocalPath2 = VS2010\\Setup
-		SccProvider2 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccLocalPath3 = .
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
