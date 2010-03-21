@@ -6,7 +6,7 @@
     <Version>1.0</Version>
     <Description xml:space="preserve">Provides strongly typed object model over the web resources. Used framework extracts data from the web automatically and updates the data structures when their values are requested.</Description>
     <Locale>1033</Locale>
-    <InstalledByMsi>false</InstalledByMsi>
+    <InstalledByMsi>true</InstalledByMsi>
     <SupportedProducts>
       <VisualStudio Version="10.0">
         <Edition>Ultimate</Edition>

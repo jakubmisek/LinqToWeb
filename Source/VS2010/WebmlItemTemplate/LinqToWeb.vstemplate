@@ -22,11 +22,12 @@
         <Assembly>System.Data.Linq</Assembly>
       </Reference>
       <Reference>
-        <Assembly>linqtoweb.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</Assembly>
+        <Assembly>linqtoweb.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b5601b5d4e532156, processorArchitecture=MSIL</Assembly>        
       </Reference>
     </References>
-
-    <ProjectItem CustomTool="LinqToWebGenerator" TargetFileName="$fileinputname$.webml">src.webml</ProjectItem>
-
+    
+    <ProjectItem CustomTool="LinqToWebGenerator" ReplaceParameters="true" TargetFileName="$fileinputname$.webml">src.webml</ProjectItem>
+    <ProjectItem ReplaceParameters="false" TargetFileName="linqtoweb.Core.dll">linqtoweb.Core.dll</ProjectItem>
+    
   </TemplateContent>
 </VSTemplate>

@@ -110,7 +110,7 @@ namespace linqtoweb.Core.methods
 
                     if (val == null) return false;
 
-                    var vars = new RegExpEnumerator(val, new Regex(PatternToRegexp(patAttr.Value, false), RegexOptions.Multiline | RegexOptions.IgnoreCase)).FirstOrDefault();
+                    var vars = new RegExpEnumerator(val, new Regex(PatternToRegexp(patAttr.Value, true), RegexOptions.Multiline | RegexOptions.IgnoreCase)).FirstOrDefault();
                     if (vars == null) return false;
 
                     loc.AddVariables(vars);
@@ -119,7 +119,7 @@ namespace linqtoweb.Core.methods
                 // InnerText of Text node
                 if (node.Name == HtmlNode.HtmlNodeTypeNameText)
                 {
-                    var vars = new RegExpEnumerator(node.InnerText, new Regex(PatternToRegexp(patternNode.InnerText, false), RegexOptions.Multiline | RegexOptions.IgnoreCase)).FirstOrDefault();
+                    var vars = new RegExpEnumerator(node.InnerText, new Regex(PatternToRegexp(patternNode.InnerText, true), RegexOptions.Multiline | RegexOptions.IgnoreCase)).FirstOrDefault();
                     if (vars == null) return false;
 
                     loc.AddVariables(vars);

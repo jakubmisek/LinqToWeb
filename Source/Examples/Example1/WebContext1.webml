@@ -1,0 +1,43 @@
+﻿class Result
+{
+	string title;
+	string url;
+}
+
+string urlencode(string str) c# @'
+	return System.Web.HttpUtility.UrlEncode(str);
+'
+string htmldecode(string str) c# @'
+	return System.Web.HttpUtility.HtmlDecode(str);
+'
+
+// the entry point
+main(Result[] GoogleResults, string query)
+{
+	[open("http://www.google.com/search?q=" + urlencode(query))]
+	googlepage(GoogleResults);
+}
+
+// extracting from google results page
+googlepage(Result[] items)
+{
+	foreach(match(@'\<h3\sclass=r\>\<a\shref=\"(?<rurl>[^\"]*)\"[^\>]*\>(?<rtitle>[^(.)]*)\</a\>\</h3\>'))
+	{
+		items[] = Result(url=htmldecode(rurl),title=rtitle);
+	}
+	
+	foreach(regexp(@'\<a\shref=\"(?<rurl>[^\"]*)\"[^\>]*\>\<span\sclass=\"csb\sch\"\sstyle=\"background-position:-76px'))
+		[open(htmldecode(rurl))]googlepage(items);
+}
+
+// second entry point
+main(string[] strs)
+{
+	[open(@"..\..\mshome.htm")]			// path relative to the current context, the initial context location is the executing program path
+	foreach (xmlmatch(@'
+		<submenu handle="~@handle@~"><item label="~@lbl@~" /></submenu>
+	'))
+	{
+		strs[] = "handle: " + handle + ", label:" + lbl;
+	}
+}

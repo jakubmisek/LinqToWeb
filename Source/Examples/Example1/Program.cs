@@ -5,8 +5,6 @@ using System.Text;
 
 using linqtoweb.Core;
 using linqtoweb.Core.extraction;
-using linqtoweb.CodeGenerator;
-using linqtoweb.CodeGenerator.AST;
 
 using System.IO;
 
@@ -16,41 +14,24 @@ namespace Example1
     {
         static void Main(string[] args)
         {
-            if (true)
+            WebContext1 context = new WebContext1("jakub misek");
+
+            /*foreach (var x in context.GoogleResults.Take(12).Where(x => x.url.Contains(".cz")))
             {
-                WebContext context = new WebContext("jakub misek");
-
-                /*foreach (var x in context.GoogleResults.Take(12).Where(x => x.url.Contains(".cz")))
-                {
-                    Console.WriteLine(x.title);
-                    Console.WriteLine(" - " + x.url);
-                }
-
-                Console.WriteLine("people.devsense.com position: " + context.GoogleResults.TakeWhile(x => !x.url.ToLower().Contains("people.devsense.com")).Count());
-                */
-
-                //Console.WriteLine("results count: " + context.GoogleResults.Count());
-
-                foreach (var x in context.strs)
-                {
-                    Console.WriteLine(x);
-                }
+                Console.WriteLine(x.title);
+                Console.WriteLine(" - " + x.url);
             }
-            else
+
+            Console.WriteLine("people.devsense.com position: " + context.GoogleResults.TakeWhile(x => !x.url.ToLower().Contains("people.devsense.com")).Count());
+            */
+
+            //Console.WriteLine("results count: " + context.GoogleResults.Count());
+
+            foreach (var x in context.strs)
             {
-                Scanner scanner = new Scanner();
-                scanner.SetSource(File.ReadAllText("..\\..\\code.txt"), 0);
-
-                Parser parser = new Parser(scanner);
-                if (parser.Parse())
-                {
-                    GlobalCode x = parser.Ast;
-
-                    x.EmitCs(new StreamWriter("..\\..\\code.cs", false, Encoding.Unicode), "Example1", "WebContext");
-
-                    Console.WriteLine("Code emitted");
-                }
+                Console.WriteLine(x);
             }
+
 
         }
     }

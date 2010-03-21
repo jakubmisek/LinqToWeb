@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("CodeGenerator")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("LinqToWeb CodeGenerator")]
+[assembly: AssemblyDescription("Code generation for LinqToWeb source files.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("CodeGenerator")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2010")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("LinqToWeb CodeGenerator")]
+[assembly: AssemblyCopyright("Copyright © Jakub Míšek 2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

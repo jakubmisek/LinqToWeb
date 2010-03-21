@@ -64,10 +64,6 @@
     <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="HtmlAgilityPack, Version=1.3.0.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>.\HtmlAgilityPack.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -78,9 +74,6 @@
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -89,6 +82,35 @@
     <Compile Include="datacontext\DataContext.new.cs" />
     <Compile Include="datacontext\DataContext.helper.cs" />
     <Compile Include="extraction\ScopesStack.cs" />
+    <Compile Include="HtmlAgilityPack\crc32.cs" />
+    <Compile Include="HtmlAgilityPack\EncodingFoundException.cs" />
+    <Compile Include="HtmlAgilityPack\HtmlAttribute.cs" />
+    <Compile Include="HtmlAgilityPack\HtmlAttributeCollection.cs" />
+    <Compile Include="HtmlAgilityPack\HtmlCmdLine.cs" />
+    <Compile Include="HtmlAgilityPack\HtmlCommentNode.cs" />
+    <Compile Include="HtmlAgilityPack\HtmlConsoleListener.cs" />
+    <Compile Include="HtmlAgilityPack\HtmlDocument.cs" />
+    <Compile Include="HtmlAgilityPack\HtmlElementFlag.cs" />
+    <Compile Include="HtmlAgilityPack\HtmlEntity.cs" />
+    <Compile Include="HtmlAgilityPack\HtmlNameTable.cs" />
+    <Compile Include="HtmlAgilityPack\HtmlNode.cs" />
+    <Compile Include="HtmlAgilityPack\HtmlNodeCollection.cs" />
+    <Compile Include="HtmlAgilityPack\HtmlNodeNavigator.cs" />
+    <Compile Include="HtmlAgilityPack\HtmlNodeType.cs" />
+    <Compile Include="HtmlAgilityPack\HtmlParseError.cs" />
+    <Compile Include="HtmlAgilityPack\HtmlParseErrorCode.cs" />
+    <Compile Include="HtmlAgilityPack\HtmlTextNode.cs" />
+    <Compile Include="HtmlAgilityPack\HtmlWeb.cs" />
+    <Compile Include="HtmlAgilityPack\HtmlWebException.cs" />
+    <Compile Include="HtmlAgilityPack\IOLibrary.cs" />
+    <Compile Include="HtmlAgilityPack\MixedCodeDocument.cs" />
+    <Compile Include="HtmlAgilityPack\MixedCodeDocumentCodeFragment.cs" />
+    <Compile Include="HtmlAgilityPack\MixedCodeDocumentFragment.cs" />
+    <Compile Include="HtmlAgilityPack\MixedCodeDocumentFragmentList.cs" />
+    <Compile Include="HtmlAgilityPack\MixedCodeDocumentFragmentType.cs" />
+    <Compile Include="HtmlAgilityPack\MixedCodeDocumentTextFragment.cs" />
+    <Compile Include="HtmlAgilityPack\NameValuePair.cs" />
+    <Compile Include="HtmlAgilityPack\NameValuePairList.cs" />
     <Compile Include="methods\xmlregexp.cs" />
     <Compile Include="methods\match.cs" />
     <Compile Include="methods\regexp.cs" />
@@ -110,6 +132,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="datacontext\readme.txt" />
+    <Content Include="HtmlAgilityPack\readme.txt" />
     <Content Include="storage\readme.txt" />
   </ItemGroup>
   <ItemGroup>

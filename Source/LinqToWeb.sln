@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{4FD513E0-8B85-433F-A0A7-7DF125C57D20}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VS2010", "VS2010", "{CDC77BC0-B98A-4103-AD76-CE47C17EBC15}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "linqtoweb.Core", "Core\linqtoweb.Core.csproj", "{B4486636-EEBC-4246-AE8B-0594A58197F4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example1", "Examples\Example1\Example1.csproj", "{EAFAE698-D0F9-47EF-90EF-9FBC45C93161}"
@@ -13,19 +11,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "linqtoweb.CodeGenerator", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{E14F4A06-E8FC-47F8-93FB-61408FFEDE73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebmlItemTemplate", "VS2010\WebmlItemTemplate\WebmlItemTemplate.csproj", "{700245D3-A78B-4C10-8336-799B603433DC}"
-EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "LinqToWeb Setup", "VS2010\Setup\Setup.vdproj", "{7FFAFC5E-C4D2-4562-A7FF-6129F09010FC}"
-	ProjectSection(ProjectDependencies) = postProject
-		{B4486636-EEBC-4246-AE8B-0594A58197F4} = {B4486636-EEBC-4246-AE8B-0594A58197F4}
-		{700245D3-A78B-4C10-8336-799B603433DC} = {700245D3-A78B-4C10-8336-799B603433DC}
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinqToWebGenerator", "VS2010\LinqToWebGenerator\LinqToWebGenerator.csproj", "{DAA48817-4E80-4840-A01F-DA1CDECCC518}"
-EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 7
+		SccNumberOfProjects = 4
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs03.codeplex.com/
 		SccLocalPath0 = .
@@ -41,18 +29,6 @@ Global
 		SccProjectTopLevelParentUniqueName3 = LinqToWeb.sln
 		SccProjectName3 = CodeGenerator
 		SccLocalPath3 = CodeGenerator
-		SccProjectUniqueName4 = VS2010\\WebmlItemTemplate\\WebmlItemTemplate.csproj
-		SccProjectTopLevelParentUniqueName4 = LinqToWeb.sln
-		SccProjectName4 = VS2010/WebmlItemTemplate
-		SccLocalPath4 = VS2010\\WebmlItemTemplate
-		SccProjectUniqueName5 = VS2010\\Setup\\Setup.vdproj
-		SccProjectTopLevelParentUniqueName5 = LinqToWeb.sln
-		SccProjectName5 = VS2010/Setup
-		SccLocalPath5 = VS2010\\Setup
-		SccProjectUniqueName6 = VS2010\\LinqToWebGenerator\\LinqToWebGenerator.csproj
-		SccProjectTopLevelParentUniqueName6 = LinqToWeb.sln
-		SccProjectName6 = VS2010/LinqToWebGenerator
-		SccLocalPath6 = VS2010\\LinqToWebGenerator
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,25 +47,12 @@ Global
 		{F399BE34-8E3F-44FC-B4B4-3C7B2C2F4D52}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F399BE34-8E3F-44FC-B4B4-3C7B2C2F4D52}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F399BE34-8E3F-44FC-B4B4-3C7B2C2F4D52}.Release|Any CPU.Build.0 = Release|Any CPU
-		{700245D3-A78B-4C10-8336-799B603433DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{700245D3-A78B-4C10-8336-799B603433DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{700245D3-A78B-4C10-8336-799B603433DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{700245D3-A78B-4C10-8336-799B603433DC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7FFAFC5E-C4D2-4562-A7FF-6129F09010FC}.Debug|Any CPU.ActiveCfg = Debug
-		{7FFAFC5E-C4D2-4562-A7FF-6129F09010FC}.Release|Any CPU.ActiveCfg = Release
-		{DAA48817-4E80-4840-A01F-DA1CDECCC518}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DAA48817-4E80-4840-A01F-DA1CDECCC518}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DAA48817-4E80-4840-A01F-DA1CDECCC518}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DAA48817-4E80-4840-A01F-DA1CDECCC518}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{EAFAE698-D0F9-47EF-90EF-9FBC45C93161} = {4FD513E0-8B85-433F-A0A7-7DF125C57D20}
-		{700245D3-A78B-4C10-8336-799B603433DC} = {CDC77BC0-B98A-4103-AD76-CE47C17EBC15}
-		{7FFAFC5E-C4D2-4562-A7FF-6129F09010FC} = {CDC77BC0-B98A-4103-AD76-CE47C17EBC15}
-		{DAA48817-4E80-4840-A01F-DA1CDECCC518} = {CDC77BC0-B98A-4103-AD76-CE47C17EBC15}
 		{F399BE34-8E3F-44FC-B4B4-3C7B2C2F4D52} = {E14F4A06-E8FC-47F8-93FB-61408FFEDE73}
 		{B4486636-EEBC-4246-AE8B-0594A58197F4} = {E14F4A06-E8FC-47F8-93FB-61408FFEDE73}
 	EndGlobalSection
