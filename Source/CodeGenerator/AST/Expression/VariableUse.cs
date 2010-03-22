@@ -22,7 +22,7 @@ namespace linqtoweb.CodeGenerator.AST
         /// <returns></returns>
         internal override ExpressionType EmitCs(EmitCodeContext codecontext)
         {
-            ExpressionType varType = codecontext.GetLocalVarType(VariableName);
+            ExpressionType varType = codecontext.GetLocalVarType(Position, VariableName);
 
             if (varType != null)
             {
@@ -33,7 +33,7 @@ namespace linqtoweb.CodeGenerator.AST
             else
             {
                 if (VariableName.Contains("."))
-                    throw new Exception("Undeclared variable " + VariableName);
+                    throw new GeneratorException(Position, "Undeclared variable " + VariableName);
 
                 // ((string)__l["VariableName"])    // dynamic var
                 codecontext.Write("(" + scopeLocalVarName + "[\"" + VariableName + "\"].ToString())");

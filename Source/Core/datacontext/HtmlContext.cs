@@ -67,7 +67,7 @@ namespace linqtoweb.Core.datacontext
 
                             req.Referer = (RefererContext != null && RefererContext.ContextUri != null) ? RefererContext.ContextUri.AbsoluteUri : null;
                             req.UserAgent = DefaultUserAgent;
-                            req.Timeout = 15000;
+                            req.Timeout = 30000;
                             req.AllowAutoRedirect = false;
                             req.KeepAlive = false;
                             if (RefererContext != null && RefererContext.Cookies != null)

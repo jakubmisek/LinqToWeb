@@ -17,6 +17,7 @@
 %token COMMA SEMICOLON
 %token WHITESPACE
 %token COMMENT
+%token ERROR
 
 %left OP_ADD
 %left OP_SUB

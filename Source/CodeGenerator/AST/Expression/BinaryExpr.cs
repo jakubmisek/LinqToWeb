@@ -42,11 +42,11 @@ namespace linqtoweb.CodeGenerator.AST
             codecontext.Write("))");
 
             if (!lType.Equals(rType))
-                throw new Exception("Type mishmash!");
+                throw new GeneratorException(Position, "Type mishmash!");
 
             if ((expectedLType != null && !expectedLType.Equals(lType)) ||
                 (expectedRType != null && !expectedRType.Equals(rType)))
-                throw new Exception("Type mishmash!");
+                throw new GeneratorException(Position, "Type mishmash!");
 
             return lType;
         }
@@ -71,7 +71,7 @@ namespace linqtoweb.CodeGenerator.AST
             if (opType.TypeName != ExpressionType.KnownTypes.TDouble &&
                 opType.TypeName != ExpressionType.KnownTypes.TInt &&
                 opType.TypeName != ExpressionType.KnownTypes.TString)
-                throw new Exception("Type mishmash.");
+                throw new GeneratorException(Position, "Type mishmash.");
 
             return opType;
         }
@@ -92,7 +92,7 @@ namespace linqtoweb.CodeGenerator.AST
             // only int,double,string
             if (opType.TypeName != ExpressionType.KnownTypes.TDouble &&
                 opType.TypeName != ExpressionType.KnownTypes.TInt)
-                throw new Exception("Type mishmash.");
+                throw new GeneratorException(Position, "Type mishmash.");
 
             return opType;
         }
@@ -113,7 +113,7 @@ namespace linqtoweb.CodeGenerator.AST
             // only int,double,string
             if (opType.TypeName != ExpressionType.KnownTypes.TDouble &&
                 opType.TypeName != ExpressionType.KnownTypes.TInt)
-                throw new Exception("Type mishmash.");
+                throw new GeneratorException(Position, "Type mishmash.");
 
             return opType;
         }
@@ -134,7 +134,7 @@ namespace linqtoweb.CodeGenerator.AST
             // only int,double,string
             if (opType.TypeName != ExpressionType.KnownTypes.TDouble &&
                 opType.TypeName != ExpressionType.KnownTypes.TInt)
-                throw new Exception("Type mishmash.");
+                throw new GeneratorException(Position, "Type mishmash.");
 
             return opType;
         }
@@ -158,12 +158,12 @@ namespace linqtoweb.CodeGenerator.AST
             // l = r
 
             VariableUse lValueVariable = (VariableUse)LValue;
-            ExpressionType lType = codecontext.GetLocalVarType(lValueVariable.VariableName);
+            ExpressionType lType = codecontext.GetLocalVarType(Position, lValueVariable.VariableName);
             if (lType == null)
-                throw new Exception(lValueVariable.VariableName + " is not declared.");
+                throw new GeneratorException(Position, lValueVariable.VariableName + " is not declared.");
 
             if (lType.ListOf != null)
-                throw new Exception("Unable to assign to a list.");
+                throw new GeneratorException(Position, "Unable to assign to a list.");
 
             // TODO: lValue cannot be the method argument, unable to assign to the method argument, only adding to lists or modifying object properties.
             // arg1 = .. // error
@@ -175,7 +175,7 @@ namespace linqtoweb.CodeGenerator.AST
             ExpressionType rType = RValue.EmitCs(codecontext);
 
             if (!(lType.Equals(rType)))
-                throw new Exception("Type mishmash.");
+                throw new GeneratorException(Position, "Type mishmash.");
 
 
             return lType;
@@ -196,11 +196,11 @@ namespace linqtoweb.CodeGenerator.AST
 
         internal override ExpressionType EmitCs(EmitCodeContext codecontext)
         {
-            ExpressionType lValueType = codecontext.GetLocalVarType(lvalue.VariableName);
+            ExpressionType lValueType = codecontext.GetLocalVarType(Position, lvalue.VariableName);
             if (lValueType == null)
-                throw new Exception(lvalue.VariableName + " not declared.");
+                throw new GeneratorException(Position, lvalue.VariableName + " not declared.");
             if(lValueType.ListOf == null)
-                throw new Exception("Unable to add an element to a non-list variable.");
+                throw new GeneratorException(Position, "Unable to add an element to a non-list variable.");
 
             ExpressionType rValueType;
 
@@ -223,7 +223,7 @@ namespace linqtoweb.CodeGenerator.AST
             }
 
             if (!rValueType.Equals(lValueType.ListOf))
-                throw new Exception("Type mishmash, adding an element of type " + rValueType.ToString() + " to the list of " + lValueType.ListOf.ToString());
+                throw new GeneratorException(Position, "Type mishmash, adding an element of type " + rValueType.ToString() + " to the list of " + lValueType.ListOf.ToString());
             
             return lValueType.ListOf;
         }

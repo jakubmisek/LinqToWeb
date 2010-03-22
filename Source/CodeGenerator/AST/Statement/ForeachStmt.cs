@@ -43,7 +43,7 @@ namespace linqtoweb.CodeGenerator.AST
             MethodInfo feMethod = feType.GetMethod(foreachMethodName, args);
 
             if (feMethod == null)
-                throw new Exception("Method " + foreachMethodName + " could not be found within the class " + feType.FullName + ", or arguments type mishmash.");
+                throw new GeneratorException(Position, "Method " + foreachMethodName + " could not be found within the class " + feType.FullName + ", or arguments type mishmash.");
 
             // check the return type, which must implement the IEnumerable<LocalVariables> interface
             Type enumType = typeof(IEnumerable<linqtoweb.Core.extraction.LocalVariables>);
@@ -57,7 +57,7 @@ namespace linqtoweb.CodeGenerator.AST
                 if (x == enumType)
                     return typeof(linqtoweb.Core.datacontext.DataContext); // OK
 
-            throw new Exception("Method " + foreachMethodName + " does not return object that implements IEnumerable<LocalVariables> or IEnumerable<DataContext> interface.");
+            throw new GeneratorException(Position, "Method " + foreachMethodName + " does not return object that implements IEnumerable<LocalVariables> or IEnumerable<DataContext> interface.");
         }
 
         internal override ExpressionType EmitCs(EmitCodeContext codecontext)
@@ -66,7 +66,7 @@ namespace linqtoweb.CodeGenerator.AST
             {
                 MethodCall foreachMethod = ForeachExpression as MethodCall;
                 if (foreachMethod == null)
-                    throw new Exception("argument of foreach must be a method call");
+                    throw new GeneratorException(Position, "argument of foreach must be a method call");
 
                 /*  // emit this
                     foreach (var x in ForeachMethods.regexp(l.context, @"Porno\s+(?<Title>\w+)"))

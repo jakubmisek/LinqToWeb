@@ -56,8 +56,9 @@ namespace linqtoweb.CodeGenerator.AST
         /// <param name="declaredVariables">List of variables declared in the current context and their type.</param>
         internal override ExpressionType EmitCs(EmitCodeContext codecontext)
         {
-            codecontext.WriteLine("/* Generated LinqToWeb context");
-            codecontext.WriteLine(" * Date: " + DateTime.Now.ToString());
+            codecontext.WriteLine("/*");
+            codecontext.WriteLine(" * Generated LinqToWeb context");
+            codecontext.WriteLine(" * " + DateTime.Now.ToString());
             codecontext.WriteLine(" */");
             codecontext.WriteLine();
             codecontext.WriteLine("using System;");
@@ -108,7 +109,7 @@ namespace linqtoweb.CodeGenerator.AST
                         if (contextVars.TryGetValue(arg.VariableName, out vartype))
                         {
                             if (vartype != arg.VariableType)
-                                throw new Exception("Two context variables with different type defined.");
+                                throw new GeneratorException(Position, "Two context variables with different type defined.");
                         }
                         else
                         {
@@ -258,14 +259,14 @@ namespace linqtoweb.CodeGenerator.AST
                     if (m.DeclMethodName == methoddecl.DeclMethodName)
                     {   // arguments must match
                         if (m.MethodArguments.Count != methoddecl.MethodArguments.Count)
-                            throw new Exception("Methods " + methoddecl.DeclMethodName + ": Arguments mishmash.");
+                            throw new GeneratorException(position, "Methods " + methoddecl.DeclMethodName + ": Arguments mishmash.");
 
                         for(int arg = 0; arg < m.MethodArguments.Count; ++arg)
                         {
                             if ( !m.MethodArguments[arg].VariableType.Equals(methoddecl.MethodArguments[arg].VariableType) )
-                                throw new Exception("Methods " + methoddecl.DeclMethodName + ": Arguments mishmash.");
+                                throw new GeneratorException(position, "Methods " + methoddecl.DeclMethodName + ": Arguments mishmash.");
                             if (m.MethodArguments[arg].VariableName != methoddecl.MethodArguments[arg].VariableName)
-                                throw new Exception("Methods " + methoddecl.DeclMethodName + ": Arguments mishmash.");
+                                throw new GeneratorException(position, "Methods " + methoddecl.DeclMethodName + ": Arguments mishmash.");
                         }
                     }
 

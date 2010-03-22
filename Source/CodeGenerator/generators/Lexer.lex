@@ -22,6 +22,7 @@ IDENTIFIER              [a-zA-Z_][a-zA-Z0-9_]*
 DOTTEDIDENTIFIER		{IDENTIFIER}(\.{IDENTIFIER})+
 WHITESPACE              [ \n\r\t\f]
 NEWLINE                 ("\r"|"\n"|"\r\n")
+ANY_CHAR                (.|[\n])
 
 %%
 
@@ -97,7 +98,7 @@ false			{yylval.obj = false; return (int)Tokens.BOOLVAL;}
 \\n				{ _stringval += "\n"; }
 \\r				{ _stringval += "\r"; }
 \\f				{ _stringval += "\f"; }
-\\.				{ _stringval += yytext[1]; }
+\\{ANY_CHAR}	{ _stringval += yytext[1]; }
 [^\\\"]+		{ _stringval += yytext; }
 \"				{ BEGIN(INITIAL); yylval.obj = _stringval; return (int)Tokens.STRINGVAL; }
 }
@@ -105,6 +106,7 @@ false			{yylval.obj = false; return (int)Tokens.BOOLVAL;}
 @\"				{ BEGIN(infaststringdouble); _stringval = string.Empty; }
 <infaststringdouble>{
 [^\"]+			{ _stringval += yytext; }
+\"\"			{ _stringval += "\""; }
 \"				{ BEGIN(INITIAL); yylval.obj = _stringval; return (int)Tokens.STRINGVAL; }
 }
 
@@ -114,7 +116,7 @@ false			{yylval.obj = false; return (int)Tokens.BOOLVAL;}
 \\n				{ _stringval += "\n"; }
 \\r				{ _stringval += "\r"; }
 \\f				{ _stringval += "\f"; }
-\\.				{ _stringval += yytext[1]; }
+\\{ANY_CHAR}	{ _stringval += yytext[1]; }
 [^\\\']+		{ _stringval += yytext; }
 \'				{ BEGIN(INITIAL); yylval.obj = _stringval; return (int)Tokens.STRINGVAL; }
 }
@@ -122,6 +124,7 @@ false			{yylval.obj = false; return (int)Tokens.BOOLVAL;}
 @\'				{ BEGIN(infaststringsingle); _stringval = string.Empty; }
 <infaststringsingle>{
 [^\']+			{ _stringval += yytext; }
+\'\'			{ _stringval += "'"; }
 \'				{ BEGIN(INITIAL); yylval.obj = _stringval; return (int)Tokens.STRINGVAL; }
 }
 
@@ -136,6 +139,8 @@ false			{yylval.obj = false; return (int)Tokens.BOOLVAL;}
 \*\/			{ BEGIN(INITIAL); }
 }
 
+
+<INITIAL>{ANY_CHAR}    { return (int)Tokens.ERROR; }
 
 %%
 

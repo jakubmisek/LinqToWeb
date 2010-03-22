@@ -75,10 +75,10 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WebContext1.design.cs">
+    <Compile Include="GoogleSearcher.design.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>WebContext1.webml</DependentUpon>
+      <DependentUpon>GoogleSearcher.webml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -99,9 +99,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="WebContext1.webml">
+    <None Include="GoogleSearcher.webml">
       <Generator>LinqToWebGenerator</Generator>
-      <LastGenOutput>WebContext1.design.cs</LastGenOutput>
+      <LastGenOutput>GoogleSearcher.design.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>

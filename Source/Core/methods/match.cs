@@ -46,6 +46,9 @@ namespace linqtoweb.Core.methods
                 case ',':
                 case '|':
                 case '#':
+                case '=':
+                case '&':
+                case ';':
                     return "\\" + c;
                 default:
                     return c.ToString();

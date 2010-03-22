@@ -55,7 +55,7 @@ namespace linqtoweb.CodeGenerator.AST
             foreach (var x in ClassProperties)
             {
                 if (x.VariableName.StartsWith("_"))
-                    throw new Exception("Class property cannot start with _. It is reserved system name.");
+                    throw new GeneratorException(Position, "Class property cannot start with _. It is reserved system name.");
 
                 // comment
                 codecontext.WriteLine("// " + x.ToString());

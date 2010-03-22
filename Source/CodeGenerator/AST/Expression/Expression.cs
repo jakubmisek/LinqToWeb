@@ -157,7 +157,7 @@ namespace linqtoweb.CodeGenerator.AST
                 Debug.Assert(rettype.Equals(vartype), "Assigning different types: '" + vartype.ToString() + "' and '" + rettype.ToString() + "'");
             }
 
-            public ExpressionType GetLocalVarType( string varname )
+            public ExpressionType GetLocalVarType( ExprPosition position, string varname )
             {
                 if (string.IsNullOrEmpty(varname))
                     return null;
@@ -173,16 +173,16 @@ namespace linqtoweb.CodeGenerator.AST
                     for (int i = 1; i < chainName.Length; ++i)
                     {
                         if (retType.UserTypeName == null)
-                            throw new Exception("Member chain of non-user class not supported.");
+                            throw new GeneratorException(position, "Member chain of non-user class not supported.");
 
                         ClassDecl classdecl;
                         if (!Declarations.Classes.TryGetValue(retType.UserTypeName, out classdecl))
-                            throw new Exception("Undeclared type " + retType.UserTypeName);
+                            throw new GeneratorException(position, "Undeclared type " + retType.UserTypeName);
 
                         retType = classdecl.ContainsProperty(chainName[i]);
 
                         if (retType == null)
-                            throw new Exception("Undeclared property " + chainName[i]);
+                            throw new GeneratorException(position, "Undeclared property " + chainName[i]);
                     }
                 }
 

@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AST\Expression\BinaryExpr.cs" />
+    <Compile Include="AST\GeneratorException.cs" />
     <Compile Include="AST\Statement\ClassDecl.cs" />
     <Compile Include="AST\Statement\CodeBlock.cs" />
     <Compile Include="AST\Statement\Statement.cs" />

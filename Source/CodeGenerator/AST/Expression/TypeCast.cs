@@ -119,7 +119,7 @@ namespace linqtoweb.CodeGenerator.AST
                 }
 
                 if (string.IsNullOrEmpty(result))
-                    throw new Exception("Unable to explicitly type the expression from " + valType.ToString() + " to " + NewType.ToString() + ".");
+                    throw new GeneratorException(Position, "Unable to explicitly type the expression from " + valType.ToString() + " to " + NewType.ToString() + ".");
 
                 codecontext.Write("(" + result + ")");
             }

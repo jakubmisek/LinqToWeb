@@ -42,10 +42,10 @@ namespace linqtoweb.CodeGenerator.AST
             codecontext.Write(")");
 
             if (!condType.Equals(ExpressionType.BoolType))
-                throw new Exception("Condition must be of type bool.");
+                throw new GeneratorException(Position, "Condition must be of type bool.");
 
             if (!expr1Type.Equals(expr2Type))
-                throw new Exception("Type mishmash, " + expr1Type.ToString() + " and " + expr2Type.ToString());
+                throw new GeneratorException(Position, "Type mishmash, " + expr1Type.ToString() + " and " + expr2Type.ToString());
 
             return expr1Type;
         }

@@ -46,10 +46,10 @@ namespace linqtoweb.CodeGenerator.AST
                 if (decl.DeclMethodName == MethodName && decl.Body != null)
                 {
                     if (decl.IsMainMethod)
-                        throw new Exception("main method cannot be called!");
+                        throw new GeneratorException(Position, "main method cannot be called!");
 
                     if (decl.MethodArguments.Count != CallArguments.Count)
-                        throw new Exception("Invalid arguments count in method call " + MethodName);
+                        throw new GeneratorException(Position, "Invalid arguments count in method call " + MethodName);
 
                     matchingMethods.Add(decl);
                 }
@@ -82,7 +82,7 @@ namespace linqtoweb.CodeGenerator.AST
                     codecontext.Write("}");
 
                     if (!t.Equals(somedecl.MethodArguments[arg].VariableType))
-                        throw new Exception("Type mishmash.");
+                        throw new GeneratorException(Position, "Type mishmash.");
 
                     // check if the argument is able to add new action
                     VariableUse varuse;
@@ -118,20 +118,20 @@ namespace linqtoweb.CodeGenerator.AST
                         ExpressionAssign ass = CallArguments[arg] as ExpressionAssign;
                         VariableUse lvalue;
                         if (ass == null || (lvalue = ass.LValue as VariableUse) == null)
-                            throw new ArgumentException("Argument " + arg + ": class construct arguments must be in a form of 'PropertyName = Expression'");
+                            throw new GeneratorException(Position, "Argument " + arg + ": class construct arguments must be in a form of 'PropertyName = Expression'");
 
                         if (arg > 0) codecontext.Write(", ");
 
                         ExpressionType propType = decl.ContainsProperty(lvalue.VariableName);
 
                         if (propType == null)
-                            throw new Exception(lvalue.VariableName + " is not a property of " + decl.ClassName);
+                            throw new GeneratorException(Position, lvalue.VariableName + " is not a property of " + decl.ClassName);
 
                         codecontext.Write(lvalue.VariableName + " = ");
                         ExpressionType propValueType = ass.RValue.EmitCs(codecontext);
 
                         if (!propValueType.Equals(propType))
-                            throw new ArgumentException("Type mishmash, " + propType.ToString() + " and " + propValueType.ToString());
+                            throw new GeneratorException(Position, "Type mishmash, " + propType.ToString() + " and " + propValueType.ToString());
                     }
 
                     codecontext.Write(" })");
@@ -157,7 +157,7 @@ namespace linqtoweb.CodeGenerator.AST
                 if (decl.DeclMethodName == MethodName && decl.BodyCSharp != null)
                 {
                     if (decl.MethodArguments != null && decl.MethodArguments.Count != CallArguments.Count)
-                        throw new Exception("Invalid arguments count in method call " + MethodName);
+                        throw new GeneratorException(Position, "Invalid arguments count in method call " + MethodName);
 
                     matchingMethods.Add(decl);
                 }
@@ -165,7 +165,7 @@ namespace linqtoweb.CodeGenerator.AST
 
             if (matchingMethods.Count > 1)
             {
-                throw new Exception("Ambiguous C# method call.");
+                throw new GeneratorException(Position, "Ambiguous C# method call.");
             }
 
             if (matchingMethods.Count == 1)
@@ -208,7 +208,7 @@ namespace linqtoweb.CodeGenerator.AST
                 return retType;
 
             // 
-            throw new Exception("Undeclared method or class " + MethodName);
+            throw new GeneratorException(Position, "Undeclared method or class " + MethodName);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Example1
     {
         static void Main(string[] args)
         {
-            WebContext1 context = new WebContext1("jakub misek");
+            var context = new GoogleSearcher("jakub misek");
 
             /*foreach (var x in context.GoogleResults.Take(12).Where(x => x.url.Contains(".cz")))
             {
@@ -27,11 +27,15 @@ namespace Example1
 
             //Console.WriteLine("results count: " + context.GoogleResults.Count());
 
+            Console.WriteLine(context.state.info + "\n");
+
+            int i = 0;
+
             foreach (var x in context.GoogleResults)
             {
-                Console.WriteLine(x);
+                Console.WriteLine((i++) + ". " + x.title + "\n[" + x.url + "]\n");
             }
-
+            
 
         }
     }

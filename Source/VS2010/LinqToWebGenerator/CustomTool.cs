@@ -25,22 +25,36 @@ namespace LinqToWebGenerator
             Scanner scanner = new Scanner();
             scanner.SetSource(inputFileContent, 0);
 
-            Parser parser = new Parser(scanner);
-            if (parser.Parse())
+            try
             {
-                GlobalCode x = parser.Ast;
 
-                var ms = new MemoryStream();
-                var sw = new StreamWriter(ms, Encoding.Unicode);
+                Parser parser = new Parser(scanner);
+                if (parser.Parse())
+                {
+                    GlobalCode x = parser.Ast;
 
-                x.EmitCs(sw, FileNamespace, Path.GetFileNameWithoutExtension(inputFileName));
+                    var ms = new MemoryStream();
+                    var sw = new StreamWriter(ms, Encoding.Unicode);
 
-                ms.Position = 0;
-                code = new StreamReader(ms).ReadToEnd();
+                        x.EmitCs(sw, FileNamespace, Path.GetFileNameWithoutExtension(inputFileName));
+
+                        ms.Position = 0;
+                        code = new StreamReader(ms).ReadToEnd();
+                    
+                }
+                else
+                {
+                    throw new Exception("Syntax error.");
+                }
+
             }
-            else
+            catch (GeneratorException e)
             {
-                //
+                this.GeneratorErrorCallback(false, 0, e.Message, e.Position.StartLine, e.Position.StartColumn);
+            }
+            catch (Exception e)
+            {
+                this.GeneratorErrorCallback(false, 0, e.Message, 0, 0);
             }
 
             return Encoding.UTF8.GetBytes(code);

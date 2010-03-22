@@ -95,7 +95,7 @@ namespace linqtoweb.Core.methods
             /// <param name="patternNode"></param>
             /// <param name="loc"></param>
             /// <returns></returns>
-            private static bool IsMatch(HtmlNode node, XmlNode patternNode, LocalVariables loc)
+            private static bool IsMatch(HtmlNode node, XmlNode patternNode, LocalVariables loc, bool patternHasSiblings)
             {
                 if (node == null || patternNode == null || node.Name != patternNode.Name)
                     return false;
@@ -119,7 +119,9 @@ namespace linqtoweb.Core.methods
                 // InnerText of Text node
                 if (node.Name == HtmlNode.HtmlNodeTypeNameText)
                 {
-                    var vars = new RegExpEnumerator(node.InnerText, new Regex(PatternToRegexp(patternNode.InnerText, true), RegexOptions.Multiline | RegexOptions.IgnoreCase)).FirstOrDefault();
+                    string nodeInnerText = (patternHasSiblings ? node.InnerText : node.ParentNode.InnerHtml);   // take all the inner text if pattern has not specified another elements on the same level
+
+                    var vars = new RegExpEnumerator(nodeInnerText, new Regex(PatternToRegexp(patternNode.InnerText, true), RegexOptions.Multiline | RegexOptions.IgnoreCase)).FirstOrDefault();
                     if (vars == null) return false;
 
                     loc.AddVariables(vars);
@@ -147,7 +149,7 @@ namespace linqtoweb.Core.methods
 
                         LocalVariables loc = new LocalVariables();
 
-                        if (IsMatch(rootNode, patternNode, loc))  // TODO: for each match
+                        if (IsMatch(rootNode, patternNode, loc, pattern.Count > 1))  // TODO: for each match
                         {
                             // child variations
                             List<LocalVariables> childVariations = new List<LocalVariables>();

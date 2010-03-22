@@ -33,7 +33,7 @@ namespace linqtoweb.CodeGenerator.AST
         internal ExpressionType EmitValue( EmitCodeContext codecontext, string format )
         {
             if (Value == null)
-                throw new Exception("Value cannot be null.");
+                throw new GeneratorException(Position, "Value cannot be null.");
 
             // process the value on separated output
             MemoryStream valstr = new MemoryStream();
@@ -69,7 +69,7 @@ namespace linqtoweb.CodeGenerator.AST
             ExpressionType valType = EmitValue(codecontext, "(!({0}))");
 
             if (!valType.Equals(ExpressionType.BoolType))
-                throw new Exception("Value must be of type bool.");
+                throw new GeneratorException(Position, "Value must be of type bool.");
 
             return ExpressionType.BoolType;
         }
@@ -91,7 +91,7 @@ namespace linqtoweb.CodeGenerator.AST
             ExpressionType valType = EmitValue(codecontext, "(-({0}))");
 
             if (!valType.Equals(ExpressionType.IntType) && !valType.Equals(ExpressionType.DoubleType))
-                throw new Exception("Value must be of type int or double.");
+                throw new GeneratorException(Position, "Value must be of type int or double.");
 
             return ExpressionType.BoolType;
         }
@@ -113,7 +113,7 @@ namespace linqtoweb.CodeGenerator.AST
             ExpressionType valType = EmitValue(codecontext, "(++{0})");
 
             if (!valType.Equals(ExpressionType.IntType) && !valType.Equals(ExpressionType.DoubleType))
-                throw new Exception("Value must be of type int or double.");
+                throw new GeneratorException(Position, "Value must be of type int or double.");
 
             return ExpressionType.BoolType;
         }
@@ -135,7 +135,7 @@ namespace linqtoweb.CodeGenerator.AST
             ExpressionType valType = EmitValue(codecontext, "(--{0})");
 
             if (!valType.Equals(ExpressionType.IntType) && !valType.Equals(ExpressionType.DoubleType))
-                throw new Exception("Value must be of type int or double.");
+                throw new GeneratorException(Position, "Value must be of type int or double.");
 
             return ExpressionType.BoolType;
         }
@@ -157,7 +157,7 @@ namespace linqtoweb.CodeGenerator.AST
             ExpressionType valType = EmitValue(codecontext, "({0}++)");
 
             if (!valType.Equals(ExpressionType.IntType) && !valType.Equals(ExpressionType.DoubleType))
-                throw new Exception("Value must be of type int or double.");
+                throw new GeneratorException(Position, "Value must be of type int or double.");
 
             return ExpressionType.BoolType;
         }
@@ -179,7 +179,7 @@ namespace linqtoweb.CodeGenerator.AST
             ExpressionType valType = EmitValue(codecontext, "({0}--)");
 
             if (!valType.Equals(ExpressionType.IntType) && !valType.Equals(ExpressionType.DoubleType))
-                throw new Exception("Value must be of type int or double.");
+                throw new GeneratorException(Position, "Value must be of type int or double.");
 
             return ExpressionType.BoolType;
         }
