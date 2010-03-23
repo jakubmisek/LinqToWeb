@@ -4,13 +4,13 @@
 
 class Result
 {
-	string title;
-	string url;
+    string title;
+    string url;
 }
 
 class QueryState
 {
-	string info;
+    string info;
 }
 
 //
@@ -18,10 +18,10 @@ class QueryState
 //
 
 string urlencode(string str) c# @'
-	return System.Web.HttpUtility.UrlEncode(str);
+    return System.Web.HttpUtility.UrlEncode(str);
 '
 string htmldecode(string str) c# @'
-	return System.Web.HttpUtility.HtmlDecode(str);
+    return System.Web.HttpUtility.HtmlDecode(str);
 '
 
 //
@@ -39,31 +39,31 @@ string htmldecode(string str) c# @'
 
 main(Result[] GoogleResults, QueryState state, string searchQuery)
 {
-	[open("http://www.google.com/search?hl=en&q=" + urlencode(searchQuery))]
-	{
-		googlepage(GoogleResults);
-		searchinfo(state);
-	}
+    [open("http://www.google.com/search?hl=en&q=" + urlencode(searchQuery))]
+    {
+        googlepage(GoogleResults);
+        searchinfo(state);
+    }
 }
 
 // extracting from google results page
 googlepage(Result[] items)
 {
-	foreach(xmlmatch(@'
-		<h3 class="r">
-			<a href="~@rhref@~" class="l">~@rtitle@~</a>
-		</h3>
-	'))
-	{
-		items[] = Result(url=htmldecode(rhref),title=rtitle);
-	}
-	
-	foreach(xmlmatch(@'<a href="~@rhref@~"><span class="csb ch" style="background-position:-76px 0;margin-right:34px;width:66px" />Next</a>'))
-		[open(htmldecode(rhref))]googlepage(items);
+    foreach(xmlmatch(@'
+        <h3 class="r">
+            <a href="~@rhref@~" class="l">~@rtitle@~</a>
+        </h3>
+    '))
+    {
+        items[] = Result(url=htmldecode(rhref),title=rtitle);
+    }
+    
+    foreach(xmlmatch(@'<a href="~@rhref@~"><span class="csb ch" style="background-position:-76px 0;margin-right:34px;width:66px" />Next</a>'))
+        [open(htmldecode(rhref))]googlepage(items);
 }
 
 searchinfo(QueryState state)
 {
-	foreach(match(@'<p id=resultStats>&nbsp;~@strstat@~&nbsp;</div>'))
-		state.info = strstat;
+    foreach(match(@'<p id=resultStats>&nbsp;~@strstat@~&nbsp;</div>'))
+        state.info = strstat;
 }

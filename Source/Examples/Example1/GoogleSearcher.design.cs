@@ -1,6 +1,6 @@
 /*
  * Generated LinqToWeb context
- * 22.3.2010 23:23:12
+ * 24.3.2010 0:25:30
  */
 
 using System;
@@ -58,14 +58,14 @@ namespace Example1
         private static string urlencode_20_0(string str)
         {
         
-        	return System.Web.HttpUtility.UrlEncode(str);
+            return System.Web.HttpUtility.UrlEncode(str);
         
         }
         // htmldecode
         private static string htmldecode_23_0(string str)
         {
         
-        	return System.Web.HttpUtility.HtmlDecode(str);
+            return System.Web.HttpUtility.HtmlDecode(str);
         
         }
         // main
@@ -94,18 +94,18 @@ namespace Example1
             ExtractionListBase<Result> items = (ExtractionListBase<Result>)_parameters["items"];
             ScopesStack __l = new ScopesStack(_datacontext, null);
             {
-                foreach(var __fe52_1 in ForeachMethods.xmlmatch(__l.context, "\r\n\t\t<h3 class=\"r\">\r\n\t\t\t<a href=\"~@rhref@~\" class=\"l\">~@rtitle@~</a>\r\n\t\t</h3>\r\n\t"))
+                foreach(var __fe52_4 in ForeachMethods.xmlmatch(__l.context, "\r\n        <h3 class=\"r\">\r\n            <a href=\"~@rhref@~\" class=\"l\">~@rtitle@~</a>\r\n        </h3>\r\n    "))
                 {
-                    __l.Push(null,__fe52_1);
+                    __l.Push(null,__fe52_4);
                     {
                         items.AddElement((new Result(){ url = htmldecode_23_0((__l["rhref"].ToString())), title = (__l["rtitle"].ToString()) }));
                     }
                     __l.Pop();
                 }
 
-                foreach(var __fe61_1 in ForeachMethods.xmlmatch(__l.context, "<a href=\"~@rhref@~\"><span class=\"csb ch\" style=\"background-position:-76px 0;margin-right:34px;width:66px\" />Next</a>"))
+                foreach(var __fe61_4 in ForeachMethods.xmlmatch(__l.context, "<a href=\"~@rhref@~\"><span class=\"csb ch\" style=\"background-position:-76px 0;margin-right:34px;width:66px\" />Next</a>"))
                 {
-                    __l.Push(null,__fe61_1);
+                    __l.Push(null,__fe61_4);
                     {
                         __l.Push(__l.context.OpenContextDynamic("open", new object[] {htmldecode_23_0((__l["rhref"].ToString()))}), null);
                         ActionItem.AddAction( new ActionItem.ExtractionMethod[]{googlepage_50_0}, __l.context, new LocalVariables() {
@@ -124,9 +124,9 @@ namespace Example1
             QueryState state = (QueryState)_parameters["state"];
             ScopesStack __l = new ScopesStack(_datacontext, null);
             {
-                foreach(var __fe67_1 in ForeachMethods.match(__l.context, "<p id=resultStats>&nbsp;~@strstat@~&nbsp;</div>"))
+                foreach(var __fe67_4 in ForeachMethods.match(__l.context, "<p id=resultStats>&nbsp;~@strstat@~&nbsp;</div>"))
                 {
-                    __l.Push(null,__fe67_1);
+                    __l.Push(null,__fe67_4);
                     state.info = (__l["strstat"].ToString());                    __l.Pop();
                 }
 

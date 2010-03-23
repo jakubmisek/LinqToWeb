@@ -147,5 +147,8 @@ false			{yylval.obj = false; return (int)Tokens.BOOLVAL;}
 	// get the current token proper position
 	public override ExprPosition yylloc { get { return new ExprPosition(tokLin,tokCol,tokELin,tokECol); } set {  } }
 	
+	// report error properly
+	public override void yyerror(string format, params object[] args){ throw new GeneratorException(yylloc, string.Format(format, args)); }
+
 	// internal string concatenation (STRINGVAL)
 	private string _stringval = null;
