@@ -50,7 +50,7 @@ namespace linqtoweb.Core.datacontext
                 
             lock(this)
             {
-                if (RequestProcessed) return; // test again
+                if (RequestProcessed) return; // double checked lock, test again
                 RequestProcessed = true;
 
                 StorageValue data = (StorageValue)DataCache.GetItem(StorageKey,
@@ -70,9 +70,9 @@ namespace linqtoweb.Core.datacontext
                             req.Timeout = 30000;
                             req.AllowAutoRedirect = false;
                             req.KeepAlive = false;
+                            var cookieJar = req.CookieContainer = new CookieContainer();
                             if (RefererContext != null && RefererContext.Cookies != null)
                             {   // TODO: filter cookies by domain and path
-                                req.CookieContainer = new CookieContainer();
                                 req.CookieContainer.Add(RefererContext.Cookies);
                             }
                             //req.Headers.Add("Accept-Language", "en,cs");
@@ -85,10 +85,12 @@ namespace linqtoweb.Core.datacontext
                             RespStream.Close();
 
                             // cookies
-                            if (resp.Cookies != null && resp.Cookies.Count > 0)
+                            foreach (Cookie c in cookieJar.GetCookies(req.RequestUri))
                             {
-                                RespCookies = new CookieCollection();
-                                RespCookies.Add(resp.Cookies);
+                                if (RespCookies == null)
+                                    RespCookies = new CookieCollection();
+
+                                RespCookies.Add(c);
                             }
 
                             // TODO: headers (language, cache expire, content type, encoding, Response URI, ...)
@@ -108,7 +110,7 @@ namespace linqtoweb.Core.datacontext
 
                             // close the response
                             resp.Close();
-                        }                        
+                        }
 
                         expiration = DateTime.Now.AddHours(1.0);    // TODO: time based on HTML header or HtmlContext parameters
                         

@@ -1,6 +1,6 @@
 /*
  * Generated LinqToWeb context
- * 24.3.2010 0:25:30
+ * 27.4.2010 14:20:21
  */
 
 using System;
